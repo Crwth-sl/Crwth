@@ -1476,7 +1476,7 @@ function Kavo.CreateLib(kavName, themeList)
     local opened = false
     local selectedItems = {} -- holds selected values
 
-    local dropFrame = Instance.new("Frame")
+    local dropFrame = Instance.new("ScrollingFrame")
     local dropOpen = Instance.new("TextButton")
     local itemTextbox = Instance.new("TextLabel")
     local UIListLayout = Instance.new("UIListLayout")
