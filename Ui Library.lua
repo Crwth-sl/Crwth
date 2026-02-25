@@ -2385,49 +2385,48 @@ function Kavo.CreateLib(kavName, themeList)
             end
             
             function Elements:NewLabel(title)
-            	local labelFunctions = {}
-            	local label = Instance.new("TextLabel")
-            	local UICorner = Instance.new("UICorner")
-            	label.Name = "label"
-            	label.Parent = sectionInners
-            	label.BackgroundColor3 = themeList.SchemeColor
-            	label.BorderSizePixel = 0
-				label.ClipsDescendants = true
-            	label.Text = title
-           		label.Size = UDim2.new(0, 352, 0, 33)
-	            label.Font = Enum.Font.Gotham
-	            label.Text = "  "..title
-	            label.RichText = true
-	            label.TextColor3 = themeList.TextColor
-	            Objects[label] = "TextColor3"
-	            label.TextSize = 14.000
-	            label.TextXAlignment = Enum.TextXAlignment.Left
-	            
-	           	UICorner.CornerRadius = UDim.new(0, 4)
-                UICorner.Parent = label
-            	
-	            if themeList.SchemeColor == Color3.fromRGB(255,255,255) then
-	                Utility:TweenObject(label, {TextColor3 = Color3.fromRGB(0,0,0)}, 0.2)
-	            end 
-	            if themeList.SchemeColor == Color3.fromRGB(0,0,0) then
-	                Utility:TweenObject(label, {TextColor3 = Color3.fromRGB(255,255,255)}, 0.2)
-	            end 
+                local labelFunctions = {}
+                local label = Instance.new("TextLabel")
+                local UICorner = Instance.new("UICorner")
 
-		        coroutine.wrap(function()
-		            while wait() do
-		                label.BackgroundColor3 = themeList.SchemeColor
-		                label.TextColor3 = themeList.TextColor
-		            end
-		        end)()
+                label.Name = "label"
+                label.Parent = sectionInners
+
+                -- 🔥 Slightly softer than section
+                label.BackgroundColor3 = Adjust(themeList.Header, -5)
+
+                label.BorderSizePixel = 0
+                label.ClipsDescendants = true
+                label.Size = UDim2.new(0, 352, 0, 33)
+
+                label.Font = Enum.Font.Gotham
+                label.Text = "  "..title
+                label.RichText = true
+                label.TextColor3 = themeList.TextColor
+                label.TextSize = 14
+                label.TextXAlignment = Enum.TextXAlignment.Left
+
+                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = label
+
+                coroutine.wrap(function()
+                    while task.wait() do
+                        label.BackgroundColor3 = Adjust(themeList.Header, -5)
+                        label.TextColor3 = themeList.TextColor
+                    end
+                end)()
+
                 updateSectionFrame()
                 UpdateSize()
+
                 function labelFunctions:UpdateLabel(newText)
-                	if label.Text ~= "  "..newText then
-                		label.Text = "  "..newText
-                	end
-                end	
+                    if label.Text ~= "  "..newText then
+                        label.Text = "  "..newText
+                    end
+                end
+
                 return labelFunctions
-            end	
+            end
             return Elements
         end
         return Sections
