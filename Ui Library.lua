@@ -927,12 +927,18 @@ function Kavo.CreateLib(kavName, themeList)
                         end
                         Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
                     end
+
                     if not EnterPressed then 
                         return
-                    else
-                        callback(TextBox.Text)
-                        wait(0.18)
-                        TextBox.Text = ""  
+                    end
+
+                    local typed = TextBox.Text
+                    if typed ~= "" then
+                        callback(typed)
+
+                        -- ✅ DO NOT CLEAR TEXT
+                        TextBox.Text = typed
+                        TextBox.PlaceholderText = typed
                     end
                 end)
 
