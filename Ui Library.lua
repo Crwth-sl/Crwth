@@ -2384,51 +2384,50 @@ function Kavo.CreateLib(kavName, themeList)
                 setcolor({h,s,v})
             end
             
-            function Elements:NewLabel(text)
-                text = text or "Label"
+            function Elements:NewLabel(title)
+            	local labelFunctions = {}
+            	local label = Instance.new("TextLabel")
+            	local UICorner = Instance.new("UICorner")
+            	label.Name = "label"
+            	label.Parent = sectionInners
+            	label.BackgroundColor3 = themeList.SchemeColor
+            	label.BorderSizePixel = 0
+				label.ClipsDescendants = true
+            	label.Text = title
+           		label.Size = UDim2.new(0, 352, 0, 33)
+	            label.Font = Enum.Font.Gotham
+	            label.Text = "  "..title
+	            label.RichText = true
+	            label.TextColor3 = themeList.TextColor
+	            Objects[label] = "TextColor3"
+	            label.TextSize = 14.000
+	            label.TextXAlignment = Enum.TextXAlignment.Left
+	            
+	           	UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = label
+            	
+	            if themeList.SchemeColor == Color3.fromRGB(255,255,255) then
+	                Utility:TweenObject(label, {TextColor3 = Color3.fromRGB(0,0,0)}, 0.2)
+	            end 
+	            if themeList.SchemeColor == Color3.fromRGB(0,0,0) then
+	                Utility:TweenObject(label, {TextColor3 = Color3.fromRGB(255,255,255)}, 0.2)
+	            end 
 
-                local labelFrame = Instance.new("Frame")
-                local labelText = Instance.new("TextLabel")
-                local UICorner = Instance.new("UICorner")
-
-                labelFrame.Name = "Label"
-                labelFrame.Parent = sectionInners
-                labelFrame.BackgroundColor3 = themeList.ElementColor
-                labelFrame.BorderSizePixel = 0
-                labelFrame.Size = UDim2.new(0, 352, 0, 33)
-
-                UICorner.CornerRadius = UDim.new(0,4)
-                UICorner.Parent = labelFrame
-
-                labelText.Parent = labelFrame
-                labelText.BackgroundTransparency = 1
-                labelText.Size = UDim2.new(1, -10, 1, 0)
-                labelText.Position = UDim2.new(0, 10, 0, 0)
-                labelText.Font = Enum.Font.GothamSemibold
-                labelText.Text = text
-                labelText.TextColor3 = themeList.TextColor
-                labelText.TextSize = 14
-                labelText.TextXAlignment = Enum.TextXAlignment.Left
-
+		        coroutine.wrap(function()
+		            while wait() do
+		                label.BackgroundColor3 = themeList.SchemeColor
+		                label.TextColor3 = themeList.TextColor
+		            end
+		        end)()
                 updateSectionFrame()
                 UpdateSize()
-
-                local LabelFunction = {}
-
-                function LabelFunction:UpdateLabel(newText)
-                    labelText.Text = newText
-                end
-
-                -- Theme updater loop (matches rest of UI system)
-                coroutine.wrap(function()
-                    while task.wait() do
-                        labelFrame.BackgroundColor3 = themeList.ElementColor
-                        labelText.TextColor3 = themeList.TextColor
-                    end
-                end)()
-
-                return LabelFunction
-            end
+                function labelFunctions:UpdateLabel(newText)
+                	if label.Text ~= "  "..newText then
+                		label.Text = "  "..newText
+                	end
+                end	
+                return labelFunctions
+            end	
             return Elements
         end
         return Sections
