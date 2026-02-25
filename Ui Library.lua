@@ -1470,17 +1470,22 @@ function Kavo.CreateLib(kavName, themeList)
 
             function Elements:NewDropdown(dropname, dropinf, list, callback, multi)
                 local DropFunction = {}
+
                 dropname = dropname or "Dropdown"
-                list = list or {}
                 dropinf = dropinf or "Dropdown Info"
+                list = list or {}
                 callback = callback or function() end
-                multi = multi or false -- false = single select, true = multi select
+                multi = multi or false
 
                 local opened = false
                 local selectedItems = {}
                 local selectedSingle = nil
+                local optionButtons = {}
 
+                --------------------------------------------------
                 -- Instances
+                --------------------------------------------------
+
                 local dropFrame = Instance.new("Frame")
                 local dropOpen = Instance.new("TextButton")
                 local listImg = Instance.new("ImageLabel")
@@ -1489,14 +1494,12 @@ function Kavo.CreateLib(kavName, themeList)
                 local UIListLayout = Instance.new("UIListLayout")
                 local UICorner = Instance.new("UICorner")
 
-                -- Main frame
                 dropFrame.Parent = sectionInners
                 dropFrame.BackgroundColor3 = themeList.Background
                 dropFrame.BorderSizePixel = 0
                 dropFrame.Size = UDim2.new(0,352,0,33)
                 dropFrame.ClipsDescendants = true
 
-                -- Main button
                 dropOpen.Parent = dropFrame
                 dropOpen.BackgroundColor3 = themeList.ElementColor
                 dropOpen.Size = UDim2.new(0,352,0,33)
@@ -1513,7 +1516,6 @@ function Kavo.CreateLib(kavName, themeList)
                 listImg.Position = UDim2.new(0.02,0,0.18,0)
                 listImg.Size = UDim2.new(0,21,0,21)
                 listImg.Image = "rbxassetid://3926305904"
-                listImg.ImageColor3 = themeList.SchemeColor
                 listImg.ImageRectOffset = Vector2.new(644,364)
                 listImg.ImageRectSize = Vector2.new(36,36)
 
@@ -1524,17 +1526,15 @@ function Kavo.CreateLib(kavName, themeList)
                 itemTextbox.Size = UDim2.new(0,220,0,14)
                 itemTextbox.Font = Enum.Font.GothamSemibold
                 itemTextbox.Text = dropname
-                itemTextbox.TextColor3 = themeList.TextColor
                 itemTextbox.TextSize = 14
                 itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
 
-                -- 3 dots button
+                -- 3 dots
                 viewInfo.Parent = dropOpen
                 viewInfo.BackgroundTransparency = 1
                 viewInfo.Position = UDim2.new(0.93,0,0.15,0)
                 viewInfo.Size = UDim2.new(0,23,0,23)
                 viewInfo.Image = "rbxassetid://3926305904"
-                viewInfo.ImageColor3 = themeList.SchemeColor
                 viewInfo.ImageRectOffset = Vector2.new(764,764)
                 viewInfo.ImageRectSize = Vector2.new(36,36)
 
@@ -1549,14 +1549,12 @@ function Kavo.CreateLib(kavName, themeList)
                 moreInfo.ZIndex = 9
                 moreInfo.Font = Enum.Font.GothamSemibold
                 moreInfo.Text = "  "..dropinf
-                moreInfo.TextColor3 = themeList.TextColor
                 moreInfo.TextSize = 14
                 moreInfo.TextXAlignment = Enum.TextXAlignment.Left
 
                 infoCorner.CornerRadius = UDim.new(0,4)
                 infoCorner.Parent = moreInfo
 
-                -- 3 Dots functionality (uses shared focusing/viewDe)
                 viewInfo.MouseButton1Click:Connect(function()
                     if not viewDe then
                         viewDe = true
@@ -1571,7 +1569,7 @@ function Kavo.CreateLib(kavName, themeList)
                         Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,0,0)}, 0.2)
                         Utility:TweenObject(blurFrame, {BackgroundTransparency = 0.5}, 0.2)
 
-                        wait(1.5)
+                        task.wait(1.5)
 
                         focusing = false
                         Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,2,0)}, 0.2)
@@ -1581,107 +1579,130 @@ function Kavo.CreateLib(kavName, themeList)
                     end
                 end)
 
-                -- Layout
                 UIListLayout.Parent = dropFrame
-                UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
                 UIListLayout.Padding = UDim.new(0,3)
 
-                -- Open / Close
+                --------------------------------------------------
+                -- OPEN / CLOSE
+                --------------------------------------------------
+
                 dropOpen.MouseButton1Click:Connect(function()
-                    if not focusing then
-                        opened = not opened
+                    if focusing then return end
 
-                        if opened then
-                            dropFrame:TweenSize(
-                                UDim2.new(0,352,0,UIListLayout.AbsoluteContentSize.Y),
-                                "InOut","Linear",0.08,true
-                            )
-                        else
-                            dropFrame:TweenSize(
-                                UDim2.new(0,352,0,33),
-                                "InOut","Linear",0.08,true
-                            )
-                        end
+                    opened = not opened
 
-                        wait(0.1)
-                        updateSectionFrame()
-                        UpdateSize()
+                    if opened then
+                        dropFrame:TweenSize(
+                            UDim2.new(0,352,0,UIListLayout.AbsoluteContentSize.Y),
+                            "InOut","Linear",0.08,true
+                        )
+                    else
+                        dropFrame:TweenSize(
+                            UDim2.new(0,352,0,33),
+                            "InOut","Linear",0.08,true
+                        )
                     end
+
+                    task.wait(0.1)
+                    updateSectionFrame()
+                    UpdateSize()
                 end)
 
-                -- Options
-                for _,v in ipairs(list) do
-                    local option = Instance.new("TextButton")
-                    local optCorner = Instance.new("UICorner")
+                --------------------------------------------------
+                -- CREATE OPTIONS (Rebuildable)
+                --------------------------------------------------
 
-                    option.Parent = dropFrame
-                    option.BackgroundColor3 = themeList.ElementColor
-                    option.Size = UDim2.new(0,352,0,33)
-                    option.AutoButtonColor = false
-                    option.Font = Enum.Font.GothamSemibold
-                    option.Text = "  "..v
-                    option.TextColor3 = themeList.TextColor
-                    option.TextSize = 14
-                    option.TextXAlignment = Enum.TextXAlignment.Left
+                local function createOptions(optionList)
 
-                    optCorner.CornerRadius = UDim.new(0,4)
-                    optCorner.Parent = option
+                    for _, btn in pairs(optionButtons) do
+                        btn:Destroy()
+                    end
+                    optionButtons = {}
+                    selectedItems = {}
+                    selectedSingle = nil
+                    itemTextbox.Text = dropname
 
-                    option.MouseButton1Click:Connect(function()
-                        if focusing then return end
+                    for _,v in ipairs(optionList) do
+                        local option = Instance.new("TextButton")
+                        local optCorner = Instance.new("UICorner")
 
-                        if multi then
-                            -- MULTI SELECT
-                            if selectedItems[v] then
-                                selectedItems[v] = nil
-                                option.BackgroundColor3 = themeList.ElementColor
-                            else
-                                selectedItems[v] = true
-                                option.BackgroundColor3 = themeList.SchemeColor
-                            end
+                        option.Parent = dropFrame
+                        option.BackgroundColor3 = themeList.ElementColor
+                        option.Size = UDim2.new(0,352,0,33)
+                        option.AutoButtonColor = false
+                        option.Font = Enum.Font.GothamSemibold
+                        option.Text = "  "..v
+                        option.TextSize = 14
+                        option.TextXAlignment = Enum.TextXAlignment.Left
 
-                            local selectedList = {}
-                            for k,_ in pairs(selectedItems) do
-                                table.insert(selectedList, k)
-                            end
+                        optCorner.CornerRadius = UDim.new(0,4)
+                        optCorner.Parent = option
 
-                            if #selectedList > 0 then
-                                itemTextbox.Text = table.concat(selectedList,", ")
-                            else
-                                itemTextbox.Text = dropname
-                            end
+                        optionButtons[v] = option
 
-                            callback(selectedList)
+                        option.MouseButton1Click:Connect(function()
+                            if focusing then return end
 
-                        else
-                            -- SINGLE SELECT (Original behavior)
-                            selectedSingle = v
-
-                            for _,child in pairs(dropFrame:GetChildren()) do
-                                if child:IsA("TextButton") and child ~= dropOpen then
-                                    child.BackgroundColor3 = themeList.ElementColor
+                            if multi then
+                                if selectedItems[v] then
+                                    selectedItems[v] = nil
+                                    option.BackgroundColor3 = themeList.ElementColor
+                                else
+                                    selectedItems[v] = true
+                                    option.BackgroundColor3 = themeList.SchemeColor
                                 end
+
+                                local selectedList = {}
+                                for k,_ in pairs(selectedItems) do
+                                    table.insert(selectedList, k)
+                                end
+
+                                if #selectedList > 0 then
+                                    itemTextbox.Text = table.concat(selectedList,", ")
+                                else
+                                    itemTextbox.Text = dropname
+                                end
+
+                                callback(selectedList)
+
+                            else
+                                selectedSingle = v
+
+                                for _, btn in pairs(optionButtons) do
+                                    btn.BackgroundColor3 = themeList.ElementColor
+                                end
+
+                                option.BackgroundColor3 = themeList.SchemeColor
+                                itemTextbox.Text = v
+                                callback(v)
+
+                                opened = false
+                                dropFrame:TweenSize(
+                                    UDim2.new(0,352,0,33),
+                                    "InOut","Linear",0.08,true
+                                )
+
+                                task.wait(0.1)
+                                updateSectionFrame()
+                                UpdateSize()
                             end
-
-                            option.BackgroundColor3 = themeList.SchemeColor
-                            itemTextbox.Text = v
-                            callback(v)
-
-                            opened = false
-                            dropFrame:TweenSize(
-                                UDim2.new(0,352,0,33),
-                                "InOut","Linear",0.08,true
-                            )
-
-                            wait(0.1)
-                            updateSectionFrame()
-                            UpdateSize()
-                        end
-                    end)
+                        end)
+                    end
                 end
 
-                updateSectionFrame()
-                UpdateSize()
+                --------------------------------------------------
+                -- REFRESH SUPPORT
+                --------------------------------------------------
+
+                function DropFunction:Refresh(newList)
+                    newList = newList or {}
+                    createOptions(newList)
+                end
+
+                --------------------------------------------------
+                -- THEME UPDATER
+                --------------------------------------------------
+
                 coroutine.wrap(function()
                     while task.wait() do
                         dropFrame.BackgroundColor3 = themeList.Background
@@ -1689,17 +1710,22 @@ function Kavo.CreateLib(kavName, themeList)
                         itemTextbox.TextColor3 = themeList.TextColor
                         listImg.ImageColor3 = themeList.SchemeColor
                         viewInfo.ImageColor3 = themeList.SchemeColor
+                        moreInfo.BackgroundColor3 = themeList.SchemeColor
+                        moreInfo.TextColor3 = themeList.TextColor
 
-                        for _,child in pairs(dropFrame:GetChildren()) do
-                            if child:IsA("TextButton") and child ~= dropOpen then
-                                if not selectedItems[child.Text:gsub("^%s+", "")] then
-                                    child.BackgroundColor3 = themeList.ElementColor
-                                end
-                                child.TextColor3 = themeList.TextColor
+                        for _,btn in pairs(optionButtons) do
+                            btn.TextColor3 = themeList.TextColor
+                            if not selectedItems[btn.Text:gsub("^%s+","")] then
+                                btn.BackgroundColor3 = themeList.ElementColor
                             end
                         end
                     end
                 end)()
+
+                createOptions(list)
+                updateSectionFrame()
+                UpdateSize()
+
                 return DropFunction
             end
             
