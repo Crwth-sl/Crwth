@@ -1534,32 +1534,46 @@ function Kavo.CreateLib(kavName, themeList)
 
         local isSelected = false
 
-        optionSelect.MouseButton1Click:Connect(function()
-            isSelected = not isSelected
+        local selectedItems = selectedItems or {}
 
-            if isSelected then
-                selectedItems[option] = true
-                optionSelect.BackgroundColor3 = themeList.SchemeColor
-            else
-                selectedItems[option] = nil
-                optionSelect.BackgroundColor3 = themeList.ElementColor
-            end
+optionSelect.MouseButton1Click:Connect(function()
+    if not focusing then
 
-            -- Build display text
-            local textList = {}
-            for k,_ in pairs(selectedItems) do
-                table.insert(textList, k)
-            end
+        -- Toggle selection
+        if selectedItems[v] then
+            selectedItems[v] = nil
+            optionSelect.BackgroundColor3 = themeList.ElementColor
+        else
+            selectedItems[v] = true
+            optionSelect.BackgroundColor3 = themeList.SchemeColor
+        end
 
-            if #textList > 0 then
-                itemTextbox.Text = table.concat(textList, ", ")
-            else
-                itemTextbox.Text = dropname
-            end
+        -- Build display string
+        local selectedList = {}
+        for k,_ in pairs(selectedItems) do
+            table.insert(selectedList, k)
+        end
 
-            callback(textList)
-        end)
+        if #selectedList > 0 then
+            itemTextbox.Text = table.concat(selectedList, ", ")
+        else
+            itemTextbox.Text = dropname
+        end
+
+        -- Fire callback with table
+        callback(selectedList)
+
+        -- 🔥 DO NOT close dropdown anymore
+        updateSectionFrame()
+        UpdateSize()
+    else
+        for i,v in next, infoContainer:GetChildren() do
+            Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
+            focusing = false
+        end
+        Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
     end
+end)
 
     function DropFunction:GetSelected()
         local result = {}
