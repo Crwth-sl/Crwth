@@ -355,291 +355,243 @@ function Library:CreateWindow(config)
             -- Slider
             function Section:CreateSlider(config)
 
-                local Title = config.Title or "Slider"
-                local Min = config.Min or 0
-                local Max = config.Max or 100
-                local Default = config.Default or Min
-                local Callback = config.Callback or function() end
+    local Title = config.Title or "Slider"
+    local Min = config.Min or 0
+    local Max = config.Max or 100
+    local Default = config.Default or Min
+    local Callback = config.Callback or function() end
 
-                local Value = math.clamp(Default, Min, Max)
-                local dragging = false
+    Library._Registry = Library._Registry or {}
 
-                -- Main Frame
-                local SliderFrame = Instance.new("Frame")
-                SliderFrame.Size = UDim2.new(1, 0, 0, 50)
-                SliderFrame.BackgroundColor3 = Theme.Background
-                SliderFrame.BorderSizePixel = 0
-                SliderFrame.Parent = SectionFrame
-                Instance.new("UICorner", SliderFrame).CornerRadius = UDim.new(0,6)
+    local Value = math.clamp(Default, Min, Max)
+    local dragging = false
 
-                -- Label
-                local Label = Instance.new("TextLabel")
-                Label.Size = UDim2.new(1, -20, 0, 20)
-                Label.Position = UDim2.new(0, 10, 0, 5)
-                Label.BackgroundTransparency = 1
-                Label.Font = Enum.Font.Gotham
-                Label.TextSize = 13
-                Label.TextColor3 = Theme.Text
-                Label.TextXAlignment = Enum.TextXAlignment.Left
-                Label.Parent = SliderFrame
+    local SliderFrame = Instance.new("Frame")
+    SliderFrame.Size = UDim2.new(1, 0, 0, 50)
+    SliderFrame.BackgroundColor3 = Theme.Background
+    SliderFrame.BorderSizePixel = 0
+    SliderFrame.Parent = SectionFrame
+    Instance.new("UICorner", SliderFrame).CornerRadius = UDim.new(0,6)
 
-                -- Bar Background
-                local Bar = Instance.new("Frame")
-                Bar.Size = UDim2.new(1, -20, 0, 6)
-                Bar.Position = UDim2.new(0, 10, 0, 32)
-                Bar.BackgroundColor3 = Theme.Section
-                Bar.BorderSizePixel = 0
-                Bar.Parent = SliderFrame
-                Instance.new("UICorner", Bar).CornerRadius = UDim.new(1,0)
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(1, -20, 0, 20)
+    Label.Position = UDim2.new(0, 10, 0, 5)
+    Label.BackgroundTransparency = 1
+    Label.Font = Enum.Font.Gotham
+    Label.TextSize = 13
+    Label.TextColor3 = Theme.Text
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = SliderFrame
 
-                -- Fill
-                local Fill = Instance.new("Frame")
-                Fill.Size = UDim2.new(0, 0, 1, 0)
-                Fill.BackgroundColor3 = Theme.Accent
-                Fill.BorderSizePixel = 0
-                Fill.Parent = Bar
-                Instance.new("UICorner", Fill).CornerRadius = UDim.new(1,0)
+    local Bar = Instance.new("Frame")
+    Bar.Size = UDim2.new(1, -20, 0, 6)
+    Bar.Position = UDim2.new(0, 10, 0, 32)
+    Bar.BackgroundColor3 = Theme.Section
+    Bar.BorderSizePixel = 0
+    Bar.Parent = SliderFrame
+    Instance.new("UICorner", Bar).CornerRadius = UDim.new(1,0)
 
-                -- Update Function
-                local function SetValue(v)
-                    Value = math.clamp(v, Min, Max)
+    local Fill = Instance.new("Frame")
+    Fill.BackgroundColor3 = Theme.Accent
+    Fill.BorderSizePixel = 0
+    Fill.Parent = Bar
+    Instance.new("UICorner", Fill).CornerRadius = UDim.new(1,0)
 
-                    local percent = (Value - Min) / (Max - Min)
-                    Tween(Fill, 0.15, {
-                        Size = UDim2.new(percent, 0, 1, 0)
-                    })
+    local function SetValue(v)
+        Value = math.clamp(v, Min, Max)
+        local percent = (Value - Min) / (Max - Min)
 
-                    Label.Text = Title .. " : " .. tostring(Value)
-                    Callback(Value)
-                end
+        Tween(Fill, 0.15, {
+            Size = UDim2.new(percent, 0, 1, 0)
+        })
 
-                -- Mouse Handling
-                Bar.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        dragging = true
-                    end
-                end)
+        Label.Text = Title .. " : " .. tostring(Value)
+        Callback(Value)
+    end
 
-                UIS.InputEnded:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        dragging = false
-                    end
-                end)
+    Bar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+        end
+    end)
 
-                UIS.InputChanged:Connect(function(input)
-                    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-                        local percent = math.clamp(
-                            (input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X,
-                            0,
-                            1
-                        )
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
 
-                        local newValue = math.floor(Min + (Max - Min) * percent)
-                        SetValue(newValue)
-                    end
-                end)
+    UIS.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local percent = math.clamp(
+                (input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X,
+                0,
+                1
+            )
 
-                -- Register for Config System
-                RegisterElement(Title, {
-                    Type = "Slider",
-                    Get = function()
-                        return Value
-                    end,
-                    Set = function(v)
-                        SetValue(tonumber(v) or Min)
-                    end
-                })
+            local newValue = math.floor(Min + (Max - Min) * percent)
+            SetValue(newValue)
+        end
+    end)
 
-                -- Initialize Default
-                SetValue(Value)
-            end
+    Library._Registry[Title] = {
+        Type = "Slider",
+        Get = function()
+            return Value
+        end,
+        Set = function(v)
+            SetValue(tonumber(v) or Min)
+        end
+    }
+
+    SetValue(Value)
+end
 
 
             -- Dropdown (Single + Multi)
             function Section:CreateDropdown(config)
 
-                local Title = config.Title or "Dropdown"
-                local Options = config.Options or {}
-                local Multi = config.Multi or false
-                local Default = config.Default
-                local Callback = config.Callback or function() end
+    local Title = config.Title or "Dropdown"
+    local Options = config.Options or {}
+    local Multi = config.Multi or false
+    local Default = config.Default
+    local Callback = config.Callback or function() end
 
-                local Selected = {}
-                local Open = false
+    Library._Registry = Library._Registry or {}
 
-                -- Main Frame
-                local Frame = Instance.new("Frame")
-                Frame.Size = UDim2.new(1, 0, 0, 32)
-                Frame.BackgroundColor3 = Theme.Background
-                Frame.BorderSizePixel = 0
-                Frame.AutomaticSize = Enum.AutomaticSize.Y
-                Frame.Parent = SectionFrame
-                Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,6)
+    local Selected = {}
+    local Open = false
 
-                -- Main Button
-                local Button = Instance.new("TextButton")
-                Button.Size = UDim2.new(1, 0, 0, 32)
-                Button.BackgroundTransparency = 1
-                Button.Text = Title
-                Button.Font = Enum.Font.Gotham
-                Button.TextSize = 13
-                Button.TextColor3 = Theme.Text
-                Button.Parent = Frame
+    local Frame = Instance.new("Frame")
+    Frame.Size = UDim2.new(1, 0, 0, 32)
+    Frame.BackgroundColor3 = Theme.Background
+    Frame.BorderSizePixel = 0
+    Frame.AutomaticSize = Enum.AutomaticSize.Y
+    Frame.Parent = SectionFrame
+    Instance.new("UICorner", Frame).CornerRadius = UDim.new(0,6)
 
-                -- Dropdown Container
-                local Drop = Instance.new("Frame")
-                Drop.Position = UDim2.new(0,0,0,32)
-                Drop.Size = UDim2.new(1,0,0,0)
-                Drop.BackgroundTransparency = 1
-                Drop.ClipsDescendants = true
-                Drop.Parent = Frame
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(1, 0, 0, 32)
+    Button.BackgroundTransparency = 1
+    Button.Text = Title
+    Button.Font = Enum.Font.Gotham
+    Button.TextSize = 13
+    Button.TextColor3 = Theme.Text
+    Button.Parent = Frame
 
-                local Layout = Instance.new("UIListLayout", Drop)
-                Layout.Padding = UDim.new(0,4)
+    local Drop = Instance.new("Frame")
+    Drop.Position = UDim2.new(0,0,0,32)
+    Drop.Size = UDim2.new(1,0,0,0)
+    Drop.ClipsDescendants = true
+    Drop.BackgroundTransparency = 1
+    Drop.Parent = Frame
 
-                -- Update Display Text
-                local function UpdateText()
-                    local list = {}
+    local function UpdateText()
+        local list = {}
+        for k,_ in pairs(Selected) do
+            table.insert(list,k)
+        end
+        Button.Text = (#list > 0) and table.concat(list,", ") or Title
+    end
 
-                    for k,_ in pairs(Selected) do
-                        table.insert(list,k)
-                    end
+    local function SetValue(value)
 
-                    if #list > 0 then
-                        Button.Text = table.concat(list,", ")
-                    else
-                        Button.Text = Title
-                    end
-                end
+        Selected = {}
 
-                -- Set Value Function
-                local function SetValue(value)
-
-                    if Multi then
-                        Selected = {}
-
-                        if type(value) == "table" then
-                            for _,v in pairs(value) do
-                                Selected[v] = true
-                            end
-                        end
-
-                        UpdateText()
-
-                        local ret = {}
-                        for k,_ in pairs(Selected) do
-                            table.insert(ret,k)
-                        end
-
-                        Callback(ret)
-
-                    else
-                        Selected = {}
-                        Selected[value] = true
-                        UpdateText()
-                        Callback(value)
-                    end
-                end
-
-                -- Toggle Open
-                Button.MouseButton1Click:Connect(function()
-                    Open = not Open
-                    Tween(Drop, 0.25, {
-                        Size = Open and UDim2.new(1,0,0,#Options * 30)
-                            or UDim2.new(1,0,0,0)
-                    })
-                end)
-
-                -- Create Options
-                for _,option in pairs(Options) do
-
-                    local Opt = Instance.new("TextButton")
-                    Opt.Size = UDim2.new(1,0,0,26)
-                    Opt.Text = option
-                    Opt.Font = Enum.Font.Gotham
-                    Opt.TextSize = 13
-                    Opt.TextColor3 = Theme.Text
-                    Opt.BackgroundColor3 = Theme.Section
-                    Opt.BorderSizePixel = 0
-                    Opt.Parent = Drop
-                    Instance.new("UICorner", Opt).CornerRadius = UDim.new(0,4)
-
-                    local function RefreshColor()
-                        if Selected[option] then
-                            Tween(Opt,0.2,{BackgroundColor3 = Theme.Accent})
-                        else
-                            Tween(Opt,0.2,{BackgroundColor3 = Theme.Section})
-                        end
-                    end
-
-                    Opt.MouseButton1Click:Connect(function()
-
-                        if Multi then
-                            if Selected[option] then
-                                Selected[option] = nil
-                            else
-                                Selected[option] = true
-                            end
-
-                            UpdateText()
-
-                            local ret = {}
-                            for k,_ in pairs(Selected) do
-                                table.insert(ret,k)
-                            end
-
-                            Callback(ret)
-
-                        else
-                            SetValue(option)
-                            Open = false
-                            Tween(Drop,0.25,{Size = UDim2.new(1,0,0,0)})
-                        end
-
-                        RefreshColor()
-                    end)
-
-                    -- Auto refresh on open
-                    task.spawn(function()
-                        RefreshColor()
-                    end)
-                end
-
-                -- Config Registration
-                RegisterElement(Title, {
-                    Type = "Dropdown",
-                    Get = function()
-                        if Multi then
-                            local ret = {}
-                            for k,_ in pairs(Selected) do
-                                table.insert(ret,k)
-                            end
-                            return ret
-                        else
-                            for k,_ in pairs(Selected) do
-                                return k
-                            end
-                        end
-                    end,
-                    Set = function(v)
-                        SetValue(v)
-                    end
-                })
-
-                -- Apply Default
-                if Default then
-                    SetValue(Default)
-                else
-                    UpdateText()
+        if Multi then
+            if type(value) == "table" then
+                for _,v in pairs(value) do
+                    Selected[v] = true
                 end
             end
+        else
+            Selected[value] = true
+        end
+
+        UpdateText()
+
+        if Multi then
+            local ret = {}
+            for k,_ in pairs(Selected) do
+                table.insert(ret,k)
+            end
+            Callback(ret)
+        else
+            for k,_ in pairs(Selected) do
+                Callback(k)
+                break
+            end
+        end
+    end
+
+    Button.MouseButton1Click:Connect(function()
+        Open = not Open
+        Tween(Drop, 0.25, {
+            Size = Open and UDim2.new(1,0,0,#Options*28)
+                or UDim2.new(1,0,0,0)
+        })
+    end)
+
+    for _,option in pairs(Options) do
+        local Opt = Instance.new("TextButton")
+        Opt.Size = UDim2.new(1,0,0,26)
+        Opt.Text = option
+        Opt.Font = Enum.Font.Gotham
+        Opt.TextSize = 13
+        Opt.TextColor3 = Theme.Text
+        Opt.BackgroundColor3 = Theme.Section
+        Opt.BorderSizePixel = 0
+        Opt.Parent = Drop
+        Instance.new("UICorner", Opt).CornerRadius = UDim.new(0,4)
+
+        Opt.MouseButton1Click:Connect(function()
+
+            if Multi then
+                Selected[option] = not Selected[option]
+                UpdateText()
+
+                local ret = {}
+                for k,_ in pairs(Selected) do
+                    table.insert(ret,k)
+                end
+                Callback(ret)
+            else
+                SetValue(option)
+                Open = false
+                Tween(Drop,0.25,{Size = UDim2.new(1,0,0,0)})
+            end
+        end)
+    end
+
+    Library._Registry[Title] = {
+        Type = "Dropdown",
+        Get = function()
+            if Multi then
+                local ret = {}
+                for k,_ in pairs(Selected) do
+                    table.insert(ret,k)
+                end
+                return ret
+            else
+                for k,_ in pairs(Selected) do
+                    return k
+                end
+            end
+        end,
+        Set = function(v)
+            SetValue(v)
+        end
+    }
+
+    if Default then
+        SetValue(Default)
+    else
+        UpdateText()
+    end
+end
             --// ===== STATE REGISTRY (GLOBAL FOR WINDOW) =====
 
             Library._Registry = Library._Registry or {}
-
-            local function RegisterElement(id, data)
-                Library._Registry[id] = data
-            end
 
             --// KEYBIND
             function Section:CreateKeybind(config)
@@ -692,15 +644,6 @@ function Library:CreateWindow(config)
                         Callback()
                     end
                 end)
-
-                RegisterElement(Title, {
-                    Type = "Keybind",
-                    Get = function() return CurrentKey.Name end,
-                    Set = function(v)
-                        CurrentKey = Enum.KeyCode[v]
-                        Button.Text = v
-                    end
-                })
             end
 
             --// TEXTBOX
@@ -740,12 +683,6 @@ function Library:CreateWindow(config)
                 Box.FocusLost:Connect(function()
                     Callback(Box.Text)
                 end)
-
-                RegisterElement(Title, {
-                    Type = "Textbox",
-                    Get = function() return Box.Text end,
-                    Set = function(v) Box.Text = v end
-                })
             end
 
 
