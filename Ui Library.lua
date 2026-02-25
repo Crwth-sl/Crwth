@@ -1466,131 +1466,157 @@ function Kavo.CreateLib(kavName, themeList)
                 end)        
             end
 
-            function Elements:NewDropdown(dropname, dropinf, list, callback)
+
+function Elements:NewDropdown(dropname, dropinf, list, callback)
     local DropFunction = {}
     dropname = dropname or "Dropdown"
-    dropinf = dropinf or "Dropdown Info"
     list = list or {}
+    dropinf = dropinf or "Dropdown info"
     callback = callback or function() end   
 
     local opened = false
-    local selectedItems = {} -- holds selected values
+    local DropYSize = 33
+    local selectedItems = {} -- MULTI SELECT STORAGE
 
-    local dropFrame = Instance.new("ScrollingFrame")
+    local dropFrame = Instance.new("Frame")
     local dropOpen = Instance.new("TextButton")
+    local listImg = Instance.new("ImageLabel")
     local itemTextbox = Instance.new("TextLabel")
+    local viewInfo = Instance.new("ImageButton")
+    local UICorner = Instance.new("UICorner")
     local UIListLayout = Instance.new("UIListLayout")
+    local Sample = Instance.new("ImageLabel")
 
+    local ms = game.Players.LocalPlayer:GetMouse()
+
+    -- Sample ripple
+    Sample.Name = "Sample"
+    Sample.Parent = dropOpen
+    Sample.BackgroundTransparency = 1
+    Sample.Image = "http://www.roblox.com/asset/?id=4560909609"
+    Sample.ImageColor3 = themeList.SchemeColor
+    Sample.ImageTransparency = 0.6
+
+    dropFrame.Name = "dropFrame"
     dropFrame.Parent = sectionInners
     dropFrame.BackgroundColor3 = themeList.Background
+    dropFrame.BorderSizePixel = 0
     dropFrame.Size = UDim2.new(0, 352, 0, 33)
     dropFrame.ClipsDescendants = true
 
+    dropOpen.Name = "dropOpen"
     dropOpen.Parent = dropFrame
     dropOpen.BackgroundColor3 = themeList.ElementColor
     dropOpen.Size = UDim2.new(0, 352, 0, 33)
     dropOpen.Text = ""
+    dropOpen.AutoButtonColor = false
+
+    dropOpen.MouseButton1Click:Connect(function()
+        if not focusing then
+            opened = not opened
+
+            if opened then
+                dropFrame:TweenSize(
+                    UDim2.new(0, 352, 0, UIListLayout.AbsoluteContentSize.Y),
+                    "InOut","Linear",0.08,true
+                )
+            else
+                dropFrame:TweenSize(
+                    UDim2.new(0, 352, 0, 33),
+                    "InOut","Linear",0.08,true
+                )
+            end
+
+            wait(0.1)
+            updateSectionFrame()
+            UpdateSize()
+        end
+    end)
+
+    listImg.Parent = dropOpen
+    listImg.BackgroundTransparency = 1
+    listImg.Position = UDim2.new(0.02,0,0.18,0)
+    listImg.Size = UDim2.new(0,21,0,21)
+    listImg.Image = "rbxassetid://3926305904"
+    listImg.ImageColor3 = themeList.SchemeColor
+    listImg.ImageRectOffset = Vector2.new(644,364)
+    listImg.ImageRectSize = Vector2.new(36,36)
 
     itemTextbox.Parent = dropOpen
     itemTextbox.BackgroundTransparency = 1
-    itemTextbox.Position = UDim2.new(0.05, 0, 0.2, 0)
-    itemTextbox.Size = UDim2.new(0.9, 0, 0.6, 0)
+    itemTextbox.Position = UDim2.new(0.097,0,0.273,0)
+    itemTextbox.Size = UDim2.new(0,220,0,14)
     itemTextbox.Font = Enum.Font.GothamSemibold
     itemTextbox.Text = dropname
     itemTextbox.TextColor3 = themeList.TextColor
     itemTextbox.TextSize = 14
     itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
 
+    viewInfo.Parent = dropOpen
+    viewInfo.BackgroundTransparency = 1
+    viewInfo.Position = UDim2.new(0.93,0,0.15,0)
+    viewInfo.Size = UDim2.new(0,23,0,23)
+    viewInfo.Image = "rbxassetid://3926305904"
+    viewInfo.ImageColor3 = themeList.SchemeColor
+    viewInfo.ImageRectOffset = Vector2.new(764,764)
+    viewInfo.ImageRectSize = Vector2.new(36,36)
+
+    UICorner.CornerRadius = UDim.new(0,4)
+    UICorner.Parent = dropOpen
+
     UIListLayout.Parent = dropFrame
-    UIListLayout.Padding = UDim.new(0, 3)
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0,3)
 
-    -- Toggle open/close
-    dropOpen.MouseButton1Click:Connect(function()
-        opened = not opened
-        if opened then
-            dropFrame:TweenSize(
-                UDim2.new(0, 352, 0, UIListLayout.AbsoluteContentSize.Y + 33),
-                "InOut", "Linear", 0.15, true
-            )
-        else
-            dropFrame:TweenSize(
-                UDim2.new(0, 352, 0, 33),
-                "InOut", "Linear", 0.15, true
-            )
-        end
-    end)
-
-    -- Create options
-    for _, option in ipairs(list) do
+    -- Create Options
+    for _,v in next, list do
         local optionSelect = Instance.new("TextButton")
+        local UICorner2 = Instance.new("UICorner")
+
         optionSelect.Parent = dropFrame
         optionSelect.BackgroundColor3 = themeList.ElementColor
-        optionSelect.Size = UDim2.new(0, 352, 0, 30)
-        optionSelect.Text = "  "..option
+        optionSelect.Size = UDim2.new(0,352,0,33)
+        optionSelect.AutoButtonColor = false
         optionSelect.Font = Enum.Font.GothamSemibold
+        optionSelect.Text = "  "..v
         optionSelect.TextColor3 = themeList.TextColor
         optionSelect.TextSize = 14
         optionSelect.TextXAlignment = Enum.TextXAlignment.Left
+        optionSelect.ClipsDescendants = true
 
-        local isSelected = false
+        UICorner2.CornerRadius = UDim.new(0,4)
+        UICorner2.Parent = optionSelect
 
-        local selectedItems = selectedItems or {}
+        optionSelect.MouseButton1Click:Connect(function()
+            if not focusing then
 
-optionSelect.MouseButton1Click:Connect(function()
-    if not focusing then
+                -- TOGGLE SELECTION
+                if selectedItems[v] then
+                    selectedItems[v] = nil
+                    optionSelect.BackgroundColor3 = themeList.ElementColor
+                else
+                    selectedItems[v] = true
+                    optionSelect.BackgroundColor3 = themeList.SchemeColor
+                end
 
-        -- Toggle selection
-        if selectedItems[v] then
-            selectedItems[v] = nil
-            optionSelect.BackgroundColor3 = themeList.ElementColor
-        else
-            selectedItems[v] = true
-            optionSelect.BackgroundColor3 = themeList.SchemeColor
-        end
+                -- BUILD DISPLAY TEXT
+                local selectedList = {}
+                for k,_ in pairs(selectedItems) do
+                    table.insert(selectedList, k)
+                end
 
-        -- Build display string
-        local selectedList = {}
-        for k,_ in pairs(selectedItems) do
-            table.insert(selectedList, k)
-        end
+                if #selectedList > 0 then
+                    itemTextbox.Text = table.concat(selectedList, ", ")
+                else
+                    itemTextbox.Text = dropname
+                end
 
-        if #selectedList > 0 then
-            itemTextbox.Text = table.concat(selectedList, ", ")
-        else
-            itemTextbox.Text = dropname
-        end
+                callback(selectedList)
 
-        -- Fire callback with table
-        callback(selectedList)
-
-        -- 🔥 DO NOT close dropdown anymore
-        updateSectionFrame()
-        UpdateSize()
-    else
-        for i,v in next, infoContainer:GetChildren() do
-            Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
-            focusing = false
-        end
-        Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
-    end
-end)
-
-    function DropFunction:GetSelected()
-        local result = {}
-        for k,_ in pairs(selectedItems) do
-            table.insert(result, k)
-        end
-        return result
-    end
-
-    function DropFunction:Clear()
-        selectedItems = {}
-        itemTextbox.Text = dropname
-        for _, child in pairs(dropFrame:GetChildren()) do
-            if child:IsA("TextButton") and child ~= dropOpen then
-                child.BackgroundColor3 = themeList.ElementColor
+                updateSectionFrame()
+                UpdateSize()
             end
-        end
+        end)
     end
 
     updateSectionFrame()
@@ -1598,6 +1624,9 @@ end)
 
     return DropFunction
 end
+
+
+            
             function Elements:NewKeybind(keytext, keyinf, first, callback)
                 keytext = keytext or "KeybindText"
                 keyinf = keyinf or "KebindInfo"
