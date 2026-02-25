@@ -2391,7 +2391,7 @@ function Kavo.CreateLib(kavName, themeList)
 
                 label.Name = "label"
                 label.Parent = sectionInners
-                label.BackgroundColor3 = themeList.SchemeColor
+                label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.1)
                 label.BorderSizePixel = 0
                 label.ClipsDescendants = true
                 label.Size = UDim2.new(0, 352, 0, 33)
