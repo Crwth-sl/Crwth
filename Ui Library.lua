@@ -1682,7 +1682,24 @@ function Kavo.CreateLib(kavName, themeList)
 
                 updateSectionFrame()
                 UpdateSize()
+                coroutine.wrap(function()
+                    while task.wait() do
+                        dropFrame.BackgroundColor3 = themeList.Background
+                        dropOpen.BackgroundColor3 = themeList.ElementColor
+                        itemTextbox.TextColor3 = themeList.TextColor
+                        listImg.ImageColor3 = themeList.SchemeColor
+                        viewInfo.ImageColor3 = themeList.SchemeColor
 
+                        for _,child in pairs(dropFrame:GetChildren()) do
+                            if child:IsA("TextButton") and child ~= dropOpen then
+                                if not selectedItems[child.Text:gsub("^%s+", "")] then
+                                    child.BackgroundColor3 = themeList.ElementColor
+                                end
+                                child.TextColor3 = themeList.TextColor
+                            end
+                        end
+                    end
+                end)()
                 return DropFunction
             end
             
