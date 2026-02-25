@@ -154,37 +154,15 @@ function Kavo.CreateLib(kavName, themeList)
     if not themeList then
         themeList = themes
     end
-    if themeList == "DarkTheme" then
-        themeList = themeStyles.DarkTheme
-    elseif themeList == "LightTheme" then
-        themeList = themeStyles.LightTheme
-    elseif themeList == "BloodTheme" then
-        themeList = themeStyles.BloodTheme
-    elseif themeList == "GrapeTheme" then
-        themeList = themeStyles.GrapeTheme
-    elseif themeList == "Ocean" then
-        themeList = themeStyles.Ocean
-    elseif themeList == "Midnight" then
-        themeList = themeStyles.Midnight
-    elseif themeList == "Sentinel" then
-        themeList = themeStyles.Sentinel
-    elseif themeList == "Synapse" then
-        themeList = themeStyles.Synapse
-    elseif themeList == "Serpent" then
-        themeList = themeStyles.Serpent
-    else
-        if themeList.SchemeColor == nil then
-            themeList.SchemeColor = Color3.fromRGB(74, 99, 135)
-        elseif themeList.Background == nil then
-            themeList.Background = Color3.fromRGB(36, 37, 43)
-        elseif themeList.Header == nil then
-            themeList.Header = Color3.fromRGB(28, 29, 34)
-        elseif themeList.TextColor == nil then
-            themeList.TextColor = Color3.fromRGB(255,255,255)
-        elseif themeList.ElementColor == nil then
-            themeList.ElementColor = Color3.fromRGB(32, 32, 38)
+    if type(themeList) == "string" and themeStyles[themeList] then
+        for k,v in pairs(themeStyles[themeList]) do
+            themes[k] = v
         end
+    elseif type(themeList) ~= "table" then
+        themeList = themes
     end
+
+    local themeList = themes
 
     themeList = themeList or {}
     local selectedTab 
@@ -366,6 +344,15 @@ function Kavo.CreateLib(kavName, themeList)
             themeList.TextColor = color
         elseif prope == "ElementColor" then
             themeList.ElementColor = color
+        end
+    end
+
+        -- 🔥 ADD THIS RIGHT HERE
+    function Kavo:SetTheme(themeName)
+        if themeStyles[themeName] then
+            for k,v in pairs(themeStyles[themeName]) do
+                themeList[k] = v
+            end
         end
     end
     local Tabs = {}
@@ -1473,224 +1460,223 @@ function Kavo.CreateLib(kavName, themeList)
             end
 
 
-function Elements:NewDropdown(dropname, dropinf, list, callback, multi)
-    local DropFunction = {}
-    dropname = dropname or "Dropdown"
-    list = list or {}
-    dropinf = dropinf or "Dropdown Info"
-    callback = callback or function() end
-    multi = multi or false -- false = single select, true = multi select
+            function Elements:NewDropdown(dropname, dropinf, list, callback, multi)
+                local DropFunction = {}
+                dropname = dropname or "Dropdown"
+                list = list or {}
+                dropinf = dropinf or "Dropdown Info"
+                callback = callback or function() end
+                multi = multi or false -- false = single select, true = multi select
 
-    local opened = false
-    local selectedItems = {}
-    local selectedSingle = nil
+                local opened = false
+                local selectedItems = {}
+                local selectedSingle = nil
 
-    -- Instances
-    local dropFrame = Instance.new("Frame")
-    local dropOpen = Instance.new("TextButton")
-    local listImg = Instance.new("ImageLabel")
-    local itemTextbox = Instance.new("TextLabel")
-    local viewInfo = Instance.new("ImageButton")
-    local UIListLayout = Instance.new("UIListLayout")
-    local UICorner = Instance.new("UICorner")
+                -- Instances
+                local dropFrame = Instance.new("Frame")
+                local dropOpen = Instance.new("TextButton")
+                local listImg = Instance.new("ImageLabel")
+                local itemTextbox = Instance.new("TextLabel")
+                local viewInfo = Instance.new("ImageButton")
+                local UIListLayout = Instance.new("UIListLayout")
+                local UICorner = Instance.new("UICorner")
 
-    -- Main frame
-    dropFrame.Parent = sectionInners
-    dropFrame.BackgroundColor3 = themeList.Background
-    dropFrame.BorderSizePixel = 0
-    dropFrame.Size = UDim2.new(0,352,0,33)
-    dropFrame.ClipsDescendants = true
+                -- Main frame
+                dropFrame.Parent = sectionInners
+                dropFrame.BackgroundColor3 = themeList.Background
+                dropFrame.BorderSizePixel = 0
+                dropFrame.Size = UDim2.new(0,352,0,33)
+                dropFrame.ClipsDescendants = true
 
-    -- Main button
-    dropOpen.Parent = dropFrame
-    dropOpen.BackgroundColor3 = themeList.ElementColor
-    dropOpen.Size = UDim2.new(0,352,0,33)
-    dropOpen.Text = ""
-    dropOpen.AutoButtonColor = false
-    dropOpen.ClipsDescendants = true
+                -- Main button
+                dropOpen.Parent = dropFrame
+                dropOpen.BackgroundColor3 = themeList.ElementColor
+                dropOpen.Size = UDim2.new(0,352,0,33)
+                dropOpen.Text = ""
+                dropOpen.AutoButtonColor = false
+                dropOpen.ClipsDescendants = true
 
-    UICorner.CornerRadius = UDim.new(0,4)
-    UICorner.Parent = dropOpen
+                UICorner.CornerRadius = UDim.new(0,4)
+                UICorner.Parent = dropOpen
 
-    -- Left icon
-    listImg.Parent = dropOpen
-    listImg.BackgroundTransparency = 1
-    listImg.Position = UDim2.new(0.02,0,0.18,0)
-    listImg.Size = UDim2.new(0,21,0,21)
-    listImg.Image = "rbxassetid://3926305904"
-    listImg.ImageColor3 = themeList.SchemeColor
-    listImg.ImageRectOffset = Vector2.new(644,364)
-    listImg.ImageRectSize = Vector2.new(36,36)
+                -- Left icon
+                listImg.Parent = dropOpen
+                listImg.BackgroundTransparency = 1
+                listImg.Position = UDim2.new(0.02,0,0.18,0)
+                listImg.Size = UDim2.new(0,21,0,21)
+                listImg.Image = "rbxassetid://3926305904"
+                listImg.ImageColor3 = themeList.SchemeColor
+                listImg.ImageRectOffset = Vector2.new(644,364)
+                listImg.ImageRectSize = Vector2.new(36,36)
 
-    -- Text
-    itemTextbox.Parent = dropOpen
-    itemTextbox.BackgroundTransparency = 1
-    itemTextbox.Position = UDim2.new(0.097,0,0.273,0)
-    itemTextbox.Size = UDim2.new(0,220,0,14)
-    itemTextbox.Font = Enum.Font.GothamSemibold
-    itemTextbox.Text = dropname
-    itemTextbox.TextColor3 = themeList.TextColor
-    itemTextbox.TextSize = 14
-    itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
+                -- Text
+                itemTextbox.Parent = dropOpen
+                itemTextbox.BackgroundTransparency = 1
+                itemTextbox.Position = UDim2.new(0.097,0,0.273,0)
+                itemTextbox.Size = UDim2.new(0,220,0,14)
+                itemTextbox.Font = Enum.Font.GothamSemibold
+                itemTextbox.Text = dropname
+                itemTextbox.TextColor3 = themeList.TextColor
+                itemTextbox.TextSize = 14
+                itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- 3 dots button
-    viewInfo.Parent = dropOpen
-    viewInfo.BackgroundTransparency = 1
-    viewInfo.Position = UDim2.new(0.93,0,0.15,0)
-    viewInfo.Size = UDim2.new(0,23,0,23)
-    viewInfo.Image = "rbxassetid://3926305904"
-    viewInfo.ImageColor3 = themeList.SchemeColor
-    viewInfo.ImageRectOffset = Vector2.new(764,764)
-    viewInfo.ImageRectSize = Vector2.new(36,36)
+                -- 3 dots button
+                viewInfo.Parent = dropOpen
+                viewInfo.BackgroundTransparency = 1
+                viewInfo.Position = UDim2.new(0.93,0,0.15,0)
+                viewInfo.Size = UDim2.new(0,23,0,23)
+                viewInfo.Image = "rbxassetid://3926305904"
+                viewInfo.ImageColor3 = themeList.SchemeColor
+                viewInfo.ImageRectOffset = Vector2.new(764,764)
+                viewInfo.ImageRectSize = Vector2.new(36,36)
 
-    -- Info popup
-    local moreInfo = Instance.new("TextLabel")
-    local infoCorner = Instance.new("UICorner")
+                -- Info popup
+                local moreInfo = Instance.new("TextLabel")
+                local infoCorner = Instance.new("UICorner")
 
-    moreInfo.Parent = infoContainer
-    moreInfo.BackgroundColor3 = themeList.SchemeColor
-    moreInfo.Position = UDim2.new(0,0,2,0)
-    moreInfo.Size = UDim2.new(0,353,0,33)
-    moreInfo.ZIndex = 9
-    moreInfo.Font = Enum.Font.GothamSemibold
-    moreInfo.Text = "  "..dropinf
-    moreInfo.TextColor3 = themeList.TextColor
-    moreInfo.TextSize = 14
-    moreInfo.TextXAlignment = Enum.TextXAlignment.Left
+                moreInfo.Parent = infoContainer
+                moreInfo.BackgroundColor3 = themeList.SchemeColor
+                moreInfo.Position = UDim2.new(0,0,2,0)
+                moreInfo.Size = UDim2.new(0,353,0,33)
+                moreInfo.ZIndex = 9
+                moreInfo.Font = Enum.Font.GothamSemibold
+                moreInfo.Text = "  "..dropinf
+                moreInfo.TextColor3 = themeList.TextColor
+                moreInfo.TextSize = 14
+                moreInfo.TextXAlignment = Enum.TextXAlignment.Left
 
-    infoCorner.CornerRadius = UDim.new(0,4)
-    infoCorner.Parent = moreInfo
+                infoCorner.CornerRadius = UDim.new(0,4)
+                infoCorner.Parent = moreInfo
 
-    -- 3 Dots functionality (uses shared focusing/viewDe)
-    viewInfo.MouseButton1Click:Connect(function()
-        if not viewDe then
-            viewDe = true
-            focusing = true
+                -- 3 Dots functionality (uses shared focusing/viewDe)
+                viewInfo.MouseButton1Click:Connect(function()
+                    if not viewDe then
+                        viewDe = true
+                        focusing = true
 
-            for _,v in next, infoContainer:GetChildren() do
-                if v ~= moreInfo then
-                    Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
-                end
-            end
+                        for _,v in next, infoContainer:GetChildren() do
+                            if v ~= moreInfo then
+                                Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
+                            end
+                        end
 
-            Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,0,0)}, 0.2)
-            Utility:TweenObject(blurFrame, {BackgroundTransparency = 0.5}, 0.2)
+                        Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,0,0)}, 0.2)
+                        Utility:TweenObject(blurFrame, {BackgroundTransparency = 0.5}, 0.2)
 
-            wait(1.5)
+                        wait(1.5)
 
-            focusing = false
-            Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,2,0)}, 0.2)
-            Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
+                        focusing = false
+                        Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,2,0)}, 0.2)
+                        Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
 
-            viewDe = false
-        end
-    end)
-
-    -- Layout
-    UIListLayout.Parent = dropFrame
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0,3)
-
-    -- Open / Close
-    dropOpen.MouseButton1Click:Connect(function()
-        if not focusing then
-            opened = not opened
-
-            if opened then
-                dropFrame:TweenSize(
-                    UDim2.new(0,352,0,UIListLayout.AbsoluteContentSize.Y),
-                    "InOut","Linear",0.08,true
-                )
-            else
-                dropFrame:TweenSize(
-                    UDim2.new(0,352,0,33),
-                    "InOut","Linear",0.08,true
-                )
-            end
-
-            wait(0.1)
-            updateSectionFrame()
-            UpdateSize()
-        end
-    end)
-
-    -- Options
-    for _,v in ipairs(list) do
-        local option = Instance.new("TextButton")
-        local optCorner = Instance.new("UICorner")
-
-        option.Parent = dropFrame
-        option.BackgroundColor3 = themeList.ElementColor
-        option.Size = UDim2.new(0,352,0,33)
-        option.AutoButtonColor = false
-        option.Font = Enum.Font.GothamSemibold
-        option.Text = "  "..v
-        option.TextColor3 = themeList.TextColor
-        option.TextSize = 14
-        option.TextXAlignment = Enum.TextXAlignment.Left
-
-        optCorner.CornerRadius = UDim.new(0,4)
-        optCorner.Parent = option
-
-        option.MouseButton1Click:Connect(function()
-            if focusing then return end
-
-            if multi then
-                -- MULTI SELECT
-                if selectedItems[v] then
-                    selectedItems[v] = nil
-                    option.BackgroundColor3 = themeList.ElementColor
-                else
-                    selectedItems[v] = true
-                    option.BackgroundColor3 = themeList.SchemeColor
-                end
-
-                local selectedList = {}
-                for k,_ in pairs(selectedItems) do
-                    table.insert(selectedList, k)
-                end
-
-                if #selectedList > 0 then
-                    itemTextbox.Text = table.concat(selectedList,", ")
-                else
-                    itemTextbox.Text = dropname
-                end
-
-                callback(selectedList)
-
-            else
-                -- SINGLE SELECT (Original behavior)
-                selectedSingle = v
-
-                for _,child in pairs(dropFrame:GetChildren()) do
-                    if child:IsA("TextButton") and child ~= dropOpen then
-                        child.BackgroundColor3 = themeList.ElementColor
+                        viewDe = false
                     end
+                end)
+
+                -- Layout
+                UIListLayout.Parent = dropFrame
+                UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                UIListLayout.Padding = UDim.new(0,3)
+
+                -- Open / Close
+                dropOpen.MouseButton1Click:Connect(function()
+                    if not focusing then
+                        opened = not opened
+
+                        if opened then
+                            dropFrame:TweenSize(
+                                UDim2.new(0,352,0,UIListLayout.AbsoluteContentSize.Y),
+                                "InOut","Linear",0.08,true
+                            )
+                        else
+                            dropFrame:TweenSize(
+                                UDim2.new(0,352,0,33),
+                                "InOut","Linear",0.08,true
+                            )
+                        end
+
+                        wait(0.1)
+                        updateSectionFrame()
+                        UpdateSize()
+                    end
+                end)
+
+                -- Options
+                for _,v in ipairs(list) do
+                    local option = Instance.new("TextButton")
+                    local optCorner = Instance.new("UICorner")
+
+                    option.Parent = dropFrame
+                    option.BackgroundColor3 = themeList.ElementColor
+                    option.Size = UDim2.new(0,352,0,33)
+                    option.AutoButtonColor = false
+                    option.Font = Enum.Font.GothamSemibold
+                    option.Text = "  "..v
+                    option.TextColor3 = themeList.TextColor
+                    option.TextSize = 14
+                    option.TextXAlignment = Enum.TextXAlignment.Left
+
+                    optCorner.CornerRadius = UDim.new(0,4)
+                    optCorner.Parent = option
+
+                    option.MouseButton1Click:Connect(function()
+                        if focusing then return end
+
+                        if multi then
+                            -- MULTI SELECT
+                            if selectedItems[v] then
+                                selectedItems[v] = nil
+                                option.BackgroundColor3 = themeList.ElementColor
+                            else
+                                selectedItems[v] = true
+                                option.BackgroundColor3 = themeList.SchemeColor
+                            end
+
+                            local selectedList = {}
+                            for k,_ in pairs(selectedItems) do
+                                table.insert(selectedList, k)
+                            end
+
+                            if #selectedList > 0 then
+                                itemTextbox.Text = table.concat(selectedList,", ")
+                            else
+                                itemTextbox.Text = dropname
+                            end
+
+                            callback(selectedList)
+
+                        else
+                            -- SINGLE SELECT (Original behavior)
+                            selectedSingle = v
+
+                            for _,child in pairs(dropFrame:GetChildren()) do
+                                if child:IsA("TextButton") and child ~= dropOpen then
+                                    child.BackgroundColor3 = themeList.ElementColor
+                                end
+                            end
+
+                            option.BackgroundColor3 = themeList.SchemeColor
+                            itemTextbox.Text = v
+                            callback(v)
+
+                            opened = false
+                            dropFrame:TweenSize(
+                                UDim2.new(0,352,0,33),
+                                "InOut","Linear",0.08,true
+                            )
+
+                            wait(0.1)
+                            updateSectionFrame()
+                            UpdateSize()
+                        end
+                    end)
                 end
 
-                option.BackgroundColor3 = themeList.SchemeColor
-                itemTextbox.Text = v
-                callback(v)
-
-                opened = false
-                dropFrame:TweenSize(
-                    UDim2.new(0,352,0,33),
-                    "InOut","Linear",0.08,true
-                )
-
-                wait(0.1)
                 updateSectionFrame()
                 UpdateSize()
+
+                return DropFunction
             end
-        end)
-    end
-
-    updateSectionFrame()
-    UpdateSize()
-
-    return DropFunction
-end
-
             
             function Elements:NewKeybind(keytext, keyinf, first, callback)
                 keytext = keytext or "KeybindText"
