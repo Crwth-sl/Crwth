@@ -2387,16 +2387,31 @@ function Kavo.CreateLib(kavName, themeList)
             function Elements:NewLabel(text)
                 text = text or "Label"
 
-                local label = Instance.new("TextLabel")
+                local labelFrame = Instance.new("Frame")
+                local labelText = Instance.new("TextLabel")
+                local UICorner = Instance.new("UICorner")
 
-                label.Parent = sectionInners
-                label.BackgroundTransparency = 1
-                label.Size = UDim2.new(0, 352, 0, 20)
-                label.Font = Enum.Font.Gotham
-                label.Text = text
-                label.TextColor3 = themeList.TextColor
-                label.TextSize = 13
-                label.TextXAlignment = Enum.TextXAlignment.Left
+                labelFrame.Parent = sectionInners
+                labelFrame.BackgroundColor3 = Color3.fromRGB(
+                    themeList.ElementColor.R * 255 - 6,
+                    themeList.ElementColor.G * 255 - 6,
+                    themeList.ElementColor.B * 255 - 6
+                )
+                labelFrame.Size = UDim2.new(0, 352, 0, 26)
+                labelFrame.BorderSizePixel = 0
+
+                UICorner.CornerRadius = UDim.new(0,4)
+                UICorner.Parent = labelFrame
+
+                labelText.Parent = labelFrame
+                labelText.BackgroundTransparency = 1
+                labelText.Size = UDim2.new(1, -10, 1, 0)
+                labelText.Position = UDim2.new(0, 10, 0, 0)
+                labelText.Font = Enum.Font.Gotham
+                labelText.Text = text
+                labelText.TextColor3 = themeList.TextColor
+                labelText.TextSize = 13
+                labelText.TextXAlignment = Enum.TextXAlignment.Left
 
                 updateSectionFrame()
                 UpdateSize()
@@ -2404,12 +2419,17 @@ function Kavo.CreateLib(kavName, themeList)
                 local LabelFunction = {}
 
                 function LabelFunction:UpdateLabel(newText)
-                    label.Text = newText
+                    labelText.Text = newText
                 end
 
                 coroutine.wrap(function()
                     while task.wait() do
-                        label.TextColor3 = themeList.TextColor
+                        labelFrame.BackgroundColor3 = Color3.fromRGB(
+                            themeList.ElementColor.R * 255 - 6,
+                            themeList.ElementColor.G * 255 - 6,
+                            themeList.ElementColor.B * 255 - 6
+                        )
+                        labelText.TextColor3 = themeList.TextColor
                     end
                 end)()
 
