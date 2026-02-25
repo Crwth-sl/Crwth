@@ -2384,47 +2384,7 @@ function Kavo.CreateLib(kavName, themeList)
                 setcolor({h,s,v})
             end
             
-            function Elements:NewLabel(title)
-                local labelFunctions = {}
-                local label = Instance.new("TextLabel")
-                local UICorner = Instance.new("UICorner")
-
-                label.Name = "label"
-                label.Parent = sectionInners
-                label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.1)
-                label.BorderSizePixel = 0
-                label.ClipsDescendants = true
-                label.Size = UDim2.new(0, 352, 0, 33)
-
-                label.Font = Enum.Font.Gotham
-                label.Text = "  "..title
-                label.RichText = true
-                label.TextColor3 = themeList.TextColor
-                label.TextSize = 14
-                label.TextXAlignment = Enum.TextXAlignment.Left
-
-                UICorner.CornerRadius = UDim.new(0, 4)
-                UICorner.Parent = label
-
-                -- Theme updater (stable)
-                coroutine.wrap(function()
-                    while task.wait() do
-                        label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.1)
-                        label.TextColor3 = themeList.TextColor
-                    end
-                end)()
-
-                updateSectionFrame()
-                UpdateSize()
-
-                function labelFunctions:UpdateLabel(newText)
-                    if label.Text ~= "  "..newText then
-                        label.Text = "  "..newText
-                    end
-                end    
-
-                return labelFunctions
-            end
+            Objects[label] = "TextColor3"
             return Elements
         end
         return Sections
