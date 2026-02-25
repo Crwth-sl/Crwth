@@ -1,0 +1,231 @@
+local Library = {}
+Library.__index = Library
+
+--// Services
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+
+--// Theme
+local Theme = {
+    Background = Color3.fromRGB(24,24,24),
+    Section = Color3.fromRGB(32,32,32),
+    Accent = Color3.fromRGB(0,170,255),
+    Text = Color3.fromRGB(255,255,255),
+    SubText = Color3.fromRGB(180,180,180)
+}
+
+--// Create Window
+function Library:CreateWindow(title)
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "CustomUILibrary"
+    ScreenGui.Parent = game.CoreGui
+
+    local Main = Instance.new("Frame", ScreenGui)
+    Main.Size = UDim2.new(0, 520, 0, 420)
+    Main.Position = UDim2.new(0.5, -260, 0.5, -210)
+    Main.BackgroundColor3 = Theme.Background
+    Main.BorderSizePixel = 0
+
+    Instance.new("UICorner", Main).CornerRadius = UDim.new(0,10)
+
+    -- Drag
+    local dragging, dragInput, dragStart, startPos
+
+    Main.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+        end
+    end)
+
+    Main.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    -- Title
+    local Title = Instance.new("TextLabel", Main)
+    Title.Size = UDim2.new(1,0,0,40)
+    Title.BackgroundTransparency = 1
+    Title.Text = title
+    Title.TextColor3 = Theme.Text
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 18
+
+    local Container = Instance.new("ScrollingFrame", Main)
+    Container.Position = UDim2.new(0,0,0,40)
+    Container.Size = UDim2.new(1,0,1,-40)
+    Container.CanvasSize = UDim2.new(0,0,0,0)
+    Container.ScrollBarThickness = 4
+    Container.BackgroundTransparency = 1
+
+    local Layout = Instance.new("UIListLayout", Container)
+    Layout.Padding = UDim.new(0,10)
+
+    Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Container.CanvasSize = UDim2.new(0,0,0,Layout.AbsoluteContentSize.Y + 10)
+    end)
+
+    local Window = {}
+
+    function Window:CreateSection(sectionTitle)
+
+        local SectionFrame = Instance.new("Frame", Container)
+        SectionFrame.Size = UDim2.new(1,-20,0,0)
+        SectionFrame.BackgroundColor3 = Theme.Section
+        SectionFrame.BorderSizePixel = 0
+        SectionFrame.AutomaticSize = Enum.AutomaticSize.Y
+
+        Instance.new("UICorner", SectionFrame).CornerRadius = UDim.new(0,8)
+
+        local Padding = Instance.new("UIPadding", SectionFrame)
+        Padding.PaddingTop = UDim.new(0,10)
+        Padding.PaddingBottom = UDim.new(0,10)
+        Padding.PaddingLeft = UDim.new(0,10)
+        Padding.PaddingRight = UDim.new(0,10)
+
+        local SectionLayout = Instance.new("UIListLayout", SectionFrame)
+        SectionLayout.Padding = UDim.new(0,8)
+
+        local Label = Instance.new("TextLabel", SectionFrame)
+        Label.Text = sectionTitle
+        Label.Size = UDim2.new(1,0,0,20)
+        Label.BackgroundTransparency = 1
+        Label.TextColor3 = Theme.Text
+        Label.Font = Enum.Font.GothamBold
+        Label.TextSize = 14
+        Label.TextXAlignment = Enum.TextXAlignment.Left
+
+        local Section = {}
+
+        -- Multi / Single Dropdown
+        function Section:CreateDropdown(config)
+
+            local Title = config.Title or "Dropdown"
+            local Options = config.Options or {}
+            local Multi = config.Multi or false
+            local Default = config.Default or {}
+            local Callback = config.Callback or function() end
+
+            local Selected = {}
+
+            if Multi and type(Default) == "table" then
+                for _,v in pairs(Default) do
+                    Selected[v] = true
+                end
+            end
+
+            local Holder = Instance.new("Frame", SectionFrame)
+            Holder.Size = UDim2.new(1,0,0,30)
+            Holder.BackgroundColor3 = Theme.Background
+            Holder.BorderSizePixel = 0
+            Holder.AutomaticSize = Enum.AutomaticSize.Y
+
+            Instance.new("UICorner", Holder).CornerRadius = UDim.new(0,6)
+
+            local Button = Instance.new("TextButton", Holder)
+            Button.Size = UDim2.new(1,0,0,30)
+            Button.BackgroundTransparency = 1
+            Button.TextColor3 = Theme.Text
+            Button.Font = Enum.Font.Gotham
+            Button.TextSize = 14
+            Button.Text = Title
+
+            local DropFrame = Instance.new("Frame", Holder)
+            DropFrame.Position = UDim2.new(0,0,0,30)
+            DropFrame.Size = UDim2.new(1,0,0,0)
+            DropFrame.ClipsDescendants = true
+            DropFrame.BackgroundTransparency = 1
+
+            local DropLayout = Instance.new("UIListLayout", DropFrame)
+
+            local Open = false
+
+            local function UpdateText()
+                local List = {}
+                for k,_ in pairs(Selected) do
+                    table.insert(List,k)
+                end
+                if #List > 0 then
+                    Button.Text = table.concat(List,", ")
+                else
+                    Button.Text = Title
+                end
+            end
+
+            Button.MouseButton1Click:Connect(function()
+                Open = not Open
+                DropFrame.Size = Open and UDim2.new(1,0,0,#Options*26)
+                    or UDim2.new(1,0,0,0)
+            end)
+
+            for _,option in pairs(Options) do
+
+                local Opt = Instance.new("TextButton", DropFrame)
+                Opt.Size = UDim2.new(1,0,0,25)
+                Opt.Text = option
+                Opt.BackgroundColor3 = Theme.Section
+                Opt.TextColor3 = Theme.Text
+                Opt.Font = Enum.Font.Gotham
+                Opt.TextSize = 13
+
+                Opt.MouseButton1Click:Connect(function()
+
+                    if Multi then
+                        if Selected[option] then
+                            Selected[option] = nil
+                            Opt.BackgroundColor3 = Theme.Section
+                        else
+                            Selected[option] = true
+                            Opt.BackgroundColor3 = Theme.Accent
+                        end
+                    else
+                        Selected = {[option] = true}
+                        Callback(option)
+                        DropFrame.Size = UDim2.new(1,0,0,0)
+                        UpdateText()
+                        return
+                    end
+
+                    UpdateText()
+
+                    local ReturnTable = {}
+                    for k,_ in pairs(Selected) do
+                        table.insert(ReturnTable,k)
+                    end
+
+                    Callback(ReturnTable)
+                end)
+            end
+
+            UpdateText()
+        end
+
+        return Section
+    end
+
+    return Window
+end
+
+return Library
