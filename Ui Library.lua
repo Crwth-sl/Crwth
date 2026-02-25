@@ -1475,7 +1475,6 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     callback = callback or function() end   
 
     local opened = false
-    local DropYSize = 33
     local selectedItems = {}
 
     local dropFrame = Instance.new("Frame")
@@ -1487,12 +1486,9 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     local UIListLayout = Instance.new("UIListLayout")
     local Sample = Instance.new("ImageLabel")
 
-    local focusing = false
-    local viewDe = false
-
     local ms = game.Players.LocalPlayer:GetMouse()
 
-    -- Main container
+    -- Frame
     dropFrame.Name = "dropFrame"
     dropFrame.Parent = sectionInners
     dropFrame.BackgroundColor3 = themeList.Background
@@ -1500,8 +1496,7 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     dropFrame.Size = UDim2.new(0, 352, 0, 33)
     dropFrame.ClipsDescendants = true
 
-    -- Main button
-    dropOpen.Name = "dropOpen"
+    -- Main Button
     dropOpen.Parent = dropFrame
     dropOpen.BackgroundColor3 = themeList.ElementColor
     dropOpen.Size = UDim2.new(0, 352, 0, 33)
@@ -1513,14 +1508,13 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     UICorner.Parent = dropOpen
 
     -- Ripple
-    Sample.Name = "Sample"
     Sample.Parent = dropOpen
     Sample.BackgroundTransparency = 1
     Sample.Image = "http://www.roblox.com/asset/?id=4560909609"
     Sample.ImageColor3 = themeList.SchemeColor
     Sample.ImageTransparency = 0.6
 
-    -- Icon
+    -- Left icon
     listImg.Parent = dropOpen
     listImg.BackgroundTransparency = 1
     listImg.Position = UDim2.new(0.02,0,0.18,0)
@@ -1541,7 +1535,7 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     itemTextbox.TextSize = 14
     itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- 3 dots button
+    -- 3 Dots
     viewInfo.Parent = dropOpen
     viewInfo.BackgroundTransparency = 1
     viewInfo.Position = UDim2.new(0.93,0,0.15,0)
@@ -1551,16 +1545,10 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     viewInfo.ImageRectOffset = Vector2.new(764,764)
     viewInfo.ImageRectSize = Vector2.new(36,36)
 
-    -- Layout
-    UIListLayout.Parent = dropFrame
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0,3)
-
     -- Info popup
     local moreInfo = Instance.new("TextLabel")
     local infoCorner = Instance.new("UICorner")
 
-    moreInfo.Name = "TipMore"
     moreInfo.Parent = infoContainer
     moreInfo.BackgroundColor3 = Color3.fromRGB(
         themeList.SchemeColor.r * 255 - 14,
@@ -1579,7 +1567,7 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     infoCorner.CornerRadius = UDim.new(0,4)
     infoCorner.Parent = moreInfo
 
-    -- 3 dots functionality
+    -- 3 Dots functionality (USES SHARED focusing + viewDe)
     viewInfo.MouseButton1Click:Connect(function()
         if not viewDe then
             viewDe = true
@@ -1627,6 +1615,11 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
         end
     end)
 
+    -- Layout
+    UIListLayout.Parent = dropFrame
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0,3)
+
     -- Options
     for _,v in next, list do
         local optionSelect = Instance.new("TextButton")
@@ -1641,14 +1634,12 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
         optionSelect.TextColor3 = themeList.TextColor
         optionSelect.TextSize = 14
         optionSelect.TextXAlignment = Enum.TextXAlignment.Left
-        optionSelect.ClipsDescendants = true
 
         optCorner.CornerRadius = UDim.new(0,4)
         optCorner.Parent = optionSelect
 
         optionSelect.MouseButton1Click:Connect(function()
             if not focusing then
-
                 if selectedItems[v] then
                     selectedItems[v] = nil
                     optionSelect.BackgroundColor3 = themeList.ElementColor
