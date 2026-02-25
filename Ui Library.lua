@@ -2391,10 +2391,7 @@ function Kavo.CreateLib(kavName, themeList)
 
                 label.Name = "label"
                 label.Parent = sectionInners
-
-                -- 🔥 Slightly softer than section
-                label.BackgroundColor3 = themeList.Header:Lerp(themeList.Background, 0.8)
-
+                label.BackgroundColor3 = themeList.SchemeColor
                 label.BorderSizePixel = 0
                 label.ClipsDescendants = true
                 label.Size = UDim2.new(0, 352, 0, 33)
@@ -2409,9 +2406,16 @@ function Kavo.CreateLib(kavName, themeList)
                 UICorner.CornerRadius = UDim.new(0, 4)
                 UICorner.Parent = label
 
+                if themeList.SchemeColor == Color3.fromRGB(255,255,255) then
+                    Utility:TweenObject(label, {TextColor3 = Color3.fromRGB(0,0,0)}, 0.2)
+                end 
+                if themeList.SchemeColor == Color3.fromRGB(0,0,0) then
+                    Utility:TweenObject(label, {TextColor3 = Color3.fromRGB(255,255,255)}, 0.2)
+                end 
+
                 coroutine.wrap(function()
-                    while task.wait() do
-                        label.BackgroundColor3 = themeList.Header:Lerp(themeList.Background, 0.8)
+                    while wait() do
+                        label.BackgroundColor3 = themeList.SchemeColor
                         label.TextColor3 = themeList.TextColor
                     end
                 end)()
