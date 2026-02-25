@@ -1,6 +1,3 @@
---// to the 2 peoplee who are constantly watching this repo, get a life yall weird.
---// to the people who are still forking this unoptimized garbage, if you want a custom optimized rewrite for $, hmu on discord: federal6768 or federal.
-
 local Kavo = {}
 
 local tween = game:GetService("TweenService")
@@ -14,7 +11,6 @@ function Kavo:DraggingEnabled(frame, parent)
         
     parent = parent or frame
     
-    -- stolen from wally or kiriot, kek
     local dragging = false
     local dragInput, mousePos, framePos
 
@@ -355,7 +351,6 @@ function Kavo.CreateLib(kavName, themeList)
         end
     end
 
-        -- 🔥 ADD THIS RIGHT HERE
     function Kavo:SetTheme(themeName)
         if themeStyles[themeName] then
             for k,v in pairs(themeStyles[themeName]) do
@@ -488,7 +483,7 @@ function Kavo.CreateLib(kavName, themeList)
 
             sectionFrame.Name = "sectionFrame"
             sectionFrame.Parent = page
-            sectionFrame.BackgroundColor3 = themeList.Background--36, 37, 43
+            sectionFrame.BackgroundColor3 = themeList.Background
             sectionFrame.BorderSizePixel = 0
             
             sectionlistoknvm.Name = "sectionlistoknvm"
@@ -931,9 +926,8 @@ function Kavo.CreateLib(kavName, themeList)
                     if typed ~= "" then
                         callback(typed)
 
-                        -- 🔥 This is the key part:
                         TextBox.PlaceholderText = typed
-                        TextBox.Text = "" -- clear the typing field
+                        TextBox.Text = ""
                     end
                 end)
 
@@ -1481,11 +1475,6 @@ function Kavo.CreateLib(kavName, themeList)
                 local selectedItems = {}
                 local selectedSingle = nil
                 local optionButtons = {}
-
-                --------------------------------------------------
-                -- Instances
-                --------------------------------------------------
-
                 local dropFrame = Instance.new("Frame")
                 local dropOpen = Instance.new("TextButton")
                 local listImg = Instance.new("ImageLabel")
@@ -1510,7 +1499,6 @@ function Kavo.CreateLib(kavName, themeList)
                 UICorner.CornerRadius = UDim.new(0,4)
                 UICorner.Parent = dropOpen
 
-                -- Left icon
                 listImg.Parent = dropOpen
                 listImg.BackgroundTransparency = 1
                 listImg.Position = UDim2.new(0.02,0,0.18,0)
@@ -1519,7 +1507,6 @@ function Kavo.CreateLib(kavName, themeList)
                 listImg.ImageRectOffset = Vector2.new(644,364)
                 listImg.ImageRectSize = Vector2.new(36,36)
 
-                -- Text
                 itemTextbox.Parent = dropOpen
                 itemTextbox.BackgroundTransparency = 1
                 itemTextbox.Position = UDim2.new(0.097,0,0.273,0)
@@ -1529,7 +1516,6 @@ function Kavo.CreateLib(kavName, themeList)
                 itemTextbox.TextSize = 14
                 itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
 
-                -- 3 dots
                 viewInfo.Parent = dropOpen
                 viewInfo.BackgroundTransparency = 1
                 viewInfo.Position = UDim2.new(0.93,0,0.15,0)
@@ -1538,7 +1524,6 @@ function Kavo.CreateLib(kavName, themeList)
                 viewInfo.ImageRectOffset = Vector2.new(764,764)
                 viewInfo.ImageRectSize = Vector2.new(36,36)
 
-                -- Info popup
                 local moreInfo = Instance.new("TextLabel")
                 local infoCorner = Instance.new("UICorner")
 
@@ -1582,10 +1567,6 @@ function Kavo.CreateLib(kavName, themeList)
                 UIListLayout.Parent = dropFrame
                 UIListLayout.Padding = UDim.new(0,3)
 
-                --------------------------------------------------
-                -- OPEN / CLOSE
-                --------------------------------------------------
-
                 dropOpen.MouseButton1Click:Connect(function()
                     if focusing then return end
 
@@ -1608,26 +1589,19 @@ function Kavo.CreateLib(kavName, themeList)
                     UpdateSize()
                 end)
 
-                --------------------------------------------------
-                -- CREATE OPTIONS (Rebuildable)
-                --------------------------------------------------
-
                 local function createOptions(optionList)
 
-                    -- Store previous selection
                     local oldSingle = selectedSingle
                     local oldMulti = {}
                     for k,_ in pairs(selectedItems) do
                         oldMulti[k] = true
                     end
 
-                    -- Destroy old buttons
                     for _, btn in pairs(optionButtons) do
                         btn:Destroy()
                     end
                     optionButtons = {}
 
-                    -- Reset text temporarily
                     itemTextbox.Text = dropname
 
                     for _,v in ipairs(optionList) do
@@ -1648,10 +1622,6 @@ function Kavo.CreateLib(kavName, themeList)
 
                         optionButtons[v] = option
 
-                        --------------------------------------------------
-                        -- RESTORE PREVIOUS SELECTION (KAVO BEHAVIOR)
-                        --------------------------------------------------
-
                         if multi then
                             if oldMulti[v] then
                                 selectedItems[v] = true
@@ -1664,10 +1634,6 @@ function Kavo.CreateLib(kavName, themeList)
                                 itemTextbox.Text = v
                             end
                         end
-
-                        --------------------------------------------------
-                        -- CLICK LOGIC
-                        --------------------------------------------------
 
                         option.MouseButton1Click:Connect(function()
                             if focusing then return end
@@ -1719,18 +1685,10 @@ function Kavo.CreateLib(kavName, themeList)
                     end
                 end
 
-                --------------------------------------------------
-                -- REFRESH SUPPORT
-                --------------------------------------------------
-
                 function DropFunction:Refresh(newList)
                     newList = newList or {}
                     createOptions(newList)
                 end
-
-                --------------------------------------------------
-                -- THEME UPDATER
-                --------------------------------------------------
 
                 coroutine.wrap(function()
                     while task.wait() do
@@ -2000,8 +1958,6 @@ function Kavo.CreateLib(kavName, themeList)
                 local toggleEnabled = Instance.new("ImageLabel")
                 local onrainbow = Instance.new("TextButton")
                 local togName_2 = Instance.new("TextLabel")
-
-                --Properties:
                 local Sample = Instance.new("ImageLabel")
                 Sample.Name = "Sample"
                 Sample.Parent = colorHeader
@@ -2346,7 +2302,7 @@ function Kavo.CreateLib(kavName, themeList)
                 local rainbow = false
                 local rainbowconnection
                 local counter = 0
-                --
+
                 local function zigzag(X) return math.acos(math.cos(X*math.pi))/math.pi end
                 counter = 0
                 local function mouseLocation()
@@ -2426,7 +2382,7 @@ function Kavo.CreateLib(kavName, themeList)
                 end
 
                 onrainbow.MouseButton1Click:Connect(togglerainbow)
-                --
+
                 mouse.Move:connect(cp)
                 rgb.MouseButton1Down:connect(function()colorpicker=true end)
                 dark.MouseButton1Down:connect(function()darknesss=true end)
@@ -2461,7 +2417,6 @@ function Kavo.CreateLib(kavName, themeList)
                 UICorner.CornerRadius = UDim.new(0, 4)
                 UICorner.Parent = label
 
-                -- Theme updater (stable)
                 coroutine.wrap(function()
                     while task.wait() do
                         label.BackgroundColor3 = themeList.SchemeColor:Lerp(themeList.Header, 0.6)
