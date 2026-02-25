@@ -1467,52 +1467,44 @@ function Kavo.CreateLib(kavName, themeList)
             end
 
 
-function Elements:NewDropdown(dropname, dropinf, list, callback)
+function Elements:NewDropdown(dropname, dropinf, list, callback, multi)
     local DropFunction = {}
     dropname = dropname or "Dropdown"
     list = list or {}
-    dropinf = dropinf or "Dropdown info"
-    callback = callback or function() end   
+    dropinf = dropinf or "Dropdown Info"
+    callback = callback or function() end
+    multi = multi or false -- false = single select, true = multi select
 
     local opened = false
     local selectedItems = {}
+    local selectedSingle = nil
 
+    -- Instances
     local dropFrame = Instance.new("Frame")
     local dropOpen = Instance.new("TextButton")
     local listImg = Instance.new("ImageLabel")
     local itemTextbox = Instance.new("TextLabel")
     local viewInfo = Instance.new("ImageButton")
-    local UICorner = Instance.new("UICorner")
     local UIListLayout = Instance.new("UIListLayout")
-    local Sample = Instance.new("ImageLabel")
+    local UICorner = Instance.new("UICorner")
 
-    local ms = game.Players.LocalPlayer:GetMouse()
-
-    -- Frame
-    dropFrame.Name = "dropFrame"
+    -- Main frame
     dropFrame.Parent = sectionInners
     dropFrame.BackgroundColor3 = themeList.Background
     dropFrame.BorderSizePixel = 0
-    dropFrame.Size = UDim2.new(0, 352, 0, 33)
+    dropFrame.Size = UDim2.new(0,352,0,33)
     dropFrame.ClipsDescendants = true
 
-    -- Main Button
+    -- Main button
     dropOpen.Parent = dropFrame
     dropOpen.BackgroundColor3 = themeList.ElementColor
-    dropOpen.Size = UDim2.new(0, 352, 0, 33)
-    dropOpen.AutoButtonColor = false
+    dropOpen.Size = UDim2.new(0,352,0,33)
     dropOpen.Text = ""
+    dropOpen.AutoButtonColor = false
     dropOpen.ClipsDescendants = true
 
     UICorner.CornerRadius = UDim.new(0,4)
     UICorner.Parent = dropOpen
-
-    -- Ripple
-    Sample.Parent = dropOpen
-    Sample.BackgroundTransparency = 1
-    Sample.Image = "http://www.roblox.com/asset/?id=4560909609"
-    Sample.ImageColor3 = themeList.SchemeColor
-    Sample.ImageTransparency = 0.6
 
     -- Left icon
     listImg.Parent = dropOpen
@@ -1524,7 +1516,7 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     listImg.ImageRectOffset = Vector2.new(644,364)
     listImg.ImageRectSize = Vector2.new(36,36)
 
-    -- Label
+    -- Text
     itemTextbox.Parent = dropOpen
     itemTextbox.BackgroundTransparency = 1
     itemTextbox.Position = UDim2.new(0.097,0,0.273,0)
@@ -1535,7 +1527,7 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     itemTextbox.TextSize = 14
     itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- 3 Dots
+    -- 3 dots button
     viewInfo.Parent = dropOpen
     viewInfo.BackgroundTransparency = 1
     viewInfo.Position = UDim2.new(0.93,0,0.15,0)
@@ -1550,11 +1542,7 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     local infoCorner = Instance.new("UICorner")
 
     moreInfo.Parent = infoContainer
-    moreInfo.BackgroundColor3 = Color3.fromRGB(
-        themeList.SchemeColor.r * 255 - 14,
-        themeList.SchemeColor.g * 255 - 17,
-        themeList.SchemeColor.b * 255 - 13
-    )
+    moreInfo.BackgroundColor3 = themeList.SchemeColor
     moreInfo.Position = UDim2.new(0,0,2,0)
     moreInfo.Size = UDim2.new(0,353,0,33)
     moreInfo.ZIndex = 9
@@ -1567,13 +1555,13 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
     infoCorner.CornerRadius = UDim.new(0,4)
     infoCorner.Parent = moreInfo
 
-    -- 3 Dots functionality (USES SHARED focusing + viewDe)
+    -- 3 Dots functionality (uses shared focusing/viewDe)
     viewInfo.MouseButton1Click:Connect(function()
         if not viewDe then
             viewDe = true
             focusing = true
 
-            for i,v in next, infoContainer:GetChildren() do
+            for _,v in next, infoContainer:GetChildren() do
                 if v ~= moreInfo then
                     Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
                 end
@@ -1591,6 +1579,11 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
             viewDe = false
         end
     end)
+
+    -- Layout
+    UIListLayout.Parent = dropFrame
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0,3)
 
     -- Open / Close
     dropOpen.MouseButton1Click:Connect(function()
@@ -1615,37 +1608,35 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
         end
     end)
 
-    -- Layout
-    UIListLayout.Parent = dropFrame
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0,3)
-
     -- Options
-    for _,v in next, list do
-        local optionSelect = Instance.new("TextButton")
+    for _,v in ipairs(list) do
+        local option = Instance.new("TextButton")
         local optCorner = Instance.new("UICorner")
 
-        optionSelect.Parent = dropFrame
-        optionSelect.BackgroundColor3 = themeList.ElementColor
-        optionSelect.Size = UDim2.new(0,352,0,33)
-        optionSelect.AutoButtonColor = false
-        optionSelect.Font = Enum.Font.GothamSemibold
-        optionSelect.Text = "  "..v
-        optionSelect.TextColor3 = themeList.TextColor
-        optionSelect.TextSize = 14
-        optionSelect.TextXAlignment = Enum.TextXAlignment.Left
+        option.Parent = dropFrame
+        option.BackgroundColor3 = themeList.ElementColor
+        option.Size = UDim2.new(0,352,0,33)
+        option.AutoButtonColor = false
+        option.Font = Enum.Font.GothamSemibold
+        option.Text = "  "..v
+        option.TextColor3 = themeList.TextColor
+        option.TextSize = 14
+        option.TextXAlignment = Enum.TextXAlignment.Left
 
         optCorner.CornerRadius = UDim.new(0,4)
-        optCorner.Parent = optionSelect
+        optCorner.Parent = option
 
-        optionSelect.MouseButton1Click:Connect(function()
-            if not focusing then
+        option.MouseButton1Click:Connect(function()
+            if focusing then return end
+
+            if multi then
+                -- MULTI SELECT
                 if selectedItems[v] then
                     selectedItems[v] = nil
-                    optionSelect.BackgroundColor3 = themeList.ElementColor
+                    option.BackgroundColor3 = themeList.ElementColor
                 else
                     selectedItems[v] = true
-                    optionSelect.BackgroundColor3 = themeList.SchemeColor
+                    option.BackgroundColor3 = themeList.SchemeColor
                 end
 
                 local selectedList = {}
@@ -1654,12 +1645,36 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
                 end
 
                 if #selectedList > 0 then
-                    itemTextbox.Text = table.concat(selectedList, ", ")
+                    itemTextbox.Text = table.concat(selectedList,", ")
                 else
                     itemTextbox.Text = dropname
                 end
 
                 callback(selectedList)
+
+            else
+                -- SINGLE SELECT (Original behavior)
+                selectedSingle = v
+
+                for _,child in pairs(dropFrame:GetChildren()) do
+                    if child:IsA("TextButton") and child ~= dropOpen then
+                        child.BackgroundColor3 = themeList.ElementColor
+                    end
+                end
+
+                option.BackgroundColor3 = themeList.SchemeColor
+                itemTextbox.Text = v
+                callback(v)
+
+                opened = false
+                dropFrame:TweenSize(
+                    UDim2.new(0,352,0,33),
+                    "InOut","Linear",0.08,true
+                )
+
+                wait(0.1)
+                updateSectionFrame()
+                UpdateSize()
             end
         end)
     end
@@ -1669,7 +1684,6 @@ function Elements:NewDropdown(dropname, dropinf, list, callback)
 
     return DropFunction
 end
-
 
             
             function Elements:NewKeybind(keytext, keyinf, first, callback)
