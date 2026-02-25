@@ -2391,7 +2391,7 @@ function Kavo.CreateLib(kavName, themeList)
 
                 label.Name = "label"
                 label.Parent = sectionInners
-                label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.1)
+                label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.5)
                 label.BorderSizePixel = 0
                 label.ClipsDescendants = true
                 label.Size = UDim2.new(0, 352, 0, 33)
@@ -2409,7 +2409,7 @@ function Kavo.CreateLib(kavName, themeList)
                 -- Theme updater (stable)
                 coroutine.wrap(function()
                     while task.wait() do
-                        label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.1)
+                        label.BackgroundColor3 = themeList.SchemeColor:Lerp(Color3.new(0,0,0), 0.5)
                         label.TextColor3 = themeList.TextColor
                     end
                 end)()
