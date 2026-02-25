@@ -293,9 +293,10 @@ function Library:CreateWindow(config)
                 local Default = config.Default or false
                 local Callback = config.Callback or function() end
 
+                Library._Registry = Library._Registry or {}
+
                 local Enabled = Default
 
-                -- Main Frame
                 local ToggleFrame = Instance.new("Frame")
                 ToggleFrame.Size = UDim2.new(1, 0, 0, 32)
                 ToggleFrame.BackgroundColor3 = Theme.Background
@@ -303,7 +304,6 @@ function Library:CreateWindow(config)
                 ToggleFrame.Parent = SectionFrame
                 Instance.new("UICorner", ToggleFrame).CornerRadius = UDim.new(0,6)
 
-                -- Label
                 local Label = Instance.new("TextLabel")
                 Label.Text = Title
                 Label.BackgroundTransparency = 1
@@ -315,7 +315,6 @@ function Library:CreateWindow(config)
                 Label.TextXAlignment = Enum.TextXAlignment.Left
                 Label.Parent = ToggleFrame
 
-                -- Indicator Circle
                 local Indicator = Instance.new("Frame")
                 Indicator.Size = UDim2.new(0, 20, 0, 20)
                 Indicator.Position = UDim2.new(1, -30, 0.5, -10)
@@ -324,7 +323,6 @@ function Library:CreateWindow(config)
                 Indicator.Parent = ToggleFrame
                 Instance.new("UICorner", Indicator).CornerRadius = UDim.new(1,0)
 
-                -- Toggle Logic
                 local function SetState(state)
                     Enabled = state
                     Tween(Indicator, 0.2, {
@@ -339,8 +337,8 @@ function Library:CreateWindow(config)
                     end
                 end)
 
-                -- Register For Config System
-                RegisterElement(Title, {
+                -- 🔥 DIRECT REGISTRY INSERT (NO LOCAL FUNCTION)
+                Library._Registry[Title] = {
                     Type = "Toggle",
                     Get = function()
                         return Enabled
@@ -348,10 +346,9 @@ function Library:CreateWindow(config)
                     Set = function(v)
                         SetState(v)
                     end
-                })
+                }
 
-                -- Fire Default State
-                Callback(Enabled)
+                SetState(Default)
             end
 
 
