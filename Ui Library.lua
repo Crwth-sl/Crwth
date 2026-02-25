@@ -936,9 +936,9 @@ function Kavo.CreateLib(kavName, themeList)
                     if typed ~= "" then
                         callback(typed)
 
-                        -- ✅ DO NOT CLEAR TEXT
-                        TextBox.Text = typed
+                        -- 🔥 This is the key part:
                         TextBox.PlaceholderText = typed
+                        TextBox.Text = "" -- clear the typing field
                     end
                 end)
 
