@@ -1614,12 +1614,20 @@ function Kavo.CreateLib(kavName, themeList)
 
                 local function createOptions(optionList)
 
+                    -- Store previous selection
+                    local oldSingle = selectedSingle
+                    local oldMulti = {}
+                    for k,_ in pairs(selectedItems) do
+                        oldMulti[k] = true
+                    end
+
+                    -- Destroy old buttons
                     for _, btn in pairs(optionButtons) do
                         btn:Destroy()
                     end
                     optionButtons = {}
-                    selectedItems = {}
-                    selectedSingle = nil
+
+                    -- Reset text temporarily
                     itemTextbox.Text = dropname
 
                     for _,v in ipairs(optionList) do
@@ -1639,6 +1647,27 @@ function Kavo.CreateLib(kavName, themeList)
                         optCorner.Parent = option
 
                         optionButtons[v] = option
+
+                        --------------------------------------------------
+                        -- RESTORE PREVIOUS SELECTION (KAVO BEHAVIOR)
+                        --------------------------------------------------
+
+                        if multi then
+                            if oldMulti[v] then
+                                selectedItems[v] = true
+                                option.BackgroundColor3 = themeList.SchemeColor
+                            end
+                        else
+                            if oldSingle == v then
+                                selectedSingle = v
+                                option.BackgroundColor3 = themeList.SchemeColor
+                                itemTextbox.Text = v
+                            end
+                        end
+
+                        --------------------------------------------------
+                        -- CLICK LOGIC
+                        --------------------------------------------------
 
                         option.MouseButton1Click:Connect(function()
                             if focusing then return end
