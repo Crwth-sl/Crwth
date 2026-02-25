@@ -2393,7 +2393,7 @@ function Kavo.CreateLib(kavName, themeList)
                 label.Parent = sectionInners
 
                 -- 🔥 Slightly softer than section
-                label.BackgroundColor3 = themeList.Header:Lerp(themeList.Background, 0.35)
+                label.BackgroundColor3 = themeList.Header:Lerp(themeList.Background, 0.2)
 
                 label.BorderSizePixel = 0
                 label.ClipsDescendants = true
@@ -2411,7 +2411,7 @@ function Kavo.CreateLib(kavName, themeList)
 
                 coroutine.wrap(function()
                     while task.wait() do
-                        label.BackgroundColor3 = themeList.Header:Lerp(themeList.Background, 0.35)
+                        label.BackgroundColor3 = themeList.Header:Lerp(themeList.Background, 0.2)
                         label.TextColor3 = themeList.TextColor
                     end
                 end)()
