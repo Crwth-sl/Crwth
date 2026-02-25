@@ -2391,14 +2391,11 @@ function Kavo.CreateLib(kavName, themeList)
                 local labelText = Instance.new("TextLabel")
                 local UICorner = Instance.new("UICorner")
 
+                labelFrame.Name = "Label"
                 labelFrame.Parent = sectionInners
-                labelFrame.BackgroundColor3 = Color3.fromRGB(
-                    themeList.ElementColor.R * 255 - 6,
-                    themeList.ElementColor.G * 255 - 6,
-                    themeList.ElementColor.B * 255 - 6
-                )
-                labelFrame.Size = UDim2.new(0, 352, 0, 26)
+                labelFrame.BackgroundColor3 = themeList.ElementColor
                 labelFrame.BorderSizePixel = 0
+                labelFrame.Size = UDim2.new(0, 352, 0, 33)
 
                 UICorner.CornerRadius = UDim.new(0,4)
                 UICorner.Parent = labelFrame
@@ -2407,10 +2404,10 @@ function Kavo.CreateLib(kavName, themeList)
                 labelText.BackgroundTransparency = 1
                 labelText.Size = UDim2.new(1, -10, 1, 0)
                 labelText.Position = UDim2.new(0, 10, 0, 0)
-                labelText.Font = Enum.Font.Gotham
+                labelText.Font = Enum.Font.GothamSemibold
                 labelText.Text = text
                 labelText.TextColor3 = themeList.TextColor
-                labelText.TextSize = 13
+                labelText.TextSize = 14
                 labelText.TextXAlignment = Enum.TextXAlignment.Left
 
                 updateSectionFrame()
@@ -2422,13 +2419,10 @@ function Kavo.CreateLib(kavName, themeList)
                     labelText.Text = newText
                 end
 
+                -- Theme updater loop (matches rest of UI system)
                 coroutine.wrap(function()
                     while task.wait() do
-                        labelFrame.BackgroundColor3 = Color3.fromRGB(
-                            themeList.ElementColor.R * 255 - 6,
-                            themeList.ElementColor.G * 255 - 6,
-                            themeList.ElementColor.B * 255 - 6
-                        )
+                        labelFrame.BackgroundColor3 = themeList.ElementColor
                         labelText.TextColor3 = themeList.TextColor
                     end
                 end)()
