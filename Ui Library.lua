@@ -1785,27 +1785,37 @@ function Kavo.CreateLib(kavName, themeList)
                 viewInfo.ImageColor3 = themeList.SchemeColor
                 viewInfo.ImageRectOffset = Vector2.new(764, 764)
                 viewInfo.ImageRectSize = Vector2.new(36, 36)
+               local viewDe = false
+
                 viewInfo.MouseButton1Click:Connect(function()
-                    if not viewDe then
-                        viewDe = true
-                        focusing = true
-                        for i,v in next, infoContainer:GetChildren() do
-                            if v ~= moreInfo then
-                                Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
-                            end
+
+                    if viewDe then return end
+                    viewDe = true
+                    focusing = true
+
+                    -- Hide all other info popups
+                    for _,v in ipairs(infoContainer:GetChildren()) do
+                        if v ~= moreInfo then
+                            Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
                         end
-                        Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,0,0)}, 0.2)
-                        Utility:TweenObject(blurFrame, {BackgroundTransparency = 0.5}, 0.2)
-                        Utility:TweenObject(keybindElement, {BackgroundColor3 = themeList.ElementColor}, 0.2)
-                        wait(1.5)
-                        focusing = false
-                        Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,2,0)}, 0.2)
-                        Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
-                        wait(0)
-                        viewDe = false
                     end
-                end)  
-                                updateSectionFrame()
+
+                    -- Show this dropdown’s description
+                    Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,0,0)}, 0.2)
+
+                    -- Apply blur overlay
+                    Utility:TweenObject(blurFrame, {BackgroundTransparency = 0.5}, 0.2)
+
+                    task.wait(1.5)
+
+                    -- Hide again
+                    focusing = false
+                    Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,2,0)}, 0.2)
+                    Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
+
+                    viewDe = false
+                end)
+                updateSectionFrame()
                 UpdateSize()
                 local oHover = false
                 keybindElement.MouseEnter:Connect(function()
