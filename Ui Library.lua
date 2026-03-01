@@ -1475,6 +1475,7 @@ function Kavo.CreateLib(kavName, themeList)
                 local selectedItems = {}
                 local selectedSingle = nil
                 local optionButtons = {}
+
                 local dropFrame = Instance.new("Frame")
                 local dropOpen = Instance.new("TextButton")
                 local listImg = Instance.new("ImageLabel")
@@ -1494,7 +1495,6 @@ function Kavo.CreateLib(kavName, themeList)
                 dropOpen.Size = UDim2.new(0,352,0,33)
                 dropOpen.Text = ""
                 dropOpen.AutoButtonColor = false
-                dropOpen.ClipsDescendants = true
 
                 UICorner.CornerRadius = UDim.new(0,4)
                 UICorner.Parent = dropOpen
@@ -1506,6 +1506,7 @@ function Kavo.CreateLib(kavName, themeList)
                 listImg.Image = "rbxassetid://3926305904"
                 listImg.ImageRectOffset = Vector2.new(644,364)
                 listImg.ImageRectSize = Vector2.new(36,36)
+                listImg.ImageColor3 = themeList.SchemeColor
 
                 itemTextbox.Parent = dropOpen
                 itemTextbox.BackgroundTransparency = 1
@@ -1515,6 +1516,7 @@ function Kavo.CreateLib(kavName, themeList)
                 itemTextbox.Text = dropname
                 itemTextbox.TextSize = 14
                 itemTextbox.TextXAlignment = Enum.TextXAlignment.Left
+                itemTextbox.TextColor3 = themeList.TextColor -- FIXED
 
                 viewInfo.Parent = dropOpen
                 viewInfo.BackgroundTransparency = 1
@@ -1523,46 +1525,7 @@ function Kavo.CreateLib(kavName, themeList)
                 viewInfo.Image = "rbxassetid://3926305904"
                 viewInfo.ImageRectOffset = Vector2.new(764,764)
                 viewInfo.ImageRectSize = Vector2.new(36,36)
-
-                local moreInfo = Instance.new("TextLabel")
-                local infoCorner = Instance.new("UICorner")
-
-                moreInfo.Parent = infoContainer
-                moreInfo.BackgroundColor3 = themeList.SchemeColor
-                moreInfo.Position = UDim2.new(0,0,2,0)
-                moreInfo.Size = UDim2.new(0,353,0,33)
-                moreInfo.ZIndex = 9
-                moreInfo.Font = Enum.Font.GothamSemibold
-                moreInfo.Text = "  "..dropinf
-                moreInfo.TextSize = 14
-                moreInfo.TextXAlignment = Enum.TextXAlignment.Left
-
-                infoCorner.CornerRadius = UDim.new(0,4)
-                infoCorner.Parent = moreInfo
-
-                viewInfo.MouseButton1Click:Connect(function()
-                    if not viewDe then
-                        viewDe = true
-                        focusing = true
-
-                        for _,v in next, infoContainer:GetChildren() do
-                            if v ~= moreInfo then
-                                Utility:TweenObject(v, {Position = UDim2.new(0,0,2,0)}, 0.2)
-                            end
-                        end
-
-                        Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,0,0)}, 0.2)
-                        Utility:TweenObject(blurFrame, {BackgroundTransparency = 0.5}, 0.2)
-
-                        task.wait(1.5)
-
-                        focusing = false
-                        Utility:TweenObject(moreInfo, {Position = UDim2.new(0,0,2,0)}, 0.2)
-                        Utility:TweenObject(blurFrame, {BackgroundTransparency = 1}, 0.2)
-
-                        viewDe = false
-                    end
-                end)
+                viewInfo.ImageColor3 = themeList.SchemeColor
 
                 UIListLayout.Parent = dropFrame
                 UIListLayout.Padding = UDim.new(0,3)
@@ -1616,6 +1579,7 @@ function Kavo.CreateLib(kavName, themeList)
                         option.Text = "  "..v
                         option.TextSize = 14
                         option.TextXAlignment = Enum.TextXAlignment.Left
+                        option.TextColor3 = themeList.TextColor -- ✅ FIX ADDED HERE
 
                         optCorner.CornerRadius = UDim.new(0,4)
                         optCorner.Parent = option
@@ -1689,25 +1653,6 @@ function Kavo.CreateLib(kavName, themeList)
                     newList = newList or {}
                     createOptions(newList)
                 end
-
-                coroutine.wrap(function()
-                    while task.wait() do
-                        dropFrame.BackgroundColor3 = themeList.Background
-                        dropOpen.BackgroundColor3 = themeList.ElementColor
-                        itemTextbox.TextColor3 = themeList.TextColor
-                        listImg.ImageColor3 = themeList.SchemeColor
-                        viewInfo.ImageColor3 = themeList.SchemeColor
-                        moreInfo.BackgroundColor3 = themeList.SchemeColor
-                        moreInfo.TextColor3 = themeList.TextColor
-
-                        for _,btn in pairs(optionButtons) do
-                            btn.TextColor3 = themeList.TextColor
-                            if not selectedItems[btn.Text:gsub("^%s+","")] then
-                                btn.BackgroundColor3 = themeList.ElementColor
-                            end
-                        end
-                    end
-                end)()
 
                 createOptions(list)
                 updateSectionFrame()
