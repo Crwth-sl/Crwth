@@ -1560,14 +1560,15 @@ function Kavo.CreateLib(kavName, themeList)
                         oldMulti[k] = true
                     end
 
-                    for _, btn in pairs(optionButtons) do
+                    for _, btn in ipairs(optionButtons) do
                         btn:Destroy()
                     end
-                    optionButtons = {}
 
+                    optionButtons = {}
                     itemTextbox.Text = dropname
 
-                    for _,v in ipairs(optionList) do
+                    for i, v in ipairs(optionList) do
+
                         local option = Instance.new("TextButton")
                         local optCorner = Instance.new("UICorner")
 
@@ -1579,12 +1580,12 @@ function Kavo.CreateLib(kavName, themeList)
                         option.Text = "  "..v
                         option.TextSize = 14
                         option.TextXAlignment = Enum.TextXAlignment.Left
-                        option.TextColor3 = themeList.TextColor -- ✅ FIX ADDED HERE
+                        option.TextColor3 = themeList.TextColor
 
                         optCorner.CornerRadius = UDim.new(0,4)
                         optCorner.Parent = option
 
-                        optionButtons[v] = option
+                        table.insert(optionButtons, option)
 
                         if multi then
                             if oldMulti[v] then
@@ -1600,9 +1601,11 @@ function Kavo.CreateLib(kavName, themeList)
                         end
 
                         option.MouseButton1Click:Connect(function()
+
                             if focusing then return end
 
                             if multi then
+
                                 if selectedItems[v] then
                                     selectedItems[v] = nil
                                     option.BackgroundColor3 = themeList.ElementColor
@@ -1612,8 +1615,11 @@ function Kavo.CreateLib(kavName, themeList)
                                 end
 
                                 local selectedList = {}
-                                for k,_ in pairs(selectedItems) do
-                                    table.insert(selectedList, k)
+
+                                for _, value in ipairs(optionList) do
+                                    if selectedItems[value] then
+                                        table.insert(selectedList, value)
+                                    end
                                 end
 
                                 if #selectedList > 0 then
@@ -1627,7 +1633,7 @@ function Kavo.CreateLib(kavName, themeList)
                             else
                                 selectedSingle = v
 
-                                for _, btn in pairs(optionButtons) do
+                                for _, btn in ipairs(optionButtons) do
                                     btn.BackgroundColor3 = themeList.ElementColor
                                 end
 
