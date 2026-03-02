@@ -1464,31 +1464,35 @@ function Kavo.CreateLib(kavName, themeList)
             function Elements:NewStepSlider(title, tip, stepsTable, callback)
 
                 title = title or "Step Slider"
-                tip = tip or "Custom stepped slider"
+                tip = tip or ""
                 stepsTable = stepsTable or {1,2,3}
                 callback = callback or function() end
 
                 local maxIndex = #stepsTable
-                local currentIndex = 1
 
-                -- Create normal slider BUT fake its min/max
-                local slider = Elements:NewSlider(
+                local sliderObject
+
+                sliderObject = Elements:NewSlider(
                     title,
                     tip,
-                    maxIndex,  -- max
-                    1,         -- min
+                    maxIndex,
+                    1,
                     function(index)
 
                         index = math.clamp(index, 1, maxIndex)
-                        currentIndex = index
-
                         local realValue = stepsTable[index]
+
+                        -- Update slider label manually
+                        if sliderObject and sliderObject.ValueLabel then
+                            sliderObject.ValueLabel.Text = FormatNumber(realValue)
+                        end
+
                         callback(realValue, index)
 
                     end
                 )
 
-                return slider
+                return sliderObject
             end
 
 
