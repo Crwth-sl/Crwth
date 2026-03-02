@@ -1227,26 +1227,27 @@ function Kavo.CreateLib(kavName, themeList)
 
                 local Value = min
 
-                -- UI Creation (minimal changes from yours)
                 local sliderElement = Instance.new("TextButton")
                 sliderElement.Parent = sectionInners
                 sliderElement.BackgroundColor3 = themeList.ElementColor
                 sliderElement.Size = UDim2.new(0, 352, 0, 33)
-                sliderElement.Text = ""
                 sliderElement.AutoButtonColor = false
+                sliderElement.Text = ""
+                sliderElement.ClipsDescendants = true
 
-                Instance.new("UICorner", sliderElement).CornerRadius = UDim.new(0,4)
+                local sliderCorner = Instance.new("UICorner", sliderElement)
+                sliderCorner.CornerRadius = UDim.new(0,4)
 
-                local titleLabel = Instance.new("TextLabel")
-                titleLabel.Parent = sliderElement
-                titleLabel.BackgroundTransparency = 1
-                titleLabel.Position = UDim2.new(0.1,0,0.27,0)
-                titleLabel.Size = UDim2.new(0,150,0,14)
-                titleLabel.Font = Enum.Font.GothamSemibold
-                titleLabel.Text = text
-                titleLabel.TextColor3 = themeList.TextColor
-                titleLabel.TextSize = 14
-                titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+                local sliderLabel = Instance.new("TextLabel")
+                sliderLabel.Parent = sliderElement
+                sliderLabel.BackgroundTransparency = 1
+                sliderLabel.Position = UDim2.new(0.1,0,0.27,0)
+                sliderLabel.Size = UDim2.new(0,150,0,14)
+                sliderLabel.Font = Enum.Font.GothamSemibold
+                sliderLabel.Text = text
+                sliderLabel.TextColor3 = themeList.TextColor
+                sliderLabel.TextSize = 14
+                sliderLabel.TextXAlignment = Enum.TextXAlignment.Left
 
                 local val = Instance.new("TextLabel")
                 val.Parent = sliderElement
@@ -1264,17 +1265,43 @@ function Kavo.CreateLib(kavName, themeList)
                 sliderBar.Position = UDim2.new(0.49,0,0.4,0)
                 sliderBar.Size = UDim2.new(0,149,0,6)
                 sliderBar.BorderSizePixel = 0
-                Instance.new("UICorner", sliderBar)
+
+                local sliderBarCorner = Instance.new("UICorner", sliderBar)
 
                 local sliderFill = Instance.new("Frame")
                 sliderFill.Parent = sliderBar
                 sliderFill.BackgroundColor3 = themeList.SchemeColor
                 sliderFill.Size = UDim2.new(0,0,1,0)
                 sliderFill.BorderSizePixel = 0
-                Instance.new("UICorner", sliderFill)
 
-                -- SAFE text setter
-                local function UpdateText(v)
+                local sliderFillCorner = Instance.new("UICorner", sliderFill)
+
+                -- Three dots
+                local dots = Instance.new("ImageButton")
+                dots.Parent = sliderElement
+                dots.BackgroundTransparency = 1
+                dots.Position = UDim2.new(0.92,0,0.25,0)
+                dots.Size = UDim2.new(0,15,0,15)
+                dots.Image = "rbxassetid://6031094678"
+                dots.ImageColor3 = themeList.TextColor
+
+                -- Description
+                local descriptionFrame = Instance.new("TextLabel")
+                descriptionFrame.Parent = sliderElement
+                descriptionFrame.BackgroundTransparency = 1
+                descriptionFrame.Position = UDim2.new(0.1,0,0.8,0)
+                descriptionFrame.Size = UDim2.new(0,300,0,30)
+                descriptionFrame.TextWrapped = true
+                descriptionFrame.TextScaled = false
+                descriptionFrame.Visible = false
+                descriptionFrame.Text = desc
+                descriptionFrame.Font = Enum.Font.Gotham
+                descriptionFrame.TextColor3 = themeList.TextColor
+                descriptionFrame.TextSize = 12
+                descriptionFrame.TextXAlignment = Enum.TextXAlignment.Left
+
+                -- SAFE TEXT FUNCTION
+                local function SafeSetText(v)
                     local result
 
                     if displayFormatter then
@@ -1294,10 +1321,61 @@ function Kavo.CreateLib(kavName, themeList)
                     val.Text = result or "0"
                 end
 
-                UpdateText(Value)
+                SafeSetText(Value)
 
-                local mouse = game.Players.LocalPlayer:GetMouse()
+                -- Ripple effect
+                sliderElement.MouseButton1Down:Connect(function()
+                    local ripple = Instance.new("Frame")
+                    ripple.Parent = sliderElement
+                    ripple.BackgroundColor3 = themeList.SchemeColor
+                    ripple.BackgroundTransparency = 0.5
+                    ripple.Size = UDim2.new(0,0,0,0)
+                    ripple.Position = UDim2.new(0.5,0,0.5,0)
+                    ripple.AnchorPoint = Vector2.new(0.5,0.5)
+                    Instance.new("UICorner", ripple).CornerRadius = UDim.new(1,0)
+
+                    game:GetService("TweenService"):Create(
+                        ripple,
+                        TweenInfo.new(0.4),
+                        {Size = UDim2.new(0,400,0,400), BackgroundTransparency = 1}
+                    ):Play()
+
+                    task.delay(0.4,function()
+                        ripple:Destroy()
+                    end)
+                end)
+
+                -- Hover
+                sliderElement.MouseEnter:Connect(function()
+                    game:GetService("TweenService"):Create(
+                        sliderElement,
+                        TweenInfo.new(0.2),
+                        {BackgroundColor3 = themeList.ElementColor:Lerp(Color3.new(1,1,1),0.05)}
+                    ):Play()
+                end)
+
+                sliderElement.MouseLeave:Connect(function()
+                    game:GetService("TweenService"):Create(
+                        sliderElement,
+                        TweenInfo.new(0.2),
+                        {BackgroundColor3 = themeList.ElementColor}
+                    ):Play()
+                end)
+
+                -- Description toggle
+                dots.MouseButton1Click:Connect(function()
+                    descriptionFrame.Visible = not descriptionFrame.Visible
+                    if descriptionFrame.Visible then
+                        sliderElement.Size = UDim2.new(0,352,0,60)
+                    else
+                        sliderElement.Size = UDim2.new(0,352,0,33)
+                    end
+                    updateSectionFrame()
+                end)
+
+                -- Drag logic
                 local UIS = game:GetService("UserInputService")
+                local mouse = game.Players.LocalPlayer:GetMouse()
 
                 sliderBar.InputBegan:Connect(function(input)
                     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -1316,7 +1394,7 @@ function Kavo.CreateLib(kavName, themeList)
 
                             Value = math.floor(min + ((max - min) * percent))
 
-                            UpdateText(Value)
+                            SafeSetText(Value)
                             callback(Value)
 
                         end)
@@ -1336,7 +1414,7 @@ function Kavo.CreateLib(kavName, themeList)
                 return {
                     ValueLabel = val
                 }
-            end 
+            end
 
             function Elements:NewStepSlider(title, tip, stepsTable, callback, formatter)
 
