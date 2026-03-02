@@ -1409,11 +1409,23 @@ function Kavo.CreateLib(kavName, themeList)
                         end)
                         sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
                         moveconnection = mouse.Move:Connect(function()
+                            local displayText
+
                             if displayFormatter then
-                                val.Text = displayFormatter(Value)
+                                local success, result = pcall(function()
+                                    return displayFormatter(Value)
+                                end)
+
+                                if success and result ~= nil then
+                                    displayText = tostring(result)
+                                else
+                                    displayText = tostring(Value)
+                                end
                             else
-                                val.Text = tostring(Value)
+                                displayText = tostring(Value)
                             end
+
+                            val.Text = displayText
                             Value = math.floor((((tonumber(max) - tonumber(min)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(min))
                             pcall(function()
                                 callback(Value)
@@ -1426,11 +1438,23 @@ function Kavo.CreateLib(kavName, themeList)
                                 pcall(function()
                                     callback(Value)
                                 end)
+                                local displayText
+
                                 if displayFormatter then
-                                    val.Text = displayFormatter(Value)
+                                    local success, result = pcall(function()
+                                        return displayFormatter(Value)
+                                    end)
+
+                                    if success and result ~= nil then
+                                        displayText = tostring(result)
+                                    else
+                                        displayText = tostring(Value)
+                                    end
                                 else
-                                    val.Text = tostring(Value)
+                                    displayText = tostring(Value)
                                 end
+
+                                val.Text = displayText
                                 game.TweenService:Create(val, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
                                     TextTransparency = 1
                                 }):Play()
@@ -1488,7 +1512,7 @@ function Kavo.CreateLib(kavName, themeList)
                     1,
                     function(index)
 
-                        index = math.clamp(index, 1, maxIndex)
+                        index = math.clamp(tonumber(index) or 1, 1, #stepsTable)
                         local realValue = stepsTable[index]
 
                         callback(realValue, index)
@@ -1496,6 +1520,7 @@ function Kavo.CreateLib(kavName, themeList)
                     end,
                     function(index)
 
+                        index = math.clamp(tonumber(index) or 1, 1, #stepsTable)
                         local realValue = stepsTable[index]
 
                         if formatter then
