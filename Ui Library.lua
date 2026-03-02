@@ -1461,6 +1461,36 @@ function Kavo.CreateLib(kavName, themeList)
                 end)        
             end
 
+            function Elements:NewStepSlider(title, tip, stepsTable, callback)
+
+                title = title or "Step Slider"
+                tip = tip or "Custom stepped slider"
+                stepsTable = stepsTable or {1,2,3}
+                callback = callback or function() end
+
+                local maxIndex = #stepsTable
+                local currentIndex = 1
+
+                -- Create normal slider BUT fake its min/max
+                local slider = Elements:NewSlider(
+                    title,
+                    tip,
+                    maxIndex,  -- max
+                    1,         -- min
+                    function(index)
+
+                        index = math.clamp(index, 1, maxIndex)
+                        currentIndex = index
+
+                        local realValue = stepsTable[index]
+                        callback(realValue, index)
+
+                    end
+                )
+
+                return slider
+            end
+
 
             function Elements:NewDropdown(dropname, dropinf, list, callback, multi)
                 local DropFunction = {}
