@@ -1217,12 +1217,12 @@ function Kavo.CreateLib(kavName, themeList)
                     return TogFunction
             end
 
-            function Elements:NewSlider(slidInf, slidTip, maxvalue, minvalue, callback)
-                slidInf = slidInf or "Slider"
-                slidTip = slidTip or "Slider tip here"
-                maxvalue = maxvalue or 500
-                minvalue = minvalue or 16
-                startVal = startVal or 0
+            function Elements:NewSlider(text, desc, max, min, callback, displayFormatter)
+
+                text = text or "Slider"
+                desc = desc or ""
+                max = max or 100
+                min = min or 0
                 callback = callback or function() end
 
                 local sliderElement = Instance.new("TextButton")
@@ -1258,7 +1258,7 @@ function Kavo.CreateLib(kavName, themeList)
                 togName.Position = UDim2.new(0.096704483, 0, 0.272727281, 0)
                 togName.Size = UDim2.new(0, 138, 0, 14)
                 togName.Font = Enum.Font.GothamSemibold
-                togName.Text = slidInf
+                togName.Text = text
                 togName.RichText = true
                 togName.TextColor3 = themeList.TextColor
                 togName.TextSize = 14.000
@@ -1338,7 +1338,7 @@ function Kavo.CreateLib(kavName, themeList)
                 moreInfo.Size = UDim2.new(0, 353, 0, 33)
                 moreInfo.ZIndex = 9
                 moreInfo.Font = Enum.Font.GothamSemibold
-                moreInfo.Text = "  "..slidTip
+                moreInfo.Text = "  "..desc
                 moreInfo.TextColor3 = themeList.TextColor
                 moreInfo.TextSize = 14.000
                 moreInfo.RichText = true
@@ -1403,14 +1403,18 @@ function Kavo.CreateLib(kavName, themeList)
                         game.TweenService:Create(val, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
                             TextTransparency = 0
                         }):Play()
-                        Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue)) or 0
+                        Value = math.floor((((tonumber(max) - tonumber(min)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(min)) or 0
                         pcall(function()
                             callback(Value)
                         end)
                         sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
                         moveconnection = mouse.Move:Connect(function()
-                            val.Text = Value
-                            Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue))
+                            if displayFormatter then
+                                val.Text = displayFormatter(Value)
+                            else
+                                val.Text = tostring(Value)
+                            end
+                            Value = math.floor((((tonumber(max) - tonumber(min)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(min))
                             pcall(function()
                                 callback(Value)
                             end)
@@ -1418,11 +1422,15 @@ function Kavo.CreateLib(kavName, themeList)
                         end)
                         releaseconnection = uis.InputEnded:Connect(function(Mouse)
                             if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
-                                Value = math.floor((((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue))
+                                Value = math.floor((((tonumber(max) - tonumber(min)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(min))
                                 pcall(function()
                                     callback(Value)
                                 end)
-                                val.Text = Value
+                                if displayFormatter then
+                                    val.Text = displayFormatter(Value)
+                                else
+                                    val.Text = tostring(Value)
+                                end
                                 game.TweenService:Create(val, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
                                     TextTransparency = 1
                                 }):Play()
@@ -1458,10 +1466,13 @@ function Kavo.CreateLib(kavName, themeList)
                         wait(0)
                         viewDe = false
                     end
-                end)        
+                end)
+                return {
+                    ValueLabel = val
+                }       
             end
 
-            function Elements:NewStepSlider(title, tip, stepsTable, callback)
+            function Elements:NewStepSlider(title, tip, stepsTable, callback, formatter)
 
                 title = title or "Step Slider"
                 tip = tip or ""
@@ -1470,9 +1481,7 @@ function Kavo.CreateLib(kavName, themeList)
 
                 local maxIndex = #stepsTable
 
-                local sliderObject
-
-                sliderObject = Elements:NewSlider(
+                return Elements:NewSlider(
                     title,
                     tip,
                     maxIndex,
@@ -1482,17 +1491,20 @@ function Kavo.CreateLib(kavName, themeList)
                         index = math.clamp(index, 1, maxIndex)
                         local realValue = stepsTable[index]
 
-                        -- Update slider label manually
-                        if sliderObject and sliderObject.ValueLabel then
-                            sliderObject.ValueLabel.Text = FormatNumber(realValue)
-                        end
-
                         callback(realValue, index)
 
+                    end,
+                    function(index)
+
+                        local realValue = stepsTable[index]
+
+                        if formatter then
+                            return formatter(realValue)
+                        end
+
+                        return tostring(realValue)
                     end
                 )
-
-                return sliderObject
             end
 
 
