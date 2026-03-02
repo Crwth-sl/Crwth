@@ -1220,9 +1220,18 @@ function Kavo.CreateLib(kavName, themeList)
             function Elements:NewSlider(slidInf, slidTip, maxvalue, minvalue, callback)
                 slidInf = slidInf or "Slider"
                 slidTip = slidTip or "Slider tip here"
-                maxvalue = tonumber(maxvalue) or 500
-                minvalue = tonumber(minvalue) or 16
                 callback = callback or function() end
+
+                local isStepSlider = typeof(maxvalue) == "table"
+                local steps = isStepSlider and maxvalue or nil
+
+                if isStepSlider then
+                    minvalue = 1
+                    maxvalue = #steps
+                else
+                    maxvalue = tonumber(maxvalue) or 500
+                    minvalue = tonumber(minvalue) or 0
+                end
 
                 local sliderElement = Instance.new("TextButton")
                 local UICorner = Instance.new("UICorner")
@@ -1304,15 +1313,13 @@ function Kavo.CreateLib(kavName, themeList)
                 val.Parent = sliderElement
                 val.BackgroundTransparency = 1
                 val.Position = UDim2.new(0.3523, 0, 0.2727, 0)
-                val.Size = UDim2.new(0, 41, 0, 14)
+                val.Size = UDim2.new(0, 60, 0, 14)
                 val.Font = Enum.Font.GothamSemibold
-                val.Text = tostring(minvalue)
                 val.TextColor3 = themeList.TextColor
                 val.TextSize = 14
                 val.TextTransparency = 1
                 val.TextXAlignment = Enum.TextXAlignment.Right
 
-                -- INFO POPUP
                 local moreInfo = Instance.new("TextLabel")
                 local InfoCorner = Instance.new("UICorner")
 
@@ -1340,30 +1347,22 @@ function Kavo.CreateLib(kavName, themeList)
 
                 local mouse = game.Players.LocalPlayer:GetMouse()
                 local uis = game:GetService("UserInputService")
-                local hovering = false
                 local Value = minvalue
 
-                sliderElement.MouseEnter:Connect(function()
-                    if not focusing then
-                        hovering = true
-                        game.TweenService:Create(sliderElement, TweenInfo.new(0.1), {
-                            BackgroundColor3 = Color3.fromRGB(
-                                themeList.ElementColor.r * 255 + 8,
-                                themeList.ElementColor.g * 255 + 9,
-                                themeList.ElementColor.b * 255 + 10
-                            )
-                        }):Play()
+                local function DisplayValue(valIndex)
+                    if isStepSlider then
+                        local real = steps[valIndex]
+                        if FormatNumber then
+                            return FormatNumber(real)
+                        else
+                            return tostring(real)
+                        end
+                    else
+                        return tostring(valIndex)
                     end
-                end)
+                end
 
-                sliderElement.MouseLeave:Connect(function()
-                    hovering = false
-                    if not focusing then
-                        game.TweenService:Create(sliderElement, TweenInfo.new(0.1), {
-                            BackgroundColor3 = themeList.ElementColor
-                        }):Play()
-                    end
-                end)
+                val.Text = DisplayValue(Value)
 
                 sliderBtn.MouseButton1Down:Connect(function()
                     if focusing then return end
@@ -1383,12 +1382,16 @@ function Kavo.CreateLib(kavName, themeList)
 
                         sliderDrag.Size = UDim2.new(percent, 0, 1, 0)
 
-                        Value = math.floor(minvalue + ((maxvalue - minvalue) * percent))
-                        val.Text = tostring(Value)
+                        local rawValue = minvalue + ((maxvalue - minvalue) * percent)
+                        Value = math.clamp(math.round(rawValue), minvalue, maxvalue)
 
-                        pcall(function()
+                        val.Text = DisplayValue(Value)
+
+                        if isStepSlider then
+                            callback(steps[Value])
+                        else
                             callback(Value)
-                        end)
+                        end
                     end
 
                     Update()
