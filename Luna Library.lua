@@ -6448,90 +6448,78 @@ function Luna:CreateWindow(WindowSettings)
 
     Tab:CreateSection("Custom Editor")
 
+    local c1 = Color3.fromRGB(117,164,206)
+    local c2 = Color3.fromRGB(123,201,201)
+    local c3 = Color3.fromRGB(224,138,184)
+
+    local function update()
+        Luna.ThemeGradient = ColorSequence.new{
+            ColorSequenceKeypoint.new(0,c1),
+            ColorSequenceKeypoint.new(0.5,c2),
+            ColorSequenceKeypoint.new(1,c3)
+        }
+        LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+    end
+
     local c1cp = Tab:CreateColorPicker({
         Name = "Color 1",
-        Color = Color3.fromRGB(117,164,206),
-    }, "LunaInterfaceSuitePrebuiltCPC1")
+        Color = c1,
+        Callback = function(v)
+            if typeof(v) == "Color3" then
+                c1 = v
+            elseif typeof(v) == "table" and typeof(v.Color) == "Color3" then
+                c1 = v.Color
+            end
+            update()
+        end
+    })
 
     local c2cp = Tab:CreateColorPicker({
         Name = "Color 2",
-        Color = Color3.fromRGB(123,201,201),
-    }, "LunaInterfaceSuitePrebuiltCPC2")
+        Color = c2,
+        Callback = function(v)
+            if typeof(v) == "Color3" then
+                c2 = v
+            elseif typeof(v) == "table" and typeof(v.Color) == "Color3" then
+                c2 = v.Color
+            end
+            update()
+        end
+    })
 
     local c3cp = Tab:CreateColorPicker({
         Name = "Color 3",
-        Color = Color3.fromRGB(224,138,184),
-    }, "LunaInterfaceSuitePrebuiltCPC3")
-
-    task.wait(1)
-
-    c1cp:Set({
-        Callback = function(Value)
-
-            local col = Value
-            if typeof(Value) == "table" then
-                col = Value.Color
+        Color = c3,
+        Callback = function(v)
+            if typeof(v) == "Color3" then
+                c3 = v
+            elseif typeof(v) == "table" and typeof(v.Color) == "Color3" then
+                c3 = v.Color
             end
-
-            Luna.ThemeGradient = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
-            }
-
-            LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-        end
-    })
-
-    c2cp:Set({
-        Callback = function(Value)
-
-            local col = Value
-            if typeof(Value) == "table" then
-                col = Value.Color
-            end
-
-            Luna.ThemeGradient = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
-            }
-
-            LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-        end
-    })
-
-    c3cp:Set({
-        Callback = function(Value)
-
-            local col = Value
-            if typeof(Value) == "table" then
-                col = Value.Color
-            end
-
-            Luna.ThemeGradient = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
-            }
-
-            LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+            update()
         end
     })
 
     Tab:CreateSection("Preset Gradients")
 
-    for i,v in pairs(PresetGradients) do
+    for name,gradient in pairs(PresetGradients) do
         Tab:CreateButton({
-            Name = tostring(i),
+            Name = tostring(name),
             Callback = function()
-                c1cp:Set({Color = v[1]})
-                c2cp:Set({Color = v[2]})
-                c3cp:Set({Color = v[3]})
-            end,
+                c1 = gradient[1]
+                c2 = gradient[2]
+                c3 = gradient[3]
+
+                c1cp:Set({Color = c1})
+                c2cp:Set({Color = c2})
+                c3cp:Set({Color = c3})
+
+                update()
+            end
         })
     end
 
+    update()
 end
 
 
