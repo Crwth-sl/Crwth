@@ -6465,18 +6465,24 @@ function Luna:CreateWindow(WindowSettings)
 
     task.wait(1)
 
+    local function getColor(val)
+        if typeof(val) == "Color3" then
+            return val
+        elseif typeof(val) == "table" and typeof(val.Color) == "Color3" then
+            return val.Color
+        end
+        return Color3.fromRGB(255,255,255)
+    end
+
     c1cp:Set({
         Callback = function(Value)
 
-            local col = Value
-            if typeof(Value) == "table" then
-                col = Value.Color
-            end
+            local col = getColor(Value)
 
             Luna.ThemeGradient = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, col or Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, c2cp.Color or Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, c3cp.Color or Color3.fromRGB(255,255,255))
+                ColorSequenceKeypoint.new(0, col),
+                ColorSequenceKeypoint.new(0.5, getColor(c2cp.Color)),
+                ColorSequenceKeypoint.new(1, getColor(c3cp.Color))
             }
 
             LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
@@ -6486,15 +6492,12 @@ function Luna:CreateWindow(WindowSettings)
     c2cp:Set({
         Callback = function(Value)
 
-            local col = Value
-            if typeof(Value) == "table" then
-                col = Value.Color
-            end
+            local col = getColor(Value)
 
             Luna.ThemeGradient = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, c1cp.Color or Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, col or Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, c3cp.Color or Color3.fromRGB(255,255,255))
+                ColorSequenceKeypoint.new(0, getColor(c1cp.Color)),
+                ColorSequenceKeypoint.new(0.5, col),
+                ColorSequenceKeypoint.new(1, getColor(c3cp.Color))
             }
 
             LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
@@ -6504,15 +6507,12 @@ function Luna:CreateWindow(WindowSettings)
     c3cp:Set({
         Callback = function(Value)
 
-            local col = Value
-            if typeof(Value) == "table" then
-                col = Value.Color
-            end
+            local col = getColor(Value)
 
             Luna.ThemeGradient = ColorSequence.new{
-                ColorSequenceKeypoint.new(0, c1cp.Color or Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(0.5, c2cp.Color or Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, col or Color3.fromRGB(255,255,255))
+                ColorSequenceKeypoint.new(0, getColor(c1cp.Color)),
+                ColorSequenceKeypoint.new(0.5, getColor(c2cp.Color)),
+                ColorSequenceKeypoint.new(1, col)
             }
 
             LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
