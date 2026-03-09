@@ -52,14 +52,6 @@ local Luna = {
 	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(117, 164, 206)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(123, 201, 201)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(224, 138, 175))} 
 }
 
-function Luna:RefreshTheme()
-	for _,obj in ipairs(game:FindFirstChild("Luna UI"):GetDescendants()) do
-		if obj:IsA("UIGradient") then
-			obj.Color = Luna.ThemeGradient
-		end
-	end
-end
-
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
@@ -2191,6 +2183,14 @@ function Luna:Notification(data) -- action e.g open messages
 		newNotification.Visible = false
 		newNotification:Destroy()
 	end)
+end
+
+function Luna:RefreshTheme()
+	for _,obj in ipairs(game:FindFirstChild("Luna UI"):GetDescendants()) do
+		if obj:IsA("UIGradient") then
+			obj.Color = Luna.ThemeGradient
+		end
+	end
 end
 
 local function Unhide(Window, currentTab)
