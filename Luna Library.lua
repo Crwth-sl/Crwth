@@ -2185,14 +2185,6 @@ function Luna:Notification(data) -- action e.g open messages
 	end)
 end
 
-function Luna:RefreshTheme()
-	for _,obj in ipairs(game:FindFirstChild("Luna UI"):GetDescendants()) do
-		if obj:IsA("UIGradient") then
-			obj.Color = Luna.ThemeGradient
-		end
-	end
-end
-
 local function Unhide(Window, currentTab)
 	Window.Size = SizeBleh
 	Window.Elements.Visible = true
@@ -6442,94 +6434,73 @@ function Luna:CreateWindow(WindowSettings)
 
 		function Tab:BuildThemeSection()
 
-    local Title = Elements.Template.Title:Clone()
-    Title.Text = "Theming"
-    Title.Visible = true
-    Title.Parent = TabPage
-    Title.TextTransparency = 1
+			local Title = Elements.Template.Title:Clone()
+			Title.Text = "Theming"
+			Title.Visible = true
+			Title.Parent = TabPage
+			Title.TextTransparency = 1
+			TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 
-    TweenService:Create(
-        Title,
-        TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-        {TextTransparency = 0}
-    ):Play()
+			Tab:CreateSection("Custom Editor")
 
-    Tab:CreateSection("Custom Editor")
+			local c1cp = Tab:CreateColorPicker({
+				Name = "Color 1",
+				Color = Color3.fromRGB(117, 164, 206),
+			}, "LunaInterfaceSuitePrebuiltCPC1") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
-    local c1 = Color3.fromRGB(117,164,206)
-    local c2 = Color3.fromRGB(123,201,201)
-    local c3 = Color3.fromRGB(224,138,184)
+			local c2cp = Tab:CreateColorPicker({
+				Name = "Color 2",
+				Color = Color3.fromRGB(123, 201, 201),
+			}, "LunaInterfaceSuitePrebuiltCPC2")
 
-local function update()
-	Luna.ThemeGradient = ColorSequence.new{
-		ColorSequenceKeypoint.new(0,c1),
-		ColorSequenceKeypoint.new(0.5,c2),
-		ColorSequenceKeypoint.new(1,c3)
-	}
+			local c3cp = Tab:CreateColorPicker({
+				Name = "Color 3",
+				Color = Color3.fromRGB(224, 138, 184),
+			}, "LunaInterfaceSuitePrebuiltCPC3") 
 
-	Luna:RefreshTheme()
-end
+			task.wait(1)
 
-    local c1cp = Tab:CreateColorPicker({
-        Name = "Color 1",
-        Color = c1,
-        Callback = function(v)
-            if typeof(v) == "Color3" then
-                c1 = v
-            elseif typeof(v) == "table" and typeof(v.Color) == "Color3" then
-                c1 = v.Color
-            end
-            update()
-        end
-    })
+			c1cp:Set({
+				Callback = function(Value)
+					if c2cp and c3cp then
+						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Value or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, c2cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, c3cp.Color or Color3.fromRGB(255,255,255))}
+						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+					end
+				end
+			})
 
-    local c2cp = Tab:CreateColorPicker({
-        Name = "Color 2",
-        Color = c2,
-        Callback = function(v)
-            if typeof(v) == "Color3" then
-                c2 = v
-            elseif typeof(v) == "table" and typeof(v.Color) == "Color3" then
-                c2 = v.Color
-            end
-            update()
-        end
-    })
+			c2cp:Set({
+				Callback = function(Value)
+					if c1cp and c3cp then
+						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, c1cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, Value or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, c3cp.Color or Color3.fromRGB(255,255,255))}
+						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+					end
+				end
+			})
 
-    local c3cp = Tab:CreateColorPicker({
-        Name = "Color 3",
-        Color = c3,
-        Callback = function(v)
-            if typeof(v) == "Color3" then
-                c3 = v
-            elseif typeof(v) == "table" and typeof(v.Color) == "Color3" then
-                c3 = v.Color
-            end
-            update()
-        end
-    })
+			c3cp:Set({
+				Callback = function(Valuex)
+					if c2cp and c1cp then
+						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, c1cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, c2cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, Valuex or Color3.fromRGB(255,255,255))}
+						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+					end
+				end
+			})
 
-    Tab:CreateSection("Preset Gradients")
+			Tab:CreateSection("Preset Gradients")
 
-    for name,gradient in pairs(PresetGradients) do
-        Tab:CreateButton({
-            Name = tostring(name),
-            Callback = function()
-                c1 = gradient[1]
-                c2 = gradient[2]
-                c3 = gradient[3]
+			for i,v in pairs(PresetGradients) do
+				Tab:CreateButton({
+					Name = tostring(i),
+					Callback = function()
+						c1cp:Set({ Color = v[1] })
+						c2cp:Set({ Color = v[2] })
+						c3cp:Set({ Color = v[3] })
+					end,
+				})
+			end
 
-                c1cp:Set({Color = c1})
-                c2cp:Set({Color = c2})
-                c3cp:Set({Color = c3})
-
-                update()
-            end
-        })
-    end
-
-    update()
-end
+		end
 
 
 		local function BuildFolderTree()
@@ -6785,6 +6756,7 @@ if (getgenv and not getgenv().ConfirmLuna) or (not getgenv) then
     	Content = "If you are not the script developer, ignore this message. \n\n The Luna Interface Library Is Deprecated And Not Recommended to Use. A New Library Is Available at nebulasoftworks.xyz/starlight. If you insist on using Luna, set the getgenv().ConfirmLuna variable to true. "
 	})
 end
+
 if isStudio then
 	local Window = Luna:CreateWindow({
 		Name = "Nebula Client - Luna Hub | Blade Ball",
