@@ -53,7 +53,7 @@ local Luna = {
 }
 
 function Luna:RefreshTheme()
-	for _,obj in ipairs(LunaUI:GetDescendants()) do
+	for _,obj in ipairs(game.CoreGui["Luna UI"]:GetDescendants()) do
 		if obj:IsA("UIGradient") then
 			obj.Color = Luna.ThemeGradient
 		end
