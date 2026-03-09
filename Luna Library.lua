@@ -6434,96 +6434,105 @@ function Luna:CreateWindow(WindowSettings)
 
 		function Tab:BuildThemeSection()
 
-            local Title = Elements.Template.Title:Clone()
-            Title.Text = "Theming"
-            Title.Visible = true
-            Title.Parent = TabPage
-            Title.TextTransparency = 1
+    local Title = Elements.Template.Title:Clone()
+    Title.Text = "Theming"
+    Title.Visible = true
+    Title.Parent = TabPage
+    Title.TextTransparency = 1
 
-            TweenService:Create(
-                Title,
-                TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-                {TextTransparency = 0}
-            ):Play()
+    TweenService:Create(
+        Title,
+        TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+        {TextTransparency = 0}
+    ):Play()
 
-            Tab:CreateSection("Custom Editor")
+    Tab:CreateSection("Custom Editor")
 
-            local c1cp = Tab:CreateColorPicker({
-                Name = "Color 1",
-                Color = Color3.fromRGB(117,164,206),
-            }, "LunaInterfaceSuitePrebuiltCPC1")
+    local c1cp = Tab:CreateColorPicker({
+        Name = "Color 1",
+        Color = Color3.fromRGB(117,164,206),
+    }, "LunaInterfaceSuitePrebuiltCPC1")
 
-            local c2cp = Tab:CreateColorPicker({
-                Name = "Color 2",
-                Color = Color3.fromRGB(123,201,201),
-            }, "LunaInterfaceSuitePrebuiltCPC2")
+    local c2cp = Tab:CreateColorPicker({
+        Name = "Color 2",
+        Color = Color3.fromRGB(123,201,201),
+    }, "LunaInterfaceSuitePrebuiltCPC2")
 
-            local c3cp = Tab:CreateColorPicker({
-                Name = "Color 3",
-                Color = Color3.fromRGB(224,138,184),
-            }, "LunaInterfaceSuitePrebuiltCPC3")
+    local c3cp = Tab:CreateColorPicker({
+        Name = "Color 3",
+        Color = Color3.fromRGB(224,138,184),
+    }, "LunaInterfaceSuitePrebuiltCPC3")
 
-            task.wait(1)
+    task.wait(1)
 
-            c1cp:Set({
-                Callback = function(Value)
+    c1cp:Set({
+        Callback = function(Value)
 
-                    local col = typeof(Value) == "Color3" and Value or Value.Color
-
-                    Luna.ThemeGradient = ColorSequence.new{
-                        ColorSequenceKeypoint.new(0, col or Color3.fromRGB(255,255,255)),
-                        ColorSequenceKeypoint.new(0.5, c2cp.Color or Color3.fromRGB(255,255,255)),
-                        ColorSequenceKeypoint.new(1, c3cp.Color or Color3.fromRGB(255,255,255))
-                    }
-
-                    LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-                end
-            })
-
-            c2cp:Set({
-                Callback = function(Value)
-
-                    local col = typeof(Value) == "Color3" and Value or Value.Color
-
-                    Luna.ThemeGradient = ColorSequence.new{
-                        ColorSequenceKeypoint.new(0, c1cp.Color or Color3.fromRGB(255,255,255)),
-                        ColorSequenceKeypoint.new(0.5, col or Color3.fromRGB(255,255,255)),
-                        ColorSequenceKeypoint.new(1, c3cp.Color or Color3.fromRGB(255,255,255))
-                    }
-
-                    LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-                end
-            })
-
-            c3cp:Set({
-                Callback = function(Value)
-
-                    local col = typeof(Value) == "Color3" and Value or Value.Color
-
-                    Luna.ThemeGradient = ColorSequence.new{
-                        ColorSequenceKeypoint.new(0, c1cp.Color or Color3.fromRGB(255,255,255)),
-                        ColorSequenceKeypoint.new(0.5, c2cp.Color or Color3.fromRGB(255,255,255)),
-                        ColorSequenceKeypoint.new(1, col or Color3.fromRGB(255,255,255))
-                    }
-
-                    LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-                end
-            })
-
-            Tab:CreateSection("Preset Gradients")
-
-            for i,v in pairs(PresetGradients) do
-                Tab:CreateButton({
-                    Name = tostring(i),
-                    Callback = function()
-                        c1cp:Set({Color = v[1]})
-                        c2cp:Set({Color = v[2]})
-                        c3cp:Set({Color = v[3]})
-                    end
-                })
+            local col = Value
+            if typeof(Value) == "table" then
+                col = Value.Color
             end
 
+            Luna.ThemeGradient = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, col or Color3.fromRGB(255,255,255)),
+                ColorSequenceKeypoint.new(0.5, c2cp.Color or Color3.fromRGB(255,255,255)),
+                ColorSequenceKeypoint.new(1, c3cp.Color or Color3.fromRGB(255,255,255))
+            }
+
+            LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
         end
+    })
+
+    c2cp:Set({
+        Callback = function(Value)
+
+            local col = Value
+            if typeof(Value) == "table" then
+                col = Value.Color
+            end
+
+            Luna.ThemeGradient = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, c1cp.Color or Color3.fromRGB(255,255,255)),
+                ColorSequenceKeypoint.new(0.5, col or Color3.fromRGB(255,255,255)),
+                ColorSequenceKeypoint.new(1, c3cp.Color or Color3.fromRGB(255,255,255))
+            }
+
+            LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+        end
+    })
+
+    c3cp:Set({
+        Callback = function(Value)
+
+            local col = Value
+            if typeof(Value) == "table" then
+                col = Value.Color
+            end
+
+            Luna.ThemeGradient = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, c1cp.Color or Color3.fromRGB(255,255,255)),
+                ColorSequenceKeypoint.new(0.5, c2cp.Color or Color3.fromRGB(255,255,255)),
+                ColorSequenceKeypoint.new(1, col or Color3.fromRGB(255,255,255))
+            }
+
+            LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+        end
+    })
+
+    Tab:CreateSection("Preset Gradients")
+
+    for i,v in pairs(PresetGradients) do
+        Tab:CreateButton({
+            Name = tostring(i),
+            Callback = function()
+                c1cp:Set({Color = v[1]})
+                c2cp:Set({Color = v[2]})
+                c3cp:Set({Color = v[3]})
+            end,
+        })
+    end
+
+end
 
 
 		local function BuildFolderTree()
