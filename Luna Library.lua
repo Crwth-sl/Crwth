@@ -2109,7 +2109,6 @@ function Luna:Notification(data) -- action e.g open messages
 		data = Kwargify({
 			Title = "Missing Title",
 			Content = "Missing or Unknown Content",
-			Icon = "notifications",
 			ImageSource = "Material"
 		}, data or {})
 
