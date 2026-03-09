@@ -60,6 +60,14 @@ function Luna:UpdateTheme()
 	end
 end
 
+function Luna:RefreshTheme()
+	for _,obj in ipairs(game:GetDescendants()) do
+		if obj:IsA("UIGradient") then
+			obj.Color = Luna.ThemeGradient
+		end
+	end
+end
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
@@ -6467,7 +6475,7 @@ local function update()
 		ColorSequenceKeypoint.new(1,c3)
 	}
 
-	Luna:UpdateTheme()
+	Luna:RefreshTheme()
 end
 
     local c1cp = Tab:CreateColorPicker({
