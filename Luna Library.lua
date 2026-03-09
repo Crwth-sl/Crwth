@@ -2124,7 +2124,7 @@ function Luna:Notification(data) -- action e.g open messages
 		-- Set Data
 		newNotification.Title.Text = data.Title
 		newNotification.Description.Text = data.Content 
-		newNotification.Icon.Image = GetIcon(data.Icon, data.ImageSource)
+		newNotification.Icon.Image = GetIcon(IconModule.Material[data.Icon], data.ImageSource)
 
 		-- Set initial transparency values
 		newNotification.BackgroundTransparency = 1
