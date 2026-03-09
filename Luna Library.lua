@@ -52,6 +52,14 @@ local Luna = {
 	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(117, 164, 206)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(123, 201, 201)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(224, 138, 175))} 
 }
 
+function Luna:UpdateTheme()
+	for _,v in pairs(game:GetDescendants()) do
+		if v:IsA("UIGradient") and v.Name == "LunaGradient" then
+			v.Color = Luna.ThemeGradient
+		end
+	end
+end
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
@@ -6452,14 +6460,15 @@ function Luna:CreateWindow(WindowSettings)
     local c2 = Color3.fromRGB(123,201,201)
     local c3 = Color3.fromRGB(224,138,184)
 
-    local function update()
-        Luna.ThemeGradient = ColorSequence.new{
-            ColorSequenceKeypoint.new(0,c1),
-            ColorSequenceKeypoint.new(0.5,c2),
-            ColorSequenceKeypoint.new(1,c3)
-        }
-        LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-    end
+local function update()
+	Luna.ThemeGradient = ColorSequence.new{
+		ColorSequenceKeypoint.new(0,c1),
+		ColorSequenceKeypoint.new(0.5,c2),
+		ColorSequenceKeypoint.new(1,c3)
+	}
+
+	Luna:UpdateTheme()
+end
 
     local c1cp = Tab:CreateColorPicker({
         Name = "Color 1",
