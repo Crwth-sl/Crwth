@@ -52,16 +52,8 @@ local Luna = {
 	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(117, 164, 206)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(123, 201, 201)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(224, 138, 175))} 
 }
 
-function Luna:UpdateTheme()
-	for _,v in pairs(game:GetDescendants()) do
-		if v:IsA("UIGradient") and v.Name == "LunaGradient" then
-			v.Color = Luna.ThemeGradient
-		end
-	end
-end
-
 function Luna:RefreshTheme()
-	for _,obj in ipairs(game:GetDescendants()) do
+	for _,obj in ipairs(LunaUI:GetDescendants()) do
 		if obj:IsA("UIGradient") then
 			obj.Color = Luna.ThemeGradient
 		end
