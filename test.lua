@@ -6485,7 +6485,7 @@ function Luna:CreateWindow(WindowSettings)
 			if isStudio then return "Config system unavailable." end
 			local paths = {
 				Luna.Folder,
-				Luna.Folder .. "/settings"
+				Luna.Folder .. "/" .. game.PlaceId .. "/settings"
 			}
 
 			for i = 1, #paths do
