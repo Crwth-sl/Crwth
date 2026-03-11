@@ -6485,7 +6485,7 @@ function Luna:CreateWindow(WindowSettings)
 			if isStudio then return "Config system unavailable." end
 			local paths = {
 				Luna.Folder,
-				Luna.Folder .. "/settings"
+				Luna.Folder .. "/" .. game.PlaceId .. "/settings"
 			}
 
 			for i = 1, #paths do
@@ -6518,7 +6518,7 @@ function Luna:CreateWindow(WindowSettings)
 				return false, "Please select a config file."
 			end
 
-			local fullPath = Luna.Folder .. "/settings/" .. Path .. ".luna"
+			local fullPath = Luna.Folder .. "/" .. game.PlaceId .. "/settings/" .. Path .. ".luna"
 
 			local data = {
 				objects = {}
@@ -6547,7 +6547,7 @@ function Luna:CreateWindow(WindowSettings)
 				return false, "Please select a config file."
 			end
 
-			local file = Luna.Folder .. "/settings/" .. Path .. ".luna"
+			local file = Luna.Folder .. "/" .. game.PlaceId .. "/settings/" .. Path .. ".luna"
 			if not isfile(file) then return false, "Invalid file" end
 
 			local success, decoded = pcall(HttpService.JSONDecode, HttpService, readfile(file))
@@ -6565,11 +6565,11 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:LoadAutoloadConfig()
-			if isfile(Luna.Folder .. "/settings/autoload.txt") then
+			if isfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt") then
 
 				if isStudio then return "Config system unavailable." end
 
-				local name = readfile(Luna.Folder .. "/settings/autoload.txt")
+				local name = readfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt")
 
 				local success, err = Luna:LoadConfig(name)
 				if not success then
@@ -6594,7 +6594,7 @@ function Luna:CreateWindow(WindowSettings)
 		function Luna:RefreshConfigList()
 			if isStudio then return "Config system unavailable." end
 
-			local list = listfiles(Luna.Folder .. "/settings")
+			local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
 
 			local out = {}
 			for i = 1, #list do
