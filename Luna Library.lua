@@ -6515,7 +6515,7 @@ function Luna:CreateWindow(WindowSettings)
 			BuildFolderTree()
 		end
 
-		SetFolder()
+		SetFolder(WindowSettings)
 
 		function Luna:SaveConfig(Path)
 			if isStudio then return "Config system unavailable." end
