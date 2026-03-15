@@ -2223,9 +2223,6 @@ end
 
 
 function Luna:CreateWindow(WindowSettings)
-
-	function Luna:CreateWindow(WindowSettings)
-
 	WindowSettings = Kwargify({
 		Name = "Luna UI Example Window",
 		Subtitle = "",
