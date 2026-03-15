@@ -6467,19 +6467,40 @@ function Luna:CreateWindow(WindowSettings)
 
 
 		local function BuildFolderTree()
-			if isStudio then return "Config system unavailable." end
-			local paths = {
-				Luna.Folder,
-				Luna.Folder .. "/" .. game.PlaceId .. "/settings"
-			}
+            if isStudio then return "Config system unavailable." end
+            if not Luna.Folder then return end  -- Don't build if no config system
+            
+            local paths = {
+                Luna.Folder,
+                Luna.Folder .. "/" .. game.PlaceId .. "/settings"
+            }
 
-			for i = 1, #paths do
-				local str = paths[i]
-				if not isfolder(str) then
-					makefolder(str)
-				end
-			end
-		end
+            for i = 1, #paths do
+                local str = paths[i]
+                if not isfolder(str) then
+                    makefolder(str)
+                end
+            end
+        end
+
+        local function SetFolder(WindowSettings)  -- Now accepts WindowSettings as parameter
+            if isStudio then return "Config system unavailable." end
+            
+            -- Only set up folders if ConfigSettings was explicitly provided
+            if not WindowSettings.ConfigSettings then
+                Luna.Folder = nil  -- No config system
+                return
+            end
+
+            -- FIXED: Check if ConfigSettings exists before accessing RootFolder
+            if WindowSettings.ConfigSettings.RootFolder ~= nil and WindowSettings.ConfigSettings.RootFolder ~= "" then
+                Luna.Folder = WindowSettings.ConfigSettings.RootFolder .. "/" .. WindowSettings.ConfigSettings.ConfigFolder
+            else
+                Luna.Folder = WindowSettings.ConfigSettings.ConfigFolder
+            end
+
+            BuildFolderTree()
+        end
 
 		local function SetFolder()
 
