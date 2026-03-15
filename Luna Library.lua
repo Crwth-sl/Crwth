@@ -2224,6 +2224,8 @@ end
 
 function Luna:CreateWindow(WindowSettings)
 
+	function Luna:CreateWindow(WindowSettings)
+
 	WindowSettings = Kwargify({
 		Name = "Luna UI Example Window",
 		Subtitle = "",
@@ -2262,7 +2264,51 @@ function Luna:CreateWindow(WindowSettings)
 
 	local Passthrough = false
 
-	local Window = { Bind = Enum.KeyCode.K, CurrentTab = nil, State = true, Size = false, Settings = nil }
+	-- Store WindowSettings in Window so it's accessible to nested functions
+	local Window = { 
+		Bind = Enum.KeyCode.K, 
+		CurrentTab = nil, 
+		State = true, 
+		Size = false, 
+		Settings = nil,
+		WindowSettings = WindowSettings  -- Store reference here
+	}
+
+	-- Define SetFolder as a local function inside CreateWindow so it captures WindowSettings
+	local function BuildFolderTree()
+		if isStudio then return "Config system unavailable." end
+		if not Luna.Folder then return end  -- Don't build if no config system
+		
+		local paths = {
+			Luna.Folder,
+			Luna.Folder .. "/" .. game.PlaceId .. "/settings"
+		}
+
+		for i = 1, #paths do
+			local str = paths[i]
+			if not isfolder(str) then
+				makefolder(str)
+			end
+		end
+	end
+
+	local function SetFolder()
+		if isStudio then return "Config system unavailable." end
+		
+		-- Use Window.WindowSettings instead of parameter
+		if not Window.WindowSettings.ConfigSettings then
+			Luna.Folder = nil  -- No config system
+			return
+		end
+
+		if Window.WindowSettings.ConfigSettings.RootFolder ~= nil and Window.WindowSettings.ConfigSettings.RootFolder ~= "" then
+			Luna.Folder = Window.WindowSettings.ConfigSettings.RootFolder .. "/" .. Window.WindowSettings.ConfigSettings.ConfigFolder
+		else
+			Luna.Folder = Window.WindowSettings.ConfigSettings.ConfigFolder
+		end
+
+		BuildFolderTree()
+	end
 
 	Main.Title.Title.Text = WindowSettings.Name
 	Main.Title.subtitle.Text = WindowSettings.Subtitle
