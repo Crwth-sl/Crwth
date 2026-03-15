@@ -2225,39 +2225,39 @@ end
 function Luna:CreateWindow(WindowSettings)
 
 	WindowSettings = Kwargify({
-		WindowSettings = Kwargify({
-        Name = "Luna UI Example Window",
-        Subtitle = "",
-        LogoID = "6031097225",
-        LoadingEnabled = true,
-        LoadingTitle = "Luna Interface Suite",
-        LoadingSubtitle = "by Nebula Softworks",
-
+		Name = "Luna UI Example Window",
+		Subtitle = "",
+		LogoID = "6031097225",
+		LoadingEnabled = true,
+		LoadingTitle = "Luna Interface Suite",
+		LoadingSubtitle = "by Nebula Softworks",
+		-- ConfigSettings is NOT included in defaults - only added if user provides it
 		KeySystem = false,
 		KeySettings = {}
 	}, WindowSettings or {})
 
+	-- Only apply ConfigSettings defaults if user actually provided ConfigSettings
 	if WindowSettings.ConfigSettings ~= nil then
-        WindowSettings.ConfigSettings = Kwargify({
-            RootFolder = nil,
-            ConfigFolder = "Big Hub"
-        }, WindowSettings.ConfigSettings or {})
-    end
+		WindowSettings.ConfigSettings = Kwargify({
+			RootFolder = nil,
+			ConfigFolder = "Big Hub"
+		}, WindowSettings.ConfigSettings or {})
+	end
 
 	WindowSettings.KeySettings = Kwargify({
 		Title = WindowSettings.Name,
 		Subtitle = "Key System",
 		Note = "No Instructions",
-		SaveInRoot = false, -- Enabling will save the key in your RootFolder (YOU MUST HAVE ONE BEFORE ENABLING THIS OPTION)
-		SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-		Key = {""}, -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
+		SaveInRoot = false,
+		SaveKey = true,
+		Key = {""},
 		SecondAction = {}	
 	}, WindowSettings.KeySettings or {})
 
 	WindowSettings.KeySettings.SecondAction = Kwargify({
 		Enabled = false,
-		Type = "Discord", -- Link/Discord
-		Parameter = "" -- for discord, add the invite link like home tab. for link, type the link of ur key sys
+		Type = "Discord",
+		Parameter = ""
 	}, WindowSettings.KeySettings.SecondAction)
 
 	local Passthrough = false
@@ -2301,26 +2301,6 @@ function Luna:CreateWindow(WindowSettings)
 
 	LoadingFrame.Visible = true
 
-	-- pcall(function()
-	-- 	if not isfolder(ConfigurationFolder) then
-	-- 		makefolder(ConfigurationFolder)
-	-- 	end
-	-- 	if WindowSettings.ConfigSettings.RootFolder then
-	-- 		if not isfolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder) then
-	-- 			makefolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder)
-	-- 			if not isfolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder .. WindowSettings.ConfigSettings.ConfigFolder) then
-	-- 				makefolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder .. WindowSettings.ConfigSettings.ConfigFolder)
-	-- 			end
-	-- 		end
-	-- 	else
-	-- 		if not isfolder(ConfigurationFolder .. WindowSettings.ConfigSettings.ConfigFolder) then
-	-- 			makefolder(ConfigurationFolder .. WindowSettings.ConfigSettings.ConfigFolder)
-	-- 		end
-	-- 	end
-
-	-- 	LoadAutoLoad(WindowSettings.ConfigSettings.ConfigFolder, WindowSettings.ConfigSettings.RootFolder)
-	-- end)
-
 	LunaUI.Enabled = true
 
 	BlurModule(Main)
@@ -2341,7 +2321,13 @@ function Luna:CreateWindow(WindowSettings)
 
 		if typeof(WindowSettings.KeySettings.Key) == "string" then WindowSettings.KeySettings.Key = {WindowSettings.KeySettings.Key} end
 
-		local direc = WindowSettings.KeySettings.SaveInRoot and "Luna/Configurations/" .. WindowSettings.ConfigSettings.RootFolder .. "/" .. WindowSettings.ConfigSettings.ConfigFolder .. "/Key System/" or "Luna/Configurations/" ..  WindowSettings.ConfigSettings.ConfigFolder .. "/Key System/"
+		-- Only use RootFolder if ConfigSettings exists and SaveInRoot is enabled
+		local direc
+		if WindowSettings.ConfigSettings and WindowSettings.KeySettings.SaveInRoot then
+			direc = "Luna/Configurations/" .. WindowSettings.ConfigSettings.RootFolder .. "/" .. WindowSettings.ConfigSettings.ConfigFolder .. "/Key System/"
+		else
+			direc = "Luna/Configurations/" .. (WindowSettings.ConfigSettings and WindowSettings.ConfigSettings.ConfigFolder or "Default") .. "/Key System/"
+		end
 
 		if isfile and isfile(direc .. WindowSettings.KeySettings.FileName .. ".luna") then
 			for i, Key in ipairs(WindowSettings.KeySettings.Key) do
@@ -2374,7 +2360,7 @@ function Luna:CreateWindow(WindowSettings)
 			
 			Btn.Interact.MouseButton1Click:Connect(function()
 				if typesys == "Discord" then
-					setclipboard(tostring("https://discord.gg/"..KeySettings.SecondAction.Parameter)) -- Hunter if you see this I added copy also was too lazy to send u msg
+					setclipboard(tostring("https://discord.gg/"..KeySettings.SecondAction.Parameter))
 					if request then
 						request({
 							Url = 'http://127.0.0.1:6463/rpc?v=1',
@@ -2435,7 +2421,6 @@ function Luna:CreateWindow(WindowSettings)
 					end
 				else
 					if AttemptsRemaining == 0 then
-
 						game.Players.LocalPlayer:Kick("No Attempts Remaining")
 						game:Shutdown()
 					end
@@ -2447,7 +2432,6 @@ function Luna:CreateWindow(WindowSettings)
 			end)
 
 			KeySystem.Close.MouseButton1Click:Connect(function()
-				
 				Luna:Destroy()
 			end)
 		end
