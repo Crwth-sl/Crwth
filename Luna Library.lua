@@ -2225,23 +2225,24 @@ end
 function Luna:CreateWindow(WindowSettings)
 
 	WindowSettings = Kwargify({
-		Name = "Luna UI Example Window",
-		Subtitle = "",
-		LogoID = "6031097225",
-		LoadingEnabled = true,
-		LoadingTitle = "Luna Interface Suite",
-		LoadingSubtitle = "by Nebula Softworks",
-
-		ConfigSettings = {},
+		WindowSettings = Kwargify({
+        Name = "Luna UI Example Window",
+        Subtitle = "",
+        LogoID = "6031097225",
+        LoadingEnabled = true,
+        LoadingTitle = "Luna Interface Suite",
+        LoadingSubtitle = "by Nebula Softworks",
 
 		KeySystem = false,
 		KeySettings = {}
 	}, WindowSettings or {})
 
-	WindowSettings.ConfigSettings = Kwargify({
-		RootFolder = nil,
-		ConfigFolder = "Big Hub"
-	}, WindowSettings.ConfigSettings or {})
+	if WindowSettings.ConfigSettings ~= nil then
+        WindowSettings.ConfigSettings = Kwargify({
+            RootFolder = nil,
+            ConfigFolder = "Big Hub"
+        }, WindowSettings.ConfigSettings or {})
+    end
 
 	WindowSettings.KeySettings = Kwargify({
 		Title = WindowSettings.Name,
@@ -6513,6 +6514,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		function Luna:SaveConfig(Path)
 			if isStudio then return "Config system unavailable." end
+            if not Luna.Folder then return false, "Config system not enabled." end
 
 			if (not Path) then
 				return false, "Please select a config file."
@@ -6542,6 +6544,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		function Luna:LoadConfig(Path)
 			if isStudio then return "Config system unavailable." end
+            if not Luna.Folder then return false, "Config system not enabled." end
 
 			if (not Path) then
 				return false, "Please select a config file."
@@ -6565,6 +6568,7 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:LoadAutoloadConfig()
+            if not Luna.Folder then return end
 			if isfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt") then
 
 				if isStudio then return "Config system unavailable." end
@@ -6592,6 +6596,8 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:RefreshConfigList()
+            if isStudio then return {} end
+            if not Luna.Folder then return {} end
 			if isStudio then return "Config system unavailable." end
 
 			local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
