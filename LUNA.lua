@@ -1931,13 +1931,13 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 			if dragBar and enableTaptic then
 				dragBar.MouseEnter:Connect(function()
 					if not Dragging then
-						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5, Size = UDim2.new(0, 180, 0, 6)}):Play()
+						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5, Size = UDim2.new(0, 120, 0, 4)}):Play()
 					end
 				end)
 
 				dragBar.MouseLeave:Connect(function()
 					if not Dragging then
-						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.7, Size = UDim2.new(0, 150, 0, 6)}):Play() 
+						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.7, Size = UDim2.new(0, 100, 0, 4)}):Play()
 					end
 				end)
 			end
@@ -1952,7 +1952,7 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 				FramePos = Window.Position
 
 				if enableTaptic then
-					TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 6), BackgroundTransparency = 0}):Play()
+					TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 110, 0, 4), BackgroundTransparency = 0}):Play()
 				end
 
 				Input.Changed:Connect(function()
@@ -1961,7 +1961,7 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 						connectFunctions()
 
 						if enableTaptic then
-							TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 150, 0, 6), BackgroundTransparency = 0.7}):Play()
+							TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 100, 0, 4), BackgroundTransparency = 0.7}):Play()
 						end
 					end
 				end)
@@ -3075,7 +3075,7 @@ function Luna:CreateWindow(WindowSettings)
 						Slider.Value.Text = text:match("[0-9.]*") or ""
 					end
 					if SliderSettings.Range[2] < (tonumber(Slider.Value.Text) or 0) then Slider.Value.Text = SliderSettings.Range[2] end
-					Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X + 10, 28)
+					Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X, 23)
 					Set(tonumber(Slider.Value.Text), true)
 				end)
 
@@ -3873,7 +3873,6 @@ function Luna:CreateWindow(WindowSettings)
 
                         Option.Visible = true
                         Option.Parent = Dropdown.List
-						Option.Size = UDim2.fromOffset(700, 70)
 
                         Option.MouseEnter:Connect(function()
                             optionhover = true
