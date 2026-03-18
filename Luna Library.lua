@@ -6544,13 +6544,23 @@ function Luna:CreateWindow(WindowSettings)
 			}
 		}
 
-        local function softenColor(color)
-            local h, s, v = color:ToHSV()
-            
-            s = s * 0.5
-            v = v * 0.8 
+        local function softenColor(seq)
+            local newKeypoints = {}
 
-            return Color3.fromHSV(h, s, v)
+            for _, kp in ipairs(seq.Keypoints) do
+                local h, s, v = kp.Value:ToHSV()
+
+                -- reduce intensity
+                s = s * 0.35   -- lower saturation
+                v = v * 0.75   -- slightly darker
+
+                table.insert(newKeypoints, ColorSequenceKeypoint.new(
+                    kp.Time,
+                    Color3.fromHSV(h, s, v)
+                ))
+            end
+
+            return ColorSequence.new(newKeypoints)
         end
 
         function Luna:ApplyTheme()
