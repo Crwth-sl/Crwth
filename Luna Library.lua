@@ -3,7 +3,7 @@ local Release = "Prerelease Beta 6.1"
 local Luna = { 
 	Folder = "Luna", 
 	Options = {}, 
-	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(117, 164, 206)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(123, 201, 201)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(224, 138, 175))} 
+	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(204, 255, 255)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(153, 229, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(102, 204, 255))} 
 }
 
 local UserInputService = game:GetService("UserInputService")
@@ -6435,7 +6435,7 @@ function Luna:CreateWindow(WindowSettings)
                 if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
-                
+
                 if obj:IsA("TextButton") or obj:IsA("ImageButton") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
