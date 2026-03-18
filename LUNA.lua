@@ -6863,7 +6863,7 @@ local function makeTextBigger()
     task.wait(1)  -- Wait for UI to load
     for _, obj in ipairs(Main:GetDescendants()) do
         if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-            obj.TextSize = 25  -- Increase from default (usually 14)
+            obj.TextSize = 21  -- Increase from default (usually 14)
         end
     end
 end
