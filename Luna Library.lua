@@ -1563,16 +1563,24 @@ local IconModule = {
 local request = (syn and syn.request) or (http and http.request) or http_request or nil
 local tweeninfo = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
 local PresetGradients = {
-	["Nightlight (Classic)"] = {Color3.fromRGB(147, 255, 239), Color3.fromRGB(201,211,233), Color3.fromRGB(255, 167, 227)},
-	["Nightlight (Neo)"] = {Color3.fromRGB(117, 164, 206), Color3.fromRGB(123, 201, 201), Color3.fromRGB(224, 138, 175)},
-	Starlight = {Color3.fromRGB(147, 255, 239), Color3.fromRGB(181, 206, 241), Color3.fromRGB(214, 158, 243)},
-	Solar = {Color3.fromRGB(242, 157, 76), Color3.fromRGB(240, 179, 81), Color3.fromRGB(238, 201, 86)},
-	Sparkle = {Color3.fromRGB(199, 130, 242), Color3.fromRGB(221, 130, 238), Color3.fromRGB(243, 129, 233)},
-	Lime = {Color3.fromRGB(170, 255, 127), Color3.fromRGB(163, 220, 138), Color3.fromRGB(155, 185, 149)},
-	Vine = {Color3.fromRGB(0, 191, 143), Color3.fromRGB(0, 126, 94), Color3.fromRGB(0, 61, 46)},
-	Cherry = {Color3.fromRGB(148, 54, 54), Color3.fromRGB(168, 67, 70), Color3.fromRGB(188, 80, 86)},
-	Daylight = {Color3.fromRGB(51, 156, 255), Color3.fromRGB(89, 171, 237), Color3.fromRGB(127, 186, 218)},
-	Blossom = {Color3.fromRGB(255, 165, 243), Color3.fromRGB(213, 129, 231), Color3.fromRGB(170, 92, 218)},
+    Aurora = {Color3.fromRGB(102, 255, 204), Color3.fromRGB(102, 178, 255), Color3.fromRGB(204, 153, 255)},
+    Sunset = {Color3.fromRGB(255, 140, 102), Color3.fromRGB(255, 94, 98), Color3.fromRGB(199, 121, 208)},
+    Ice = {Color3.fromRGB(204, 255, 255), Color3.fromRGB(153, 229, 255), Color3.fromRGB(102, 204, 255)},
+    Fire = {Color3.fromRGB(255, 85, 0), Color3.fromRGB(255, 140, 0), Color3.fromRGB(255, 200, 0)},
+    Ember = {Color3.fromRGB(255, 94, 77), Color3.fromRGB(204, 51, 0), Color3.fromRGB(102, 0, 0)},
+    Royal = {Color3.fromRGB(102, 51, 153), Color3.fromRGB(153, 102, 204), Color3.fromRGB(204, 153, 255)},
+    Candy = {Color3.fromRGB(255, 182, 193), Color3.fromRGB(255, 105, 180), Color3.fromRGB(255, 20, 147)},
+    Peach = {Color3.fromRGB(255, 178, 102), Color3.fromRGB(255, 153, 102), Color3.fromRGB(255, 128, 128)},
+    Mint = {Color3.fromRGB(170, 255, 204), Color3.fromRGB(102, 255, 178), Color3.fromRGB(51, 204, 153)},
+    Sky = {Color3.fromRGB(153, 204, 255), Color3.fromRGB(102, 178, 255), Color3.fromRGB(51, 153, 255)},
+    Galaxy = {Color3.fromRGB(51, 0, 102), Color3.fromRGB(102, 0, 153), Color3.fromRGB(204, 0, 255)},
+    Neon = {Color3.fromRGB(57, 255, 20), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 20, 147)},
+    Void = {Color3.fromRGB(20, 20, 20), Color3.fromRGB(40, 40, 60), Color3.fromRGB(80, 0, 120)},
+    Sand = {Color3.fromRGB(237, 201, 175), Color3.fromRGB(224, 172, 105), Color3.fromRGB(210, 140, 69)},
+    Forest = {Color3.fromRGB(34, 139, 34), Color3.fromRGB(60, 179, 113), Color3.fromRGB(107, 142, 35)},
+    Bubblegum = {Color3.fromRGB(255, 153, 204), Color3.fromRGB(255, 102, 178), Color3.fromRGB(255, 51, 153)},
+    Steel = {Color3.fromRGB(192, 192, 192), Color3.fromRGB(128, 128, 128), Color3.fromRGB(64, 64, 64)},
+    Lavender = {Color3.fromRGB(230, 230, 250), Color3.fromRGB(200, 162, 200), Color3.fromRGB(150, 123, 182)}
 }
 
 local function GetIcon(icon, source)
@@ -6505,35 +6513,36 @@ function Luna:CreateWindow(WindowSettings)
 
        function Luna:ApplyTheme()
 
-    if not LunaUI then
-        warn("LunaUI is nil")
-        return
-    end
+            if not LunaUI then
+                warn("LunaUI is nil")
+                return
+            end
 
-    if typeof(LunaUI) ~= "Instance" then
-        warn("LunaUI is not an Instance:", typeof(LunaUI))
-        return
-    end
+            if typeof(LunaUI) ~= "Instance" then
+                warn("LunaUI is not an Instance:", typeof(LunaUI))
+                return
+            end
 
-    local descendants = LunaUI:GetDescendants()
-    if not descendants then return end
+            local descendants = LunaUI:GetDescendants()
+            if not descendants then return end
 
-    for _, obj in pairs(descendants) do
+            for _, obj in pairs(descendants) do
 
-        if obj:IsA("Frame") then
-            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+                -- ❌ skip Elements and everything inside it
+                if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+                end
+
+                if (obj:IsA("TextButton") or obj:IsA("ImageButton")) then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
+                end
+
+                if obj:IsA("TextLabel") then
+                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
+                end
+
+            end
         end
-
-        if obj:IsA("TextButton") or obj:IsA("ImageButton") then
-            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
-        end
-
-        if obj:IsA("TextLabel") then
-            obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
-        end
-
-    end
-end
 
         LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
             Luna:ApplyTheme()
