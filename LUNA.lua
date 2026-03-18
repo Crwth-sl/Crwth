@@ -6251,7 +6251,7 @@ function Luna:CreateWindow(WindowSettings)
                     else
                         Luna:Notification({
                             Title = "Interface",
-                            Content = "Config \"" .. configname .. "\" successfully saved!"
+                            Content = "Config \"" .. inputPath .. "\" successfully saved!"
                         })
                         return
                     end
