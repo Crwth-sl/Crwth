@@ -6557,7 +6557,7 @@ function Luna:CreateWindow(WindowSettings)
             for _, obj in pairs(LunaUI:GetDescendants()) do
 
                 -- ❌ skip main frame
-                if obj == LunaUI.MainFrame then
+                if obj.Name == "MainFrame" then
                     continue
                 end
 
