@@ -2163,11 +2163,11 @@ end
 local MainSize
 local MinSize 
 if Camera.ViewportSize.X > 774 and Camera.ViewportSize.Y > 503 then
-	MainSize = UDim2.fromOffset(900, 600)
-	MinSize = UDim2.fromOffset(700, 60)
+	MainSize = UDim2.fromOffset(675, 424)
+	MinSize = UDim2.fromOffset(500, 42)
 else
-	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 50, Camera.ViewportSize.Y - 50)
-	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 150, 60)
+	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100, Camera.ViewportSize.Y - 100)
+	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275, 42)
 end
 
 local function Maximise(Window)
@@ -2232,7 +2232,7 @@ function Luna:CreateWindow(WindowSettings)
 	Main.Visible = true
 	Main.BackgroundTransparency = 1
 	Main.Size = MainSize
-	Main.Size = UDim2.fromOffset(Main.Size.X.Offset - 30, Main.Size.Y.Offset - 25)
+	Main.Size = UDim2.fromOffset(Main.Size.X.Offset - 70, Main.Size.Y.Offset - 55)
 	Main.Parent.ShadowHolder.Size = Main.Size
 	LoadingFrame.Frame.Frame.Title.TextTransparency = 1
 	LoadingFrame.Frame.Frame.Subtitle.TextTransparency = 1
@@ -2923,208 +2923,197 @@ function Luna:CreateWindow(WindowSettings)
 			end
 
 			function Section:CreateSlider(SliderSettings, Flag)
-				local success, result = pcall(function()
-					TabPage.Position = UDim2.new(0,0,0,28)
-					
-					SliderSettings = Kwargify({
-						Name = "Slider",
-						Range = {0, 200},
-						Increment = 1,
-						CurrentValue = 100,
-						Callback = function(Value)
+				TabPage.Position = UDim2.new(0,0,0,28)
+				local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
 
-						end,
-					}, SliderSettings or {})
+				SliderSettings = Kwargify({
+					Name = "Slider",
+					Range = {0, 200},
+					Increment = 1,
+					CurrentValue = 100,
+					Callback = function(Value)
 
-					local SLDragging = false
-					local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
-					
-					local Slider = Elements.Template.Slider:Clone()
+					end,
+				}, SliderSettings or {})
+
+				local SLDragging = false
+				local Slider = Elements.Template.Slider:Clone()
+				Slider.Name = SliderSettings.Name .. " - Slider"
+				Slider.Title.Text = SliderSettings.Name
+				Slider.Visible = true
+				Slider.Parent = TabPage
+
+				Slider.BackgroundTransparency = 1
+				Slider.UIStroke.Transparency = 1
+				Slider.Title.TextTransparency = 1
+
+				TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
+				TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+				TweenService:Create(Slider.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()	
+
+				Slider.Main.Progress.Size =	UDim2.new(0, Slider.Main.AbsoluteSize.X * ((SliderSettings.CurrentValue + SliderSettings.Range[1]) / (SliderSettings.Range[2] - SliderSettings.Range[1])) > 5 and Slider.Main.AbsoluteSize.X * (SliderSettings.CurrentValue / (SliderSettings.Range[2] - SliderSettings.Range[1])) or 5, 1, 0)
+
+				Slider.Value.Text = tostring(SliderSettings.CurrentValue)
+				SliderV.CurrentValue = Slider.Value.Text
+
+				SliderSettings.Callback(SliderSettings.CurrentValue)
+
+				Slider["MouseEnter"]:Connect(function()
+					tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				end)
+
+				Slider["MouseLeave"]:Connect(function()
+					tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				end)
+
+				Slider.Interact.InputBegan:Connect(function(Input)
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
+						SLDragging = true 
+					end 
+				end)
+
+				Slider.Interact.InputEnded:Connect(function(Input) 
+					if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
+						SLDragging = false 
+					end 
+				end)
+
+				Slider.Interact.MouseButton1Down:Connect(function()
+					local Current = Slider.Main.Progress.AbsolutePosition.X + Slider.Main.Progress.AbsoluteSize.X
+					local Start = Current
+					local Location
+					local Loop; Loop = RunService.Stepped:Connect(function()
+						if SLDragging then
+							Location = UserInputService:GetMouseLocation().X
+							Current = Current + 0.025 * (Location - Start)
+
+							if Location < Slider.Main.AbsolutePosition.X then
+								Location = Slider.Main.AbsolutePosition.X
+							elseif Location > Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X then
+								Location = Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X
+							end
+
+							if Current < Slider.Main.AbsolutePosition.X + 5 then
+								Current = Slider.Main.AbsolutePosition.X + 5
+							elseif Current > Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X then
+								Current = Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X
+							end
+
+							if Current <= Location and (Location - Start) < 0 then
+								Start = Location
+							elseif Current >= Location and (Location - Start) > 0 then
+								Start = Location
+							end
+							Slider.Main.Progress.Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X, 1, 0)
+							local NewValue = SliderSettings.Range[1] + (Location - Slider.Main.AbsolutePosition.X) / Slider.Main.AbsoluteSize.X * (SliderSettings.Range[2] - SliderSettings.Range[1])
+
+							NewValue = math.floor(NewValue / SliderSettings.Increment + 0.5) * (SliderSettings.Increment * 10000000) / 10000000
+
+							Slider.Value.Text = tostring(NewValue)
+
+							if SliderSettings.CurrentValue ~= NewValue then
+								local Success, Response = pcall(function()
+									SliderSettings.Callback(NewValue)
+								end)
+								if not Success then
+									TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+									TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+									TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+									Slider.Title.Text = "Callback Error"
+									print("Luna Interface Suite | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
+									wait(0.5)
+									Slider.Title.Text = SliderSettings.Name
+									TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
+									TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
+									TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+								end
+
+								SliderSettings.CurrentValue = NewValue
+								SliderV.CurrentValue = SliderSettings.CurrentValue
+							end
+						else
+							TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.In, 0, false), {Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X > 5 and Location - Slider.Main.AbsolutePosition.X or 5, 1, 0)}):Play()
+							Loop:Disconnect()
+						end
+					end)
+				end)
+
+				local function Set(NewVal, bleh)
+
+					NewVal = NewVal or SliderSettings.CurrentValue
+
+					TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {Size = UDim2.new(0, Slider.Main.AbsoluteSize.X * ((NewVal + SliderSettings.Range[1]) / (SliderSettings.Range[2] - SliderSettings.Range[1])) > 5 and Slider.Main.AbsoluteSize.X * (NewVal / (SliderSettings.Range[2] - SliderSettings.Range[1])) or 5, 1, 0)}):Play()
+					if not bleh then Slider.Value.Text = tostring(NewVal) end
+					local Success, Response = pcall(function()
+						SliderSettings.Callback(NewVal)
+					end)
+					if not Success then
+						TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+						TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+						TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+						Slider.Title.Text = "Callback Error"
+						print("Luna Interface Suite | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
+						wait(0.5)
+						Slider.Title.Text = SliderSettings.Name
+						TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
+						TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(30, 33, 40)}):Play()
+						TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+					end
+
+					SliderSettings.CurrentValue = NewVal
+					SliderV.CurrentValue = SliderSettings.CurrentValue
+
+				end
+
+				function SliderV:UpdateValue(Value)
+					Set(tonumber(Value))
+				end 
+
+				Slider.Value:GetPropertyChangedSignal("Text"):Connect(function()
+					local text = Slider.Value.Text
+					if not tonumber(text) and text ~= "." then
+						Slider.Value.Text = text:match("[0-9.]*") or ""
+					end
+					if SliderSettings.Range[2] < (tonumber(Slider.Value.Text) or 0) then Slider.Value.Text = SliderSettings.Range[2] end
+					Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X, 23)
+					Set(tonumber(Slider.Value.Text), true)
+				end)
+
+				function SliderV:Set(NewSliderSettings)
+					NewSliderSettings = Kwargify({
+						Name = SliderSettings.Name,
+						Range = SliderSettings.Range,
+						Increment = SliderSettings.Increment,
+						CurrentValue = SliderSettings.CurrentValue,
+						Callback = SliderSettings.Callback
+					}, NewSliderSettings or {})
+
+					SliderSettings = NewSliderSettings
+					SliderV.Settings = NewSliderSettings
+
 					Slider.Name = SliderSettings.Name .. " - Slider"
 					Slider.Title.Text = SliderSettings.Name
-					Slider.Visible = true
-					Slider.Parent = TabPage
 
-					Slider.BackgroundTransparency = 1
-					Slider.UIStroke.Transparency = 1
-					Slider.Title.TextTransparency = 1
+					Set()
 
-					TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-					TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-					TweenService:Create(Slider.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()	
-
-					Slider.Main.Progress.Size = UDim2.new(0, Slider.Main.AbsoluteSize.X * ((SliderSettings.CurrentValue + SliderSettings.Range[1]) / (SliderSettings.Range[2] - SliderSettings.Range[1])) > 5 and Slider.Main.AbsoluteSize.X * (SliderSettings.CurrentValue / (SliderSettings.Range[2] - SliderSettings.Range[1])) or 5, 1, 0)
-
-					Slider.Value.Text = tostring(SliderSettings.CurrentValue)
-					SliderV.CurrentValue = Slider.Value.Text
-
-					SliderSettings.Callback(SliderSettings.CurrentValue)
-
-					Slider["MouseEnter"]:Connect(function()
-						tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
-					end)
-
-					Slider["MouseLeave"]:Connect(function()
-						tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
-					end)
-
-					Slider.Interact.InputBegan:Connect(function(Input)
-						if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
-							SLDragging = true 
-						end 
-					end)
-
-					Slider.Interact.InputEnded:Connect(function(Input) 
-						if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
-							SLDragging = false 
-						end 
-					end)
-
-					Slider.Interact.MouseButton1Down:Connect(function()
-						local Current = Slider.Main.Progress.AbsolutePosition.X + Slider.Main.Progress.AbsoluteSize.X
-						local Start = Current
-						local Location
-						local Loop; Loop = RunService.Stepped:Connect(function()
-							if SLDragging then
-								Location = UserInputService:GetMouseLocation().X
-								Current = Current + 0.025 * (Location - Start)
-
-								if Location < Slider.Main.AbsolutePosition.X then
-									Location = Slider.Main.AbsolutePosition.X
-								elseif Location > Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X then
-									Location = Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X
-								end
-
-								if Current < Slider.Main.AbsolutePosition.X + 5 then
-									Current = Slider.Main.AbsolutePosition.X + 5
-								elseif Current > Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X then
-									Current = Slider.Main.AbsolutePosition.X + Slider.Main.AbsoluteSize.X
-								end
-
-								if Current <= Location and (Location - Start) < 0 then
-									Start = Location
-								elseif Current >= Location and (Location - Start) > 0 then
-									Start = Location
-								end
-								Slider.Main.Progress.Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X, 1, 0)
-								local NewValue = SliderSettings.Range[1] + (Location - Slider.Main.AbsolutePosition.X) / Slider.Main.AbsoluteSize.X * (SliderSettings.Range[2] - SliderSettings.Range[1])
-
-								NewValue = math.floor(NewValue / SliderSettings.Increment + 0.5) * (SliderSettings.Increment * 10000000) / 10000000
-
-								Slider.Value.Text = tostring(NewValue)
-
-								if SliderSettings.CurrentValue ~= NewValue then
-									local Success, Response = pcall(function()
-										SliderSettings.Callback(NewValue)
-									end)
-									if not Success then
-										TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-										TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-										TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-										Slider.Title.Text = "Callback Error"
-										print("Luna Interface Suite | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
-										wait(0.5)
-										Slider.Title.Text = SliderSettings.Name
-										TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-										TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
-										TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-									end
-
-									SliderSettings.CurrentValue = NewValue
-									SliderV.CurrentValue = SliderSettings.CurrentValue
-								end
-							else
-								TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.In, 0, false), {Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X > 5 and Location - Slider.Main.AbsolutePosition.X or 5, 1, 0)}):Play()
-								Loop:Disconnect()
-							end
-						end)
-					end)
-
-					local function Set(NewVal, bleh)
-						NewVal = NewVal or SliderSettings.CurrentValue
-
-						TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {Size = UDim2.new(0, Slider.Main.AbsoluteSize.X * ((NewVal + SliderSettings.Range[1]) / (SliderSettings.Range[2] - SliderSettings.Range[1])) > 5 and Slider.Main.AbsoluteSize.X * (NewVal / (SliderSettings.Range[2] - SliderSettings.Range[1])) or 5, 1, 0)}):Play()
-						if not bleh then Slider.Value.Text = tostring(NewVal) end
-						local Success, Response = pcall(function()
-							SliderSettings.Callback(NewVal)
-						end)
-						if not Success then
-							TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-							TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-							TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-							Slider.Title.Text = "Callback Error"
-							print("Luna Interface Suite | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
-							wait(0.5)
-							Slider.Title.Text = SliderSettings.Name
-							TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-							TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(30, 33, 40)}):Play()
-							TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-						end
-
-						SliderSettings.CurrentValue = NewVal
-						SliderV.CurrentValue = SliderSettings.CurrentValue
-					end
-
-					function SliderV:UpdateValue(Value)
-						Set(tonumber(Value))
-					end 
-
-					Slider.Value:GetPropertyChangedSignal("Text"):Connect(function()
-						local text = Slider.Value.Text
-						if not tonumber(text) and text ~= "." then
-							Slider.Value.Text = text:match("[0-9.]*") or ""
-						end
-						if SliderSettings.Range[2] < (tonumber(Slider.Value.Text) or 0) then Slider.Value.Text = SliderSettings.Range[2] end
-						Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X, 28)
-						Set(tonumber(Slider.Value.Text), true)
-					end)
-
-					function SliderV:Set(NewSliderSettings)
-						NewSliderSettings = Kwargify({
-							Name = SliderSettings.Name,
-							Range = SliderSettings.Range,
-							Increment = SliderSettings.Increment,
-							CurrentValue = SliderSettings.CurrentValue,
-							Callback = SliderSettings.Callback
-						}, NewSliderSettings or {})
-
-						SliderSettings = NewSliderSettings
-						SliderV.Settings = NewSliderSettings
-
-						Slider.Name = SliderSettings.Name .. " - Slider"
-						Slider.Title.Text = SliderSettings.Name
-
-						Set()
-					end
-
-					function SliderV:Destroy()
-						Slider.Visible = false
-						Slider:Destroy()
-					end
-
-					if Flag then
-						Luna.Options[Flag] = SliderV
-					end
-
-					LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
-						Slider.Main.color.Color = Luna.ThemeGradient
-						Slider.Main.UIStroke.color.Color = Luna.ThemeGradient
-					end)
-
-					return SliderV
-				end)
-				
-				if not success then
-					warn("Slider creation failed:", result)
-					return {
-						Set = function() end,
-						UpdateValue = function() end,
-						Destroy = function() end,
-						CurrentValue = (SliderSettings and SliderSettings.CurrentValue) or 0
-					}
 				end
-				
-				return result
+
+				function SliderV:Destroy()
+					Slider.Visible = false
+					Slider:Destroy()
+				end
+
+				if Flag then
+					Luna.Options[Flag] = SliderV
+				end
+
+				LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
+					Slider.Main.color.Color = Luna.ThemeGradient
+					Slider.Main.UIStroke.color.Color = Luna.ThemeGradient
+				end)
+
+				return SliderV
+
 			end
 
 			function Section:CreateToggle(ToggleSettings, Flag)    
@@ -6654,7 +6643,7 @@ function Luna:CreateWindow(WindowSettings)
 					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
 					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
 				},
-				CurrentOption = "Velvet",
+				CurrentOption = "Void",
 				Callback = function(presetName)
 					local preset = PresetGradients[presetName]
 					if preset then
@@ -6869,16 +6858,6 @@ function Luna:CreateWindow(WindowSettings)
 
 	return Window
 end
-
-local function makeTextBigger()
-    task.wait(1)
-    for _, obj in ipairs(Main:GetDescendants()) do
-        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-            obj.TextSize = 21
-        end
-    end
-end
-makeTextBigger()
 
 function Luna:Destroy()
 	Main.Visible = false
