@@ -1562,68 +1562,17 @@ local IconModule = {
 -- Other Variables
 local request = (syn and syn.request) or (http and http.request) or http_request or nil
 local tweeninfo = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
-local themePresets = {
-
-    ["Ocean Blue"] = {
-        Color3.fromRGB(70, 110, 160),
-        Color3.fromRGB(80, 120, 170),
-        Color3.fromRGB(95, 135, 185)
-    },
-
-    ["Purple Dream"] = {
-        Color3.fromRGB(120, 80, 150),
-        Color3.fromRGB(135, 90, 160),
-        Color3.fromRGB(150, 105, 170)
-    },
-
-    ["Soft Mint"] = {
-        Color3.fromRGB(100, 170, 150),
-        Color3.fromRGB(110, 180, 160),
-        Color3.fromRGB(125, 195, 175)
-    },
-
-    ["Sunset Warm"] = {
-        Color3.fromRGB(180, 120, 90),
-        Color3.fromRGB(195, 135, 100),
-        Color3.fromRGB(210, 150, 115)
-    },
-
-    ["Dark Night"] = {
-        Color3.fromRGB(30, 30, 45),
-        Color3.fromRGB(35, 35, 50),
-        Color3.fromRGB(40, 40, 60)
-    },
-
-    ["Royal Blue"] = {
-        Color3.fromRGB(40, 70, 120),
-        Color3.fromRGB(50, 85, 135),
-        Color3.fromRGB(65, 100, 150)
-    },
-
-    ["Pink Soft"] = {
-        Color3.fromRGB(190, 130, 150),
-        Color3.fromRGB(205, 145, 165),
-        Color3.fromRGB(220, 160, 180)
-    },
-
-    ["Cyber Teal"] = {
-        Color3.fromRGB(40, 140, 130),
-        Color3.fromRGB(50, 150, 140),
-        Color3.fromRGB(65, 165, 155)
-    },
-
-    ["Lavender"] = {
-        Color3.fromRGB(150, 140, 200),
-        Color3.fromRGB(165, 155, 215),
-        Color3.fromRGB(180, 170, 230)
-    },
-
-    ["Minimal Gray"] = {
-        Color3.fromRGB(55, 55, 55),
-        Color3.fromRGB(65, 65, 65),
-        Color3.fromRGB(75, 75, 75)
-    },
-
+local PresetGradients = {
+	["Nightlight (Classic)"] = {Color3.fromRGB(147, 255, 239), Color3.fromRGB(201,211,233), Color3.fromRGB(255, 167, 227)},
+	["Nightlight (Neo)"] = {Color3.fromRGB(117, 164, 206), Color3.fromRGB(123, 201, 201), Color3.fromRGB(224, 138, 175)},
+	Starlight = {Color3.fromRGB(147, 255, 239), Color3.fromRGB(181, 206, 241), Color3.fromRGB(214, 158, 243)},
+	Solar = {Color3.fromRGB(242, 157, 76), Color3.fromRGB(240, 179, 81), Color3.fromRGB(238, 201, 86)},
+	Sparkle = {Color3.fromRGB(199, 130, 242), Color3.fromRGB(221, 130, 238), Color3.fromRGB(243, 129, 233)},
+	Lime = {Color3.fromRGB(170, 255, 127), Color3.fromRGB(163, 220, 138), Color3.fromRGB(155, 185, 149)},
+	Vine = {Color3.fromRGB(0, 191, 143), Color3.fromRGB(0, 126, 94), Color3.fromRGB(0, 61, 46)},
+	Cherry = {Color3.fromRGB(148, 54, 54), Color3.fromRGB(168, 67, 70), Color3.fromRGB(188, 80, 86)},
+	Daylight = {Color3.fromRGB(51, 156, 255), Color3.fromRGB(89, 171, 237), Color3.fromRGB(127, 186, 218)},
+	Blossom = {Color3.fromRGB(255, 165, 243), Color3.fromRGB(213, 129, 231), Color3.fromRGB(170, 92, 218)},
 }
 
 local function GetIcon(icon, source)
@@ -6547,20 +6496,30 @@ function Luna:CreateWindow(WindowSettings)
         local function softenColor(color)
             local h, s, v = color:ToHSV()
             
-            s = s * 0.5
-            v = v * 0.8 
+            -- reduce saturation + brightness
+            s = s * 0.5        -- less intense
+            v = v * 0.8        -- slightly darker
 
             return Color3.fromHSV(h, s, v)
         end
 
         function Luna:ApplyTheme()
-            if not LunaUI then return end
-            if not LunaUI.GetDescendants then return end
-
             for _, obj in pairs(LunaUI:GetDescendants()) do
 
                 if obj:IsA("UIGradient") then
                     obj.Color = self.ThemeGradient
+                end
+
+                if obj:IsA("Frame") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+                end
+
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
+                end
+
+                if obj:IsA("TextLabel") then
+                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
                 end
             end
         end
@@ -6568,6 +6527,7 @@ function Luna:CreateWindow(WindowSettings)
         LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
             Luna:ApplyTheme()
         end)
+
 		function Tab:BuildThemeSection()
 
             local Title = Elements.Template.Title:Clone()
