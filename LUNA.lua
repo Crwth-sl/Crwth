@@ -3780,6 +3780,7 @@ function Luna:CreateWindow(WindowSettings)
 
                     Toggle()
 
+                    -- Find the option by its RealName attribute instead of by name
                     local Selected = nil
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == name then
@@ -4053,13 +4054,14 @@ function Luna:CreateWindow(WindowSettings)
                     end
                     
                     if ind == 1 then 
-                        bleh = DropdownSettings.CurrentOption[1]
+                        bleh = DropdownSettings.CurrentOption[1]  -- This is a string
                     else 
-                        bleh = DropdownSettings.CurrentOption
+                        bleh = DropdownSettings.CurrentOption  -- This is a table
                     end
                     
                     SafeCallback(bleh)
                     
+                    -- Reset all options first
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
                             local base = Option:GetAttribute("ThemeTextColor")
@@ -4070,7 +4072,9 @@ function Luna:CreateWindow(WindowSettings)
                         end
                     end
 
+                    -- Handle highlighting based on bleh type
                     if type(bleh) == "string" then
+                        -- Single selection - find by RealName attribute
                         for _, Option in pairs(Dropdown.List:GetChildren()) do
                             if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
                                 local base = Option:GetAttribute("ThemeTextColor")
@@ -4082,6 +4086,7 @@ function Luna:CreateWindow(WindowSettings)
                             end
                         end
                     else
+                        -- Multiple selections - find each by RealName attribute
                         for _, value in pairs(bleh) do
                             for _, Option in pairs(Dropdown.List:GetChildren()) do
                                 if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
@@ -4596,8 +4601,7 @@ function Luna:CreateWindow(WindowSettings)
 			return ParagraphV
 		end
 
-		function Section:CreateSlider(SliderSettings, Flag)
-			TabPage.Position = UDim2.new(0,0,0,28)
+		function Tab:CreateSlider(SliderSettings, Flag)
 			local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
 
 			SliderSettings = Kwargify({
@@ -4769,7 +4773,6 @@ function Luna:CreateWindow(WindowSettings)
 				Slider.Title.Text = SliderSettings.Name
 
 				Set()
-
 			end
 
 			function SliderV:Destroy()
@@ -5883,13 +5886,14 @@ function Luna:CreateWindow(WindowSettings)
                 end
                 
                 if ind == 1 then 
-                    bleh = DropdownSettings.CurrentOption[1]
+                    bleh = DropdownSettings.CurrentOption[1]  -- This is a string
                 else 
-                    bleh = DropdownSettings.CurrentOption
+                    bleh = DropdownSettings.CurrentOption  -- This is a table
                 end
                 
                 SafeCallback(bleh)
                 
+                -- Reset all options first
                 for _, Option in pairs(Dropdown.List:GetChildren()) do
                     if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
                         local base = Option:GetAttribute("ThemeTextColor")
@@ -5900,7 +5904,9 @@ function Luna:CreateWindow(WindowSettings)
                     end
                 end
 
+                -- Handle highlighting based on bleh type
                 if type(bleh) == "string" then
+                    -- Single selection
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
                             local base = Option:GetAttribute("ThemeTextColor")
@@ -5912,6 +5918,7 @@ function Luna:CreateWindow(WindowSettings)
                         end
                     end
                 else
+                    -- Multiple selections
                     for _, value in pairs(bleh) do
                         for _, Option in pairs(Dropdown.List:GetChildren()) do
                             if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
@@ -6563,100 +6570,92 @@ function Luna:CreateWindow(WindowSettings)
         end)
 
 		function Tab:BuildThemeSection()
-			local Title = Elements.Template.Title:Clone()
-			Title.Text = "Theming"
-			Title.Visible = true
-			Title.Parent = TabPage
-			Title.TextTransparency = 1
 
-			TweenService:Create(
-				Title,
-				TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-				{TextTransparency = 0}
-			):Play()
+            local Title = Elements.Template.Title:Clone()
+            Title.Text = "Theming"
+            Title.Visible = true
+            Title.Parent = TabPage
+            Title.TextTransparency = 1
 
-			Tab:CreateSection("Custom Editor")
+            TweenService:Create(
+                Title,
+                TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+                {TextTransparency = 0}
+            ):Play()
 
-			local function toColor3(v)
-				if typeof(v) == "Color3" then
-					return v
-				elseif type(v) == "table" then
-					return Color3.fromRGB(v.R or 255, v.G or 255, v.B or 255)
-				end
-				return Color3.fromRGB(255,255,255)
-			end
+            Tab:CreateSection("Custom Editor")
 
-			local c1cp = Tab:CreateColorPicker({
-				Name = "Color 1",
-				Color = Color3.fromRGB(117, 164, 206),
-			}, "LunaInterfaceSuitePrebuiltCPC1")
+            local function toColor3(v)
+                if typeof(v) == "Color3" then
+                    return v
+                elseif type(v) == "table" then
+                    return Color3.fromRGB(v.R or 255, v.G or 255, v.B or 255)
+                end
+                return Color3.fromRGB(255,255,255)
+            end
 
-			local c2cp = Tab:CreateColorPicker({
-				Name = "Color 2",
-				Color = Color3.fromRGB(123, 201, 201),
-			}, "LunaInterfaceSuitePrebuiltCPC2")
+            local c1cp = Tab:CreateColorPicker({
+                Name = "Color 1",
+                Color = Color3.fromRGB(117, 164, 206),
+            }, "LunaInterfaceSuitePrebuiltCPC1")
 
-			local c3cp = Tab:CreateColorPicker({
-				Name = "Color 3",
-				Color = Color3.fromRGB(224, 138, 184),
-			}, "LunaInterfaceSuitePrebuiltCPC3")
+            local c2cp = Tab:CreateColorPicker({
+                Name = "Color 2",
+                Color = Color3.fromRGB(123, 201, 201),
+            }, "LunaInterfaceSuitePrebuiltCPC2")
 
-			local function updateTheme(c1, c2, c3)
-				Luna.ThemeGradient = ColorSequence.new{
-					ColorSequenceKeypoint.new(0.00, toColor3(c1)),
-					ColorSequenceKeypoint.new(0.50, toColor3(c2)),
-					ColorSequenceKeypoint.new(1.00, toColor3(c3))
-				}
+            local c3cp = Tab:CreateColorPicker({
+                Name = "Color 3",
+                Color = Color3.fromRGB(224, 138, 184),
+            }, "LunaInterfaceSuitePrebuiltCPC3")
 
-				LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-				Luna:ApplyTheme()
-			end
+            local function updateTheme(c1, c2, c3)
+                Luna.ThemeGradient = ColorSequence.new{
+                    ColorSequenceKeypoint.new(0.00, toColor3(c1)),
+                    ColorSequenceKeypoint.new(0.50, toColor3(c2)),
+                    ColorSequenceKeypoint.new(1.00, toColor3(c3))
+                }
 
-			task.wait(1)
+                LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
 
-			c1cp:Set({
-				Callback = function(Value)
-					updateTheme(Value, c2cp.Color, c3cp.Color)
-				end
-			})
+                Luna:ApplyTheme()
+            end
 
-			c2cp:Set({
-				Callback = function(Value)
-					updateTheme(c1cp.Color, Value, c3cp.Color)
-				end
-			})
+            task.wait(1)
 
-			c3cp:Set({
-				Callback = function(Value)
-					updateTheme(c1cp.Color, c2cp.Color, Value)
-				end
-			})
+            c1cp:Set({
+                Callback = function(Value)
+                    updateTheme(Value, c2cp.Color, c3cp.Color)
+                end
+            })
 
-			Tab:CreateSection("Preset Gradients")
+            c2cp:Set({
+                Callback = function(Value)
+                    updateTheme(c1cp.Color, Value, c3cp.Color)
+                end
+            })
 
-			Tab:CreateDropdown({
-				Name = "Theme Presets",
-				Options = {
-					"NeonSun", "Arctic", "Crimson", "Gold", "Obsidian", "Cyber", 
-					"ToxicGlow", "RoseGold", "DeepSea", "Plasma", "Inferno", 
-					"CottonCandy", "NightSky", "Lava", "Glacier", "Sakura", 
-					"Matrix", "Midnight", "Frostbite", "Velvet", "Slatel", 
-					"Aurora", "Sunset", "Ice", "Fire", "Ember", "Royal", 
-					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
-					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
-				},
-				CurrentOption = "Void",
-				Callback = function(presetName)
-					local preset = PresetGradients[presetName]
-					if preset then
-						c1cp:Set({ Color = preset[1] })
-						c2cp:Set({ Color = preset[2] })
-						c3cp:Set({ Color = preset[3] })
-						updateTheme(preset[1], preset[2], preset[3])
-					end
-				end
-			})
-		end
+            c3cp:Set({
+                Callback = function(Value)
+                    updateTheme(c1cp.Color, c2cp.Color, Value)
+                end
+            })
+
+            Tab:CreateSection("Preset Gradients")
+
+            for name, colors in pairs(PresetGradients) do
+                Tab:CreateButton({
+                    Name = name,
+                    Callback = function()
+                        c1cp:Set({ Color = colors[1] })
+                        c2cp:Set({ Color = colors[2] })
+                        c3cp:Set({ Color = colors[3] })
+
+                        updateTheme(colors[1], colors[2], colors[3])
+                    end,
+                })
+            end
+        end
 
 
 		local function BuildFolderTree()
