@@ -4048,7 +4048,13 @@ function Luna:CreateWindow(WindowSettings)
 							Dropdown.Selected.PlaceholderText = "None"
 						end
 						for _, name in pairs(DropdownSettings.CurrentOption) do
-							tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+							local opt = Dropdown.List[name]
+                            local base = opt:GetAttribute("ThemeTextColor")
+
+                            tween(opt, {
+                                TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
+                                BackgroundTransparency = 0.95
+                            })
 						end
 					else
 						Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
@@ -5579,7 +5585,13 @@ function Luna:CreateWindow(WindowSettings)
 				end
 
 				Toggle()
-				tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
+				local opt = Dropdown.List[name]
+                local base = opt:GetAttribute("ThemeTextColor")
+
+                tween(opt, {
+                    BackgroundTransparency = 0.95,
+                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3)
+                })
 			end
 
 			local function Refresh()
@@ -5594,17 +5606,26 @@ function Luna:CreateWindow(WindowSettings)
 						local bleh
 						if DropdownSettings.MultipleOptions then
 							if table.find(DropdownSettings.CurrentOption, v) then
-								RemoveTable(DropdownSettings.CurrentOption, v)
-								DropdownV.CurrentOption = DropdownSettings.CurrentOption
-								if not optionhover then
-									tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
-								end
-								tween(Option, {BackgroundTransparency = 0.98})
-							else
-								table.insert(DropdownSettings.CurrentOption, v)
-								DropdownV.CurrentOption = DropdownSettings.CurrentOption
-								tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
-							end
+                                RemoveTable(DropdownSettings.CurrentOption, v)
+                                DropdownV.CurrentOption = DropdownSettings.CurrentOption
+
+                                if not optionhover then
+                                    local base = Option:GetAttribute("ThemeTextColor")
+                                    tween(Option, {TextColor3 = base})
+                                end
+
+                                tween(Option, {BackgroundTransparency = 0.98})
+                            else
+                                table.insert(DropdownSettings.CurrentOption, v)
+                                DropdownV.CurrentOption = DropdownSettings.CurrentOption
+
+                                local base = Option:GetAttribute("ThemeTextColor")
+
+                                tween(Option, {
+                                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+                                    BackgroundTransparency = 0.95
+                                })
+                            end
 							bleh = DropdownSettings.CurrentOption
 						else
 							DropdownSettings.CurrentOption = {v}
@@ -5637,21 +5658,32 @@ function Luna:CreateWindow(WindowSettings)
 					Option.Visible = true
 					Option.Parent = Dropdown.List
 					Option.MouseEnter:Connect(function()
-						optionhover = true
-						if Option.BackgroundTransparency == 0.95 then
-							return
-						else
-							tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
-						end
-					end)
-					Option.MouseLeave:Connect(function()
-						optionhover = false
-						if Option.BackgroundTransparency == 0.95 then
-							return
-						else
-							tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
-						end
-					end)	
+                        optionhover = true
+
+                        if Option.BackgroundTransparency == 0.95 then
+                            return
+                        else
+                            local base = Option:GetAttribute("ThemeTextColor")
+
+                            tween(Option, {
+                                TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.2)
+                            })
+                        end
+                    end)
+
+                    Option.MouseLeave:Connect(function()
+                        optionhover = false
+
+                        if Option.BackgroundTransparency == 0.95 then
+                            return
+                        else
+                            local base = Option:GetAttribute("ThemeTextColor")
+
+                            tween(Option, {
+                                TextColor3 = base
+                            })
+                        end
+                    end)	
 				end
 			end
 
@@ -5709,13 +5741,25 @@ function Luna:CreateWindow(WindowSettings)
 			end
 			if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 			SafeCallback(bleh)
-			if type(bleh) == "string" then 
-				tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
-			else
-				for i,v in pairs(bleh) do
-					tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
-				end
-			end
+            if type(bleh) == "string" then
+                local opt = Dropdown.List[bleh]
+                local base = opt:GetAttribute("ThemeTextColor")
+
+                tween(opt, {
+                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+                    BackgroundTransparency = 0.95
+                })
+            else
+                for i, v in pairs(bleh) do
+                    local opt = Dropdown.List[v]
+                    local base = opt:GetAttribute("ThemeTextColor")
+
+                    tween(opt, {
+                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+                        BackgroundTransparency = 0.95
+                    })
+                end
+            end
 
 			if DropdownSettings.MultipleOptions then
 				if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
@@ -5788,11 +5832,22 @@ function Luna:CreateWindow(WindowSettings)
 				if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 				SafeCallback(bleh)
 				for _, Option in pairs(Dropdown.List:GetChildren()) do
-					if Option.ClassName == "TextLabel" then
-						tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
-					end
-				end
-				tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+                    if Option.ClassName == "TextLabel" then
+                        local base = Option:GetAttribute("ThemeTextColor")
+
+                        tween(Option, {
+                            TextColor3 = base,
+                            BackgroundTransparency = 0.98
+                        })
+                    end
+                end
+				local opt = Dropdown.List[bleh]
+                local base = opt:GetAttribute("ThemeTextColor")
+
+                tween(opt, {
+                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+                    BackgroundTransparency = 0.95
+                })
 
 				if DropdownSettings.MultipleOptions then
 					if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
