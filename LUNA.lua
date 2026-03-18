@@ -1511,17 +1511,14 @@ local PresetGradients = {
     NeonSun = {Color3.fromRGB(255, 94, 0), Color3.fromRGB(255, 0, 128), Color3.fromRGB(255, 255, 0)},
     Arctic = {Color3.fromRGB(180, 240, 255), Color3.fromRGB(120, 200, 255), Color3.fromRGB(80, 160, 255)},
     Crimson = {Color3.fromRGB(120, 0, 0), Color3.fromRGB(180, 0, 0), Color3.fromRGB(255, 80, 80)},
-    Emerald = {Color3.fromRGB(0, 200, 120), Color3.fromRGB(0, 160, 100), Color3.fromRGB(0, 120, 80)},
     Gold = {Color3.fromRGB(255, 215, 0), Color3.fromRGB(255, 200, 50), Color3.fromRGB(255, 170, 0)},
     Obsidian = {Color3.fromRGB(15, 15, 15), Color3.fromRGB(35, 35, 35), Color3.fromRGB(70, 0, 100)},
     Cyber = {Color3.fromRGB(0, 255, 255), Color3.fromRGB(0, 180, 255), Color3.fromRGB(120, 0, 255)},
     ToxicGlow = {Color3.fromRGB(170, 255, 0), Color3.fromRGB(120, 255, 0), Color3.fromRGB(60, 200, 0)},
     RoseGold = {Color3.fromRGB(255, 183, 197), Color3.fromRGB(255, 140, 150), Color3.fromRGB(212, 100, 120)},
     DeepSea = {Color3.fromRGB(0, 70, 120), Color3.fromRGB(0, 110, 160), Color3.fromRGB(0, 150, 200)},
-    Thunder = {Color3.fromRGB(60, 60, 60), Color3.fromRGB(120, 120, 120), Color3.fromRGB(200, 200, 255)},
     Plasma = {Color3.fromRGB(255, 0, 255), Color3.fromRGB(200, 0, 255), Color3.fromRGB(100, 0, 255)},
     Inferno = {Color3.fromRGB(255, 60, 0), Color3.fromRGB(255, 120, 0), Color3.fromRGB(255, 200, 0)},
-    Aqua = {Color3.fromRGB(0, 255, 200), Color3.fromRGB(0, 200, 180), Color3.fromRGB(0, 150, 160)},
     CottonCandy = {Color3.fromRGB(255, 200, 255), Color3.fromRGB(200, 180, 255), Color3.fromRGB(180, 220, 255)},
     NightSky = {Color3.fromRGB(10, 10, 40), Color3.fromRGB(30, 30, 80), Color3.fromRGB(80, 80, 160)},
     Lava = {Color3.fromRGB(120, 20, 0), Color3.fromRGB(200, 50, 0), Color3.fromRGB(255, 120, 0)},
@@ -1531,8 +1528,7 @@ local PresetGradients = {
     Midnight = {Color3.fromRGB(25, 25, 40), Color3.fromRGB(50, 50, 80), Color3.fromRGB(120, 120, 200)},
     Frostbite = {Color3.fromRGB(180, 240, 255), Color3.fromRGB(120, 200, 255), Color3.fromRGB(80, 150, 220)},
     Velvet = {Color3.fromRGB(80, 0, 80), Color3.fromRGB(120, 0, 120), Color3.fromRGB(200, 0, 200)},
-    Bronze = {Color3.fromRGB(205, 127, 50), Color3.fromRGB(180, 100, 40), Color3.fromRGB(140, 80, 30)},
-    Slatellllll = {Color3.fromRGB(70, 70, 90), Color3.fromRGB(100, 100, 120), Color3.fromRGB(150, 150, 180)},
+    Slatel = {Color3.fromRGB(70, 70, 90), Color3.fromRGB(100, 100, 120), Color3.fromRGB(150, 150, 180)},
     Aurora = {Color3.fromRGB(102, 255, 204), Color3.fromRGB(102, 178, 255), Color3.fromRGB(204, 153, 255)},
     Sunset = {Color3.fromRGB(255, 140, 102), Color3.fromRGB(255, 94, 98), Color3.fromRGB(199, 121, 208)},
     Ice = {Color3.fromRGB(204, 255, 255), Color3.fromRGB(153, 229, 255), Color3.fromRGB(102, 204, 255)},
@@ -3774,22 +3770,16 @@ function Luna:CreateWindow(WindowSettings)
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
                             tween(Option, {BackgroundTransparency = 0.98})
-
-                            local base = Option:GetAttribute("ThemeTextColor")
-                            if base then
-                                tween(Option, {TextColor3 = base})
-                            end
                         end
                     end
 
                     Toggle()
+                    local opt = Dropdown.List[name]
+                    local base = opt:GetAttribute("ThemeTextColor")
 
-                    local Selected = Dropdown.List[name]
-                    local base = Selected:GetAttribute("ThemeTextColor")
-
-                    tween(Selected, {
+                    tween(opt, {
                         BackgroundTransparency = 0.95,
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3) or Selected.TextColor3
+                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3)
                     })
                 end
 
