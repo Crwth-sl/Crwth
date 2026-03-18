@@ -6860,10 +6860,10 @@ function Luna:CreateWindow(WindowSettings)
 end
 
 local function makeTextBigger()
-    task.wait(1)
+    task.wait(1)  -- Wait for UI to load
     for _, obj in ipairs(Main:GetDescendants()) do
         if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
-            obj.TextSize = 18
+            obj.TextSize = 25  -- Increase from default (usually 14)
         end
     end
 end
