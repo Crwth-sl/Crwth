@@ -6503,21 +6503,37 @@ function Luna:CreateWindow(WindowSettings)
             return Color3.fromHSV(h, s, v)
         end
 
-        function Luna:ApplyTheme()
-            for _, obj in pairs(LunaUI:GetDescendants()) do
-                if obj:IsA("Frame") then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
-                end
+       function Luna:ApplyTheme()
 
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
-                end
+    if not LunaUI then
+        warn("LunaUI is nil")
+        return
+    end
 
-                if obj:IsA("TextLabel") then
-                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
-                end
-            end
+    if typeof(LunaUI) ~= "Instance" then
+        warn("LunaUI is not an Instance:", typeof(LunaUI))
+        return
+    end
+
+    local descendants = LunaUI:GetDescendants()
+    if not descendants then return end
+
+    for _, obj in pairs(descendants) do
+
+        if obj:IsA("Frame") then
+            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
         end
+
+        if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
+        end
+
+        if obj:IsA("TextLabel") then
+            obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
+        end
+
+    end
+end
 
         LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
             Luna:ApplyTheme()
