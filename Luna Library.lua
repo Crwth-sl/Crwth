@@ -6493,6 +6493,33 @@ function Luna:CreateWindow(WindowSettings)
 			}
 		}
 
+        LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
+            Luna:ApplyTheme()
+        end)
+        function Luna:ApplyTheme()
+            for _, obj in pairs(game:GetDescendants()) do
+                
+                -- 🎨 Gradients
+                if obj:IsA("UIGradient") then
+                    obj.Color = self.ThemeGradient
+                end
+
+                -- 🧱 Frames
+                if obj:IsA("Frame") then
+                    obj.BackgroundColor3 = self.ThemeGradient.Keypoints[1].Value
+                end
+
+                -- 🔘 Buttons
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    obj.BackgroundColor3 = self.ThemeGradient.Keypoints[2].Value
+                end
+
+                -- 📝 Text
+                if obj:IsA("TextLabel") then
+                    obj.TextColor3 = self.ThemeGradient.Keypoints[3].Value
+                end
+            end
+        end
 
 		function Tab:BuildThemeSection()
 
@@ -6510,7 +6537,7 @@ function Luna:CreateWindow(WindowSettings)
 
             Tab:CreateSection("Custom Editor")
 
-            -- 🔧 Helper: safely convert anything → Color3
+            -- 🔧 Convert anything → Color3
             local function toColor3(v)
                 if typeof(v) == "Color3" then
                     return v
@@ -6520,7 +6547,6 @@ function Luna:CreateWindow(WindowSettings)
                 return Color3.fromRGB(255,255,255)
             end
 
-            -- 🎨 Color pickers
             local c1cp = Tab:CreateColorPicker({
                 Name = "Color 1",
                 Color = Color3.fromRGB(117, 164, 206),
@@ -6536,7 +6562,7 @@ function Luna:CreateWindow(WindowSettings)
                 Color = Color3.fromRGB(224, 138, 184),
             }, "LunaInterfaceSuitePrebuiltCPC3")
 
-            -- 🔥 Single function to update gradient (no repetition)
+            -- 🔥 Update theme + APPLY IT
             local function updateTheme(c1, c2, c3)
                 Luna.ThemeGradient = ColorSequence.new{
                     ColorSequenceKeypoint.new(0.00, toColor3(c1)),
@@ -6544,12 +6570,15 @@ function Luna:CreateWindow(WindowSettings)
                     ColorSequenceKeypoint.new(1.00, toColor3(c3))
                 }
 
+                -- 🔁 trigger update
                 LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+
+                -- 🔥 force apply (important)
+                Luna:ApplyTheme()
             end
 
             task.wait(1)
 
-            -- 🧠 Callbacks (fixed)
             c1cp:Set({
                 Callback = function(Value)
                     updateTheme(Value, c2cp.Color, c3cp.Color)
@@ -6574,12 +6603,10 @@ function Luna:CreateWindow(WindowSettings)
                 Tab:CreateButton({
                     Name = tostring(i),
                     Callback = function()
-                        -- set colors
                         c1cp:Set({ Color = v[1] })
                         c2cp:Set({ Color = v[2] })
                         c3cp:Set({ Color = v[3] })
 
-                        -- 🔥 also update theme instantly
                         updateTheme(v[1], v[2], v[3])
                     end,
                 })
