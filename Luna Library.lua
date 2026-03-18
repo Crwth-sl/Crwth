@@ -3946,16 +3946,28 @@ function Luna:CreateWindow(WindowSettings)
 					end
 				end
 
-				local function ActivateColorSingle(name)
-					for _, Option in pairs(Dropdown.List:GetChildren()) do
-						if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
-							tween(Option, {BackgroundTransparency = 0.98})
-						end
-					end
+                local function ActivateColorSingle(name)
+                    for _, Option in pairs(Dropdown.List:GetChildren()) do
+                        if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
+                            tween(Option, {BackgroundTransparency = 0.98})
 
-					Toggle()
-					tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
-				end
+                            local base = Option:GetAttribute("ThemeTextColor")
+                            if base then
+                                tween(Option, {TextColor3 = base})
+                            end
+                        end
+                    end
+
+                    Toggle()
+
+                    local Selected = Dropdown.List[name]
+                    local base = Selected:GetAttribute("ThemeTextColor")
+
+                    tween(Selected, {
+                        BackgroundTransparency = 0.95,
+                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3) or Selected.TextColor3
+                    })
+                end
 
                 local function Refresh()
                     Clear()
