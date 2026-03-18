@@ -6533,7 +6533,6 @@ function Luna:CreateWindow(WindowSettings)
         end
 
     end
-end
 
         LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
             Luna:ApplyTheme()
