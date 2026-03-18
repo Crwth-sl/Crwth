@@ -3770,17 +3770,32 @@ function Luna:CreateWindow(WindowSettings)
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
                             tween(Option, {BackgroundTransparency = 0.98})
+
+                            local base = Option:GetAttribute("ThemeTextColor")
+                            if base then
+                                tween(Option, {TextColor3 = base})
+                            end
                         end
                     end
 
                     Toggle()
-                    local opt = Dropdown.List[name]
-                    local base = opt:GetAttribute("ThemeTextColor")
 
-                    tween(opt, {
-                        BackgroundTransparency = 0.95,
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3)
-                    })
+                    -- Find the option by its RealName attribute instead of by name
+                    local Selected = nil
+                    for _, Option in pairs(Dropdown.List:GetChildren()) do
+                        if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == name then
+                            Selected = Option
+                            break
+                        end
+                    end
+
+                    if Selected then
+                        local base = Selected:GetAttribute("ThemeTextColor")
+                        tween(Selected, {
+                            BackgroundTransparency = 0.95,
+                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3) or Selected.TextColor3
+                        })
+                    end
                 end
 
                 local function Refresh()
