@@ -3873,7 +3873,7 @@ function Luna:CreateWindow(WindowSettings)
 
                         Option.Visible = true
                         Option.Parent = Dropdown.List
-						Option.Size = UDim2.fromOffset(200, 30)
+						Option.Size = UDim2.fromOffset(700, 70)
 
                         Option.MouseEnter:Connect(function()
                             optionhover = true
