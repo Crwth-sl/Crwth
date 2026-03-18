@@ -6517,8 +6517,10 @@ function Luna:CreateWindow(WindowSettings)
 
     local descendants = LunaUI:GetDescendants()
     if not descendants then return end
-    if obj:IsA("Frame") then
-            warn(obj:GetFullName())
+
+    for _, obj in pairs(descendants) do
+        if obj:IsA("Frame")  then
+            print(obj:GetFullName())
             obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
         end
 
