@@ -2104,85 +2104,77 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 	end)
 end
 
-function Luna:Notification(data) -- action e.g open messages
-	task.spawn(function()
-		data = Kwargify({
-			Title = "Missing Title",
-			Content = "Missing or Unknown Content",
-			Icon = "view_in_ar",
-			ImageSource = "Material"
-		}, data or {})
+function Luna:CreateNotification(title, text, duration)
 
-		-- Notification Object Creation
-		local newNotification = Notifications.Template:Clone()
-		newNotification.Name = data.Title
-		newNotification.Parent = Notifications
-		newNotification.LayoutOrder = #Notifications:GetChildren()
-		newNotification.Visible = false
-		BlurModule(newNotification)
+    duration = duration or 3
 
-		-- Set Data
-		newNotification.Title.Text = data.Title
-		newNotification.Description.Text = data.Content 
-		newNotification.Icon.Image = GetIcon(data.Icon, data.ImageSource)
+    local Notification = Instance.new("Frame")
+    Notification.Size = UDim2.new(0, 250, 0, 70)
+    Notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Notification.BorderSizePixel = 0
+    Notification.Parent = LunaUI.NotificationHolder
 
-		-- Set initial transparency values
-		newNotification.BackgroundTransparency = 1
-		newNotification.Title.TextTransparency = 1
-		newNotification.Description.TextTransparency = 1
-		newNotification.UIStroke.Transparency = 1
-		newNotification.Shadow.ImageTransparency = 1
-		newNotification.Icon.ImageTransparency = 1
-		newNotification.Icon.BackgroundTransparency = 1
+    local Corner = Instance.new("UICorner", Notification)
+    Corner.CornerRadius = UDim.new(0, 8)
 
-		task.wait()
+    local Stroke = Instance.new("UIStroke", Notification)
+    Stroke.Thickness = 2
 
-		-- Calculate textbounds and set initial values
-		newNotification.Size = UDim2.new(1, 0, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
+    local Title = Instance.new("TextLabel")
+    Title.Text = title or "Notification"
+    Title.Size = UDim2.new(1, -10, 0, 20)
+    Title.Position = UDim2.new(0, 5, 0, 5)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Notification
 
-		newNotification.Icon.Size = UDim2.new(0, 28, 0, 28)
-		newNotification.Icon.Position = UDim2.new(0, 16, 0.5, -1)
+    local Desc = Instance.new("TextLabel")
+    Desc.Text = text or ""
+    Desc.Size = UDim2.new(1, -10, 0, 30)
+    Desc.Position = UDim2.new(0, 5, 0, 25)
+    Desc.BackgroundTransparency = 1
+    Desc.Font = Enum.Font.Gotham
+    Desc.TextSize = 13
+    Desc.TextWrapped = true
+    Desc.TextXAlignment = Enum.TextXAlignment.Left
+    Desc.Parent = Notification
 
-		newNotification.Visible = true
+    -- 🔥 THEME APPLY FUNCTION
+    local function ApplyTheme()
+        local grad = Luna.ThemeGradient
 
-		newNotification.Description.Size = UDim2.new(1, -65, 0, math.huge)
-		local bounds = newNotification.Description.TextBounds.Y + 55
-		newNotification.Description.Size = UDim2.new(1,-65,0, bounds - 35)
-		newNotification.Size = UDim2.new(1, 0, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
-		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, bounds)}):Play()
+        Notification.BackgroundColor3 = grad.Keypoints[1].Value
+        Title.TextColor3 = grad.Keypoints[2].Value
+        Desc.TextColor3 = grad.Keypoints[2].Value
+        Stroke.Color = grad.Keypoints[3].Value
+    end
 
-		task.wait(0.15)
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+    -- apply immediately
+    ApplyTheme()
 
-		task.wait(0.05)
+    -- 🔥 update when theme changes
+    if LunaUI and LunaUI.ThemeRemote then
+        LunaUI.ThemeRemote.Changed:Connect(ApplyTheme)
+    end
 
-		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+    -- animation in
+    Notification.Position = UDim2.new(1, 300, 1, -80)
+    TweenService:Create(Notification, TweenInfo.new(0.4), {
+        Position = UDim2.new(1, -260, 1, -80)
+    }):Play()
 
-		task.wait(0.05)
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95}):Play()
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.82}):Play()
+    -- auto remove
+    task.delay(duration, function()
+        TweenService:Create(Notification, TweenInfo.new(0.4), {
+            Position = UDim2.new(1, 300, 1, -80)
+        }):Play()
 
-		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
-		task.wait(data.Duration or waitDuration)
+        task.wait(0.4)
+        Notification:Destroy()
+    end)
 
-		newNotification.Icon.Visible = false
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, 0)}):Play()
-
-		task.wait(1)
-
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)}):Play()
-
-		newNotification.Visible = false
-		newNotification:Destroy()
-	end)
 end
 
 local function Unhide(Window, currentTab)
@@ -6499,7 +6491,6 @@ function Luna:CreateWindow(WindowSettings)
 					end,
 				})
 			end
-
 		end
 
 
