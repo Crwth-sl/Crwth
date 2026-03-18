@@ -6510,10 +6510,6 @@ function Luna:CreateWindow(WindowSettings)
                     obj.Color = self.ThemeGradient
                 end
 
-                if obj:IsA("Frame") then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
-                end
-
                 if obj:IsA("TextButton") or obj:IsA("ImageButton") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
