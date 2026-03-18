@@ -6493,33 +6493,23 @@ function Luna:CreateWindow(WindowSettings)
 			}
 		}
 
-        LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
-            Luna:ApplyTheme()
-        end)
         function Luna:ApplyTheme()
-            for _, obj in pairs(game:GetDescendants()) do
-                
-                -- 🎨 Gradients
-                if obj:IsA("UIGradient") then
-                    obj.Color = self.ThemeGradient
-                end
+            for _, obj in pairs(LunaUI:GetDescendants()) do
 
-                -- 🧱 Frames
                 if obj:IsA("Frame") then
                     obj.BackgroundColor3 = self.ThemeGradient.Keypoints[1].Value
                 end
 
-                -- 🔘 Buttons
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
-                    obj.BackgroundColor3 = self.ThemeGradient.Keypoints[2].Value
-                end
-
-                -- 📝 Text
-                if obj:IsA("TextLabel") then
+                if obj:IsA("TextLabel") or obj:IsA("TextButton") then
                     obj.TextColor3 = self.ThemeGradient.Keypoints[3].Value
                 end
+
             end
         end
+
+        LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
+            Luna:ApplyTheme()
+        end)
 
 		function Tab:BuildThemeSection()
 
