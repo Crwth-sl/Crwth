@@ -3957,78 +3957,107 @@ function Luna:CreateWindow(WindowSettings)
 					tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
 				end
 
-				local function Refresh()
-					Clear()
-					for i,v in pairs(DropdownSettings.Options) do
-						local Option = Dropdown.List.Template:Clone()
-						local optionhover = false
-						Option.Text = v
-						if v == "Template" then v = "Template (Name)" end
-						Option.Name = v
-						Option.Interact.MouseButton1Click:Connect(function()
-							local bleh
-							if DropdownSettings.MultipleOptions then
-								if table.find(DropdownSettings.CurrentOption, v) then
-									RemoveTable(DropdownSettings.CurrentOption, v)
-									DropdownV.CurrentOption = DropdownSettings.CurrentOption
-									if not optionhover then
-										tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
-									end
-									tween(Option, {BackgroundTransparency = 0.98})
-								else
-									table.insert(DropdownSettings.CurrentOption, v)
-									DropdownV.CurrentOption = DropdownSettings.CurrentOption
-									tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
-								end
-								bleh = DropdownSettings.CurrentOption
-							else
-								DropdownSettings.CurrentOption = {v}
-								bleh = v
-								DropdownV.CurrentOption = bleh
-								ActivateColorSingle(v)
-							end
+                local function Refresh()
+                    Clear()
 
-							SafeCallback(bleh, function()
-								if DropdownSettings.MultipleOptions then
-									if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
-										if #DropdownSettings.CurrentOption == 1 then
-											Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
-										elseif #DropdownSettings.CurrentOption == 0 then
-											Dropdown.Selected.PlaceholderText = "None"
-										else
-											Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
-										end
-									else
-										DropdownSettings.CurrentOption = {}
-										Dropdown.Selected.PlaceholderText = "None"
-									end
-								end
-								if not DropdownSettings.MultipleOptions then
-									Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
-								end
-								Dropdown.Selected.Text = ""
-							end)
-						end)
-						Option.Visible = true
-						Option.Parent = Dropdown.List
-						Option.MouseEnter:Connect(function()
-							optionhover = true
-							if Option.BackgroundTransparency == 0.95 then
-								return
-							else
-								tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
-							end
-						end)
-						Option.MouseLeave:Connect(function()
-							optionhover = false
-							if Option.BackgroundTransparency == 0.95 then
-								return
-							else
-								tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
-							end
-						end)	
-					end
-				end
+                    for i, v in pairs(DropdownSettings.Options) do
+                        local Option = Dropdown.List.Template:Clone()
+                        local optionhover = false
+
+                        Option.Text = v
+                        if v == "Template" then v = "Template (Name)" end
+                        Option.Name = v
+
+                        local ThemeTextColor = Option.TextColor3
+                        Option:SetAttribute("ThemeTextColor", ThemeTextColor)
+
+                        Option.Interact.MouseButton1Click:Connect(function()
+                            local bleh
+
+                            if DropdownSettings.MultipleOptions then
+                                if table.find(DropdownSettings.CurrentOption, v) then
+                                    RemoveTable(DropdownSettings.CurrentOption, v)
+                                    DropdownV.CurrentOption = DropdownSettings.CurrentOption
+
+                                    if not optionhover then
+                                        local base = Option:GetAttribute("ThemeTextColor")
+                                        tween(Option, {TextColor3 = base})
+                                    end
+
+                                    tween(Option, {BackgroundTransparency = 0.98})
+                                else
+                                    table.insert(DropdownSettings.CurrentOption, v)
+                                    DropdownV.CurrentOption = DropdownSettings.CurrentOption
+
+                                    local base = Option:GetAttribute("ThemeTextColor")
+                                    tween(Option, {
+                                        TextColor3 = base:Lerp(Color3.new(1,1,1), 0.3),
+                                        BackgroundTransparency = 0.95
+                                    })
+                                end
+
+                                bleh = DropdownSettings.CurrentOption
+                            else
+                                DropdownSettings.CurrentOption = {v}
+                                bleh = v
+                                DropdownV.CurrentOption = bleh
+                                ActivateColorSingle(v)
+                            end
+
+                            SafeCallback(bleh, function()
+                                if DropdownSettings.MultipleOptions then
+                                    if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
+                                        if #DropdownSettings.CurrentOption == 1 then
+                                            Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
+                                        elseif #DropdownSettings.CurrentOption == 0 then
+                                            Dropdown.Selected.PlaceholderText = "None"
+                                        else
+                                            Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
+                                        end
+                                    else
+                                        DropdownSettings.CurrentOption = {}
+                                        Dropdown.Selected.PlaceholderText = "None"
+                                    end
+                                end
+
+                                if not DropdownSettings.MultipleOptions then
+                                    Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
+                                end
+
+                                Dropdown.Selected.Text = ""
+                            end)
+                        end)
+
+                        Option.Visible = true
+                        Option.Parent = Dropdown.List
+
+                        Option.MouseEnter:Connect(function()
+                            optionhover = true
+
+                            if Option.BackgroundTransparency == 0.95 then
+                                return
+                            else
+                                local base = Option:GetAttribute("ThemeTextColor")
+                                tween(Option, {
+                                    TextColor3 = base:Lerp(Color3.new(1,1,1), 0.2)
+                                })
+                            end
+                        end)
+
+                        Option.MouseLeave:Connect(function()
+                            optionhover = false
+
+                            if Option.BackgroundTransparency == 0.95 then
+                                return
+                            else
+                                local base = Option:GetAttribute("ThemeTextColor")
+                                tween(Option, {
+                                    TextColor3 = base
+                                })
+                            end
+                        end)
+                    end
+                end
 
 				local function PlayerTableRefresh()
 					for i,v in pairs(DropdownSettings.Options) do
