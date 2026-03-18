@@ -6552,43 +6552,22 @@ function Luna:CreateWindow(WindowSettings)
 
             return Color3.fromHSV(h, s, v)
         end
-        
+
         function Luna:ApplyTheme()
             if not LunaUI then return end
             if not LunaUI.GetDescendants then return end
 
             for _, obj in pairs(LunaUI:GetDescendants()) do
 
-                if LunaUI.MainFrame and obj == LunaUI.MainFrame then
-                    continue
-                end
-
                 if obj:IsA("UIGradient") then
                     obj.Color = self.ThemeGradient
-                end
-
-                if obj:IsA("Frame") then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
-                end
-
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
-                end
-
-                if obj:IsA("TextLabel") then
-                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
                 end
             end
         end
 
-        task.spawn(function()
-            repeat task.wait() until LunaUI and LunaUI:FindFirstChild("ThemeRemote")
-
-            LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
-                Luna:ApplyTheme()
-            end)
+        LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
+            Luna:ApplyTheme()
         end)
-
 		function Tab:BuildThemeSection()
 
             local Title = Elements.Template.Title:Clone()
