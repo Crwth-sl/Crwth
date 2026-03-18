@@ -6496,72 +6496,104 @@ function Luna:CreateWindow(WindowSettings)
 
 		function Tab:BuildThemeSection()
 
-			local Title = Elements.Template.Title:Clone()
-			Title.Text = "Theming"
-			Title.Visible = true
-			Title.Parent = TabPage
-			Title.TextTransparency = 1
-			TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+            local Title = Elements.Template.Title:Clone()
+            Title.Text = "Theming"
+            Title.Visible = true
+            Title.Parent = TabPage
+            Title.TextTransparency = 1
 
-			Tab:CreateSection("Custom Editor")
+            TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {
+                TextTransparency = 0
+            }):Play()
 
-			local c1cp = Tab:CreateColorPicker({
-				Name = "Color 1",
-				Color = Color3.fromRGB(117, 164, 206),
-			}, "LunaInterfaceSuitePrebuiltCPC1") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+            Tab:CreateSection("Custom Editor")
 
-			local c2cp = Tab:CreateColorPicker({
-				Name = "Color 2",
-				Color = Color3.fromRGB(123, 201, 201),
-			}, "LunaInterfaceSuitePrebuiltCPC2")
+            -- ✅ STORE COLORS YOURSELF (IMPORTANT)
+            local c1 = Color3.fromRGB(117, 164, 206)
+            local c2 = Color3.fromRGB(123, 201, 201)
+            local c3 = Color3.fromRGB(224, 138, 184)
 
-			local c3cp = Tab:CreateColorPicker({
-				Name = "Color 3",
-				Color = Color3.fromRGB(224, 138, 184),
-			}, "LunaInterfaceSuitePrebuiltCPC3") 
+            -- ✅ SAFE COLOR FIX
+            local function GetColor(v)
+                if typeof(v) == "Color3" then
+                    return v
+                elseif typeof(v) == "table" and v.Color then
+                    return v.Color
+                end
+                return Color3.fromRGB(255,255,255)
+            end
 
-			task.wait(1)
+            local function UpdateTheme()
+                Luna.ThemeGradient = ColorSequence.new{
+                    ColorSequenceKeypoint.new(0, c1),
+                    ColorSequenceKeypoint.new(0.5, c2),
+                    ColorSequenceKeypoint.new(1, c3)
+                }
 
-			c1cp:Set({
-				Callback = function(Value)
-					if c2cp and c3cp then
-						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Value or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, c2cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, c3cp.Color or Color3.fromRGB(255,255,255))}
-						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-					end
-				end
-			})
+                if LunaUI and LunaUI.ThemeRemote then
+                    LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+                end
+            end
 
-			c2cp:Set({
-				Callback = function(Value)
-					if c1cp and c3cp then
-						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, c1cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, Value or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, c3cp.Color or Color3.fromRGB(255,255,255))}
-						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-					end
-				end
-			})
+            local c1cp = Tab:CreateColorPicker({
+                Name = "Color 1",
+                Color = c1,
+            }, "LunaInterfaceSuitePrebuiltCPC1")
 
-			c3cp:Set({
-				Callback = function(Valuex)
-					if c2cp and c1cp then
-						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, c1cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, c2cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, Valuex or Color3.fromRGB(255,255,255))}
-						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-					end
-				end
-			})
+            local c2cp = Tab:CreateColorPicker({
+                Name = "Color 2",
+                Color = c2,
+            }, "LunaInterfaceSuitePrebuiltCPC2")
 
-			Tab:CreateSection("Preset Gradients")
+            local c3cp = Tab:CreateColorPicker({
+                Name = "Color 3",
+                Color = c3,
+            }, "LunaInterfaceSuitePrebuiltCPC3")
 
-			for i,v in pairs(PresetGradients) do
-				Tab:CreateButton({
-					Name = tostring(i),
-					Callback = function()
-						c1cp:Set({ Color = v[1] })
-						c2cp:Set({ Color = v[2] })
-						c3cp:Set({ Color = v[3] })
-					end,
-				})
-			end
-		end
+            -- ❌ REMOVE task.wait(1)
+
+            -- ✅ FIX CALLBACKS
+            c1cp:Set({
+                Callback = function(Value)
+                    c1 = GetColor(Value)
+                    UpdateTheme()
+                end
+            })
+
+            c2cp:Set({
+                Callback = function(Value)
+                    c2 = GetColor(Value)
+                    UpdateTheme()
+                end
+            })
+
+            c3cp:Set({
+                Callback = function(Value)
+                    c3 = GetColor(Value)
+                    UpdateTheme()
+                end
+            })
+
+            Tab:CreateSection("Preset Gradients")
+
+            for i,v in pairs(PresetGradients) do
+                Tab:CreateButton({
+                    Name = tostring(i),
+                    Callback = function()
+                        c1 = v[1]
+                        c2 = v[2]
+                        c3 = v[3]
+
+                        if c1cp.Set then c1cp:Set({Color = c1}) end
+                        if c2cp.Set then c2cp:Set({Color = c2}) end
+                        if c3cp.Set then c3cp:Set({Color = c3}) end
+
+                        -- 🔥 FORCE UPDATE
+                        UpdateTheme()
+                    end,
+                })
+            end
+        end
 
 
 		local function BuildFolderTree()
