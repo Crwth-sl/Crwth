@@ -3780,7 +3780,6 @@ function Luna:CreateWindow(WindowSettings)
 
                     Toggle()
 
-                    -- Find the option by its RealName attribute instead of by name
                     local Selected = nil
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == name then
@@ -4054,14 +4053,13 @@ function Luna:CreateWindow(WindowSettings)
                     end
                     
                     if ind == 1 then 
-                        bleh = DropdownSettings.CurrentOption[1]  -- This is a string
+                        bleh = DropdownSettings.CurrentOption[1]
                     else 
-                        bleh = DropdownSettings.CurrentOption  -- This is a table
+                        bleh = DropdownSettings.CurrentOption
                     end
                     
                     SafeCallback(bleh)
                     
-                    -- Reset all options first
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
                             local base = Option:GetAttribute("ThemeTextColor")
@@ -4072,9 +4070,7 @@ function Luna:CreateWindow(WindowSettings)
                         end
                     end
 
-                    -- Handle highlighting based on bleh type
                     if type(bleh) == "string" then
-                        -- Single selection - find by RealName attribute
                         for _, Option in pairs(Dropdown.List:GetChildren()) do
                             if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
                                 local base = Option:GetAttribute("ThemeTextColor")
@@ -4086,7 +4082,6 @@ function Luna:CreateWindow(WindowSettings)
                             end
                         end
                     else
-                        -- Multiple selections - find each by RealName attribute
                         for _, value in pairs(bleh) do
                             for _, Option in pairs(Dropdown.List:GetChildren()) do
                                 if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
@@ -4601,8 +4596,26 @@ function Luna:CreateWindow(WindowSettings)
 			return ParagraphV
 		end
 
-		function Tab:CreateSlider(SliderSettings, Flag)
+		function Section:CreateSlider(SliderSettings, Flag)
+			-- Make sure required services are available
+			local TweenService = game:GetService("TweenService")
+			local UserInputService = game:GetService("UserInputService")
+			local RunService = game:GetService("RunService")
+			
+			TabPage.Position = UDim2.new(0,0,0,28)
 			local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
+
+			-- Define Kwargify if it doesn't exist in your scope
+			local function Kwargify(defaults, overrides)
+				local result = {}
+				for k, v in pairs(defaults) do
+					result[k] = v
+				end
+				for k, v in pairs(overrides or {}) do
+					result[k] = v
+				end
+				return result
+			end
 
 			SliderSettings = Kwargify({
 				Name = "Slider",
@@ -4629,19 +4642,34 @@ function Luna:CreateWindow(WindowSettings)
 			TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
 			TweenService:Create(Slider.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()	
 
-			Slider.Main.Progress.Size =	UDim2.new(0, Slider.Main.AbsoluteSize.X * ((SliderSettings.CurrentValue + SliderSettings.Range[1]) / (SliderSettings.Range[2] - SliderSettings.Range[1])) > 5 and Slider.Main.AbsoluteSize.X * (SliderSettings.CurrentValue / (SliderSettings.Range[2] - SliderSettings.Range[1])) or 5, 1, 0)
-
+			-- Wait for AbsoluteSize to be available
+			task.wait()
+			
+			-- Fixed progress size calculation
+			local rangeMin, rangeMax = SliderSettings.Range[1], SliderSettings.Range[2]
+			local rangeSize = rangeMax - rangeMin
+			local normalizedValue = (SliderSettings.CurrentValue - rangeMin) / rangeSize
+			local progressWidth = math.max(5, Slider.Main.AbsoluteSize.X * normalizedValue)
+			
+			Slider.Main.Progress.Size = UDim2.new(0, progressWidth, 1, 0)
 			Slider.Value.Text = tostring(SliderSettings.CurrentValue)
 			SliderV.CurrentValue = Slider.Value.Text
 
-			SliderSettings.Callback(SliderSettings.CurrentValue)
+			-- Safely call callback
+			local success, err = pcall(function()
+				SliderSettings.Callback(SliderSettings.CurrentValue)
+			end)
+			if not success then
+				warn("Luna Interface Suite | Initial callback error:", err)
+			end
 
-			Slider["MouseEnter"]:Connect(function()
-				tween(Slider.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+			-- Fixed tween function calls
+			Slider.MouseEnter:Connect(function()
+				TweenService:Create(Slider.UIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(87, 84, 104)}):Play()
 			end)
 
-			Slider["MouseLeave"]:Connect(function()
-				tween(Slider.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+			Slider.MouseLeave:Connect(function()
+				TweenService:Create(Slider.UIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(64,61,76)}):Play()
 			end)
 
 			Slider.Interact.InputBegan:Connect(function(Input)
@@ -4682,10 +4710,17 @@ function Luna:CreateWindow(WindowSettings)
 						elseif Current >= Location and (Location - Start) > 0 then
 							Start = Location
 						end
-						Slider.Main.Progress.Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X, 1, 0)
-						local NewValue = SliderSettings.Range[1] + (Location - Slider.Main.AbsolutePosition.X) / Slider.Main.AbsoluteSize.X * (SliderSettings.Range[2] - SliderSettings.Range[1])
+						
+						local newWidth = Location - Slider.Main.AbsolutePosition.X
+						Slider.Main.Progress.Size = UDim2.new(0, math.max(5, newWidth), 1, 0)
+						
+						local rangeMin, rangeMax = SliderSettings.Range[1], SliderSettings.Range[2]
+						local rangeSize = rangeMax - rangeMin
+						local NewValue = rangeMin + (newWidth / Slider.Main.AbsoluteSize.X) * rangeSize
 
-						NewValue = math.floor(NewValue / SliderSettings.Increment + 0.5) * (SliderSettings.Increment * 10000000) / 10000000
+						NewValue = math.floor(NewValue / SliderSettings.Increment + 0.5) * SliderSettings.Increment
+						-- Round to handle floating point precision
+						NewValue = tonumber(string.format("%.2f", NewValue))
 
 						Slider.Value.Text = tostring(NewValue)
 
@@ -4694,53 +4729,74 @@ function Luna:CreateWindow(WindowSettings)
 								SliderSettings.Callback(NewValue)
 							end)
 							if not Success then
-								TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-								TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-								TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+								-- Error animation
+								TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
+								TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+								TweenService:Create(Slider.UIStroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
 								Slider.Title.Text = "Callback Error"
-								print("Luna Interface Suite | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
-								wait(0.5)
+								warn("Luna Interface Suite | "..SliderSettings.Name.." Callback Error:", Response)
+								task.wait(0.5)
 								Slider.Title.Text = SliderSettings.Name
-								TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-								TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
-								TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+								TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundTransparency = 0.5}):Play()
+								TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
+								TweenService:Create(Slider.UIStroke, TweenInfo.new(0.3), {Transparency = 0.5}):Play()
 							end
 
 							SliderSettings.CurrentValue = NewValue
 							SliderV.CurrentValue = SliderSettings.CurrentValue
 						end
 					else
-						TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.In, 0, false), {Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X > 5 and Location - Slider.Main.AbsolutePosition.X or 5, 1, 0)}):Play()
+						-- Smooth end animation
+						TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.1, Enum.EasingStyle.Back), {
+							Size = UDim2.new(0, math.max(5, Location - Slider.Main.AbsolutePosition.X), 1, 0)
+						}):Play()
 						Loop:Disconnect()
 					end
 				end)
 			end)
 
-			local function Set(NewVal, bleh)
-
+			local function Set(NewVal, skipTextUpdate)
 				NewVal = NewVal or SliderSettings.CurrentValue
+				
+				-- Ensure value is within range
+				NewVal = math.max(SliderSettings.Range[1], math.min(SliderSettings.Range[2], NewVal))
+				
+				-- Round to increment
+				NewVal = math.floor(NewVal / SliderSettings.Increment + 0.5) * SliderSettings.Increment
+				NewVal = tonumber(string.format("%.2f", NewVal))
 
-				TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {Size = UDim2.new(0, Slider.Main.AbsoluteSize.X * ((NewVal + SliderSettings.Range[1]) / (SliderSettings.Range[2] - SliderSettings.Range[1])) > 5 and Slider.Main.AbsoluteSize.X * (NewVal / (SliderSettings.Range[2] - SliderSettings.Range[1])) or 5, 1, 0)}):Play()
-				if not bleh then Slider.Value.Text = tostring(NewVal) end
+				-- Update progress bar
+				local rangeMin, rangeMax = SliderSettings.Range[1], SliderSettings.Range[2]
+				local rangeSize = rangeMax - rangeMin
+				local normalizedValue = (NewVal - rangeMin) / rangeSize
+				local targetWidth = math.max(5, Slider.Main.AbsoluteSize.X * normalizedValue)
+				
+				TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {
+					Size = UDim2.new(0, targetWidth, 1, 0)
+				}):Play()
+				
+				if not skipTextUpdate then 
+					Slider.Value.Text = tostring(NewVal) 
+				end
+				
 				local Success, Response = pcall(function()
 					SliderSettings.Callback(NewVal)
 				end)
 				if not Success then
-					TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-					TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-					TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+					TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
+					TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+					TweenService:Create(Slider.UIStroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
 					Slider.Title.Text = "Callback Error"
-					print("Luna Interface Suite | "..SliderSettings.Name.." Callback Error " ..tostring(Response))
-					wait(0.5)
+					warn("Luna Interface Suite | "..SliderSettings.Name.." Callback Error:", Response)
+					task.wait(0.5)
 					Slider.Title.Text = SliderSettings.Name
-					TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-					TweenService:Create(Slider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(30, 33, 40)}):Play()
-					TweenService:Create(Slider.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+					TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundTransparency = 0.5}):Play()
+					TweenService:Create(Slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(30, 33, 40)}):Play()
+					TweenService:Create(Slider.UIStroke, TweenInfo.new(0.3), {Transparency = 0.5}):Play()
 				end
 
 				SliderSettings.CurrentValue = NewVal
 				SliderV.CurrentValue = SliderSettings.CurrentValue
-
 			end
 
 			function SliderV:UpdateValue(Value)
@@ -4750,10 +4806,19 @@ function Luna:CreateWindow(WindowSettings)
 			Slider.Value:GetPropertyChangedSignal("Text"):Connect(function()
 				local text = Slider.Value.Text
 				if not tonumber(text) and text ~= "." then
-					Slider.Value.Text = text:match("[0-9.]*") or ""
+					Slider.Value.Text = text:gsub("[^0-9.]", "") or ""
 				end
-				if SliderSettings.Range[2] < (tonumber(Slider.Value.Text) or 0) then Slider.Value.Text = SliderSettings.Range[2] end
-				Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X, 23)
+				
+				local numValue = tonumber(Slider.Value.Text)
+				if numValue then
+					if SliderSettings.Range[2] < numValue then 
+						Slider.Value.Text = tostring(SliderSettings.Range[2])
+					elseif SliderSettings.Range[1] > numValue then
+						Slider.Value.Text = tostring(SliderSettings.Range[1])
+					end
+				end
+				
+				Slider.Value.Size = UDim2.fromOffset(math.max(30, Slider.Value.TextBounds.X + 10), 23)
 				Set(tonumber(Slider.Value.Text), true)
 			end)
 
@@ -4780,17 +4845,24 @@ function Luna:CreateWindow(WindowSettings)
 				Slider:Destroy()
 			end
 
-			if Flag then
+			-- Safely handle theme remote if it exists
+			if Flag and Luna and Luna.Options then
 				Luna.Options[Flag] = SliderV
 			end
 
-			LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
-				Slider.Main.color.Color = Luna.ThemeGradient
-				Slider.Main.UIStroke.color.Color = Luna.ThemeGradient
-			end)
+			-- Safely connect theme remote
+			if LunaUI and LunaUI.ThemeRemote then
+				LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
+					if Slider and Slider.Main and Slider.Main.color and Luna and Luna.ThemeGradient then
+						Slider.Main.color.Color = Luna.ThemeGradient
+					end
+					if Slider and Slider.Main and Slider.Main.UIStroke and Luna and Luna.ThemeGradient then
+						Slider.Main.UIStroke.color.Color = Luna.ThemeGradient
+					end
+				end)
+			end
 
 			return SliderV
-
 		end
 
 		function Tab:CreateToggle(ToggleSettings, Flag)    
@@ -5886,14 +5958,13 @@ function Luna:CreateWindow(WindowSettings)
                 end
                 
                 if ind == 1 then 
-                    bleh = DropdownSettings.CurrentOption[1]  -- This is a string
+                    bleh = DropdownSettings.CurrentOption[1]
                 else 
-                    bleh = DropdownSettings.CurrentOption  -- This is a table
+                    bleh = DropdownSettings.CurrentOption
                 end
                 
                 SafeCallback(bleh)
                 
-                -- Reset all options first
                 for _, Option in pairs(Dropdown.List:GetChildren()) do
                     if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
                         local base = Option:GetAttribute("ThemeTextColor")
@@ -5904,9 +5975,7 @@ function Luna:CreateWindow(WindowSettings)
                     end
                 end
 
-                -- Handle highlighting based on bleh type
                 if type(bleh) == "string" then
-                    -- Single selection
                     for _, Option in pairs(Dropdown.List:GetChildren()) do
                         if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
                             local base = Option:GetAttribute("ThemeTextColor")
@@ -5918,7 +5987,6 @@ function Luna:CreateWindow(WindowSettings)
                         end
                     end
                 else
-                    -- Multiple selections
                     for _, value in pairs(bleh) do
                         for _, Option in pairs(Dropdown.List:GetChildren()) do
                             if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
@@ -6570,92 +6638,100 @@ function Luna:CreateWindow(WindowSettings)
         end)
 
 		function Tab:BuildThemeSection()
+			local Title = Elements.Template.Title:Clone()
+			Title.Text = "Theming"
+			Title.Visible = true
+			Title.Parent = TabPage
+			Title.TextTransparency = 1
 
-            local Title = Elements.Template.Title:Clone()
-            Title.Text = "Theming"
-            Title.Visible = true
-            Title.Parent = TabPage
-            Title.TextTransparency = 1
+			TweenService:Create(
+				Title,
+				TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				{TextTransparency = 0}
+			):Play()
 
-            TweenService:Create(
-                Title,
-                TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-                {TextTransparency = 0}
-            ):Play()
+			Tab:CreateSection("Custom Editor")
 
-            Tab:CreateSection("Custom Editor")
+			local function toColor3(v)
+				if typeof(v) == "Color3" then
+					return v
+				elseif type(v) == "table" then
+					return Color3.fromRGB(v.R or 255, v.G or 255, v.B or 255)
+				end
+				return Color3.fromRGB(255,255,255)
+			end
 
-            local function toColor3(v)
-                if typeof(v) == "Color3" then
-                    return v
-                elseif type(v) == "table" then
-                    return Color3.fromRGB(v.R or 255, v.G or 255, v.B or 255)
-                end
-                return Color3.fromRGB(255,255,255)
-            end
+			local c1cp = Tab:CreateColorPicker({
+				Name = "Color 1",
+				Color = Color3.fromRGB(117, 164, 206),
+			}, "LunaInterfaceSuitePrebuiltCPC1")
 
-            local c1cp = Tab:CreateColorPicker({
-                Name = "Color 1",
-                Color = Color3.fromRGB(117, 164, 206),
-            }, "LunaInterfaceSuitePrebuiltCPC1")
+			local c2cp = Tab:CreateColorPicker({
+				Name = "Color 2",
+				Color = Color3.fromRGB(123, 201, 201),
+			}, "LunaInterfaceSuitePrebuiltCPC2")
 
-            local c2cp = Tab:CreateColorPicker({
-                Name = "Color 2",
-                Color = Color3.fromRGB(123, 201, 201),
-            }, "LunaInterfaceSuitePrebuiltCPC2")
+			local c3cp = Tab:CreateColorPicker({
+				Name = "Color 3",
+				Color = Color3.fromRGB(224, 138, 184),
+			}, "LunaInterfaceSuitePrebuiltCPC3")
 
-            local c3cp = Tab:CreateColorPicker({
-                Name = "Color 3",
-                Color = Color3.fromRGB(224, 138, 184),
-            }, "LunaInterfaceSuitePrebuiltCPC3")
+			local function updateTheme(c1, c2, c3)
+				Luna.ThemeGradient = ColorSequence.new{
+					ColorSequenceKeypoint.new(0.00, toColor3(c1)),
+					ColorSequenceKeypoint.new(0.50, toColor3(c2)),
+					ColorSequenceKeypoint.new(1.00, toColor3(c3))
+				}
 
-            local function updateTheme(c1, c2, c3)
-                Luna.ThemeGradient = ColorSequence.new{
-                    ColorSequenceKeypoint.new(0.00, toColor3(c1)),
-                    ColorSequenceKeypoint.new(0.50, toColor3(c2)),
-                    ColorSequenceKeypoint.new(1.00, toColor3(c3))
-                }
+				LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+				Luna:ApplyTheme()
+			end
 
-                LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+			task.wait(1)
 
-                Luna:ApplyTheme()
-            end
+			c1cp:Set({
+				Callback = function(Value)
+					updateTheme(Value, c2cp.Color, c3cp.Color)
+				end
+			})
 
-            task.wait(1)
+			c2cp:Set({
+				Callback = function(Value)
+					updateTheme(c1cp.Color, Value, c3cp.Color)
+				end
+			})
 
-            c1cp:Set({
-                Callback = function(Value)
-                    updateTheme(Value, c2cp.Color, c3cp.Color)
-                end
-            })
+			c3cp:Set({
+				Callback = function(Value)
+					updateTheme(c1cp.Color, c2cp.Color, Value)
+				end
+			})
 
-            c2cp:Set({
-                Callback = function(Value)
-                    updateTheme(c1cp.Color, Value, c3cp.Color)
-                end
-            })
+			Tab:CreateSection("Preset Gradients")
 
-            c3cp:Set({
-                Callback = function(Value)
-                    updateTheme(c1cp.Color, c2cp.Color, Value)
-                end
-            })
-
-            Tab:CreateSection("Preset Gradients")
-
-            for name, colors in pairs(PresetGradients) do
-                Tab:CreateButton({
-                    Name = name,
-                    Callback = function()
-                        c1cp:Set({ Color = colors[1] })
-                        c2cp:Set({ Color = colors[2] })
-                        c3cp:Set({ Color = colors[3] })
-
-                        updateTheme(colors[1], colors[2], colors[3])
-                    end,
-                })
-            end
-        end
+			Tab:CreateDropdown({
+				Name = "Theme Presets",
+				Options = {
+					"NeonSun", "Arctic", "Crimson", "Gold", "Obsidian", "Cyber", 
+					"ToxicGlow", "RoseGold", "DeepSea", "Plasma", "Inferno", 
+					"CottonCandy", "NightSky", "Lava", "Glacier", "Sakura", 
+					"Matrix", "Midnight", "Frostbite", "Velvet", "Slatel", 
+					"Aurora", "Sunset", "Ice", "Fire", "Ember", "Royal", 
+					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
+					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
+				},
+				CurrentOption = "Void",
+				Callback = function(presetName)
+					local preset = PresetGradients[presetName]
+					if preset then
+						c1cp:Set({ Color = preset[1] })
+						c2cp:Set({ Color = preset[2] })
+						c3cp:Set({ Color = preset[3] })
+						updateTheme(preset[1], preset[2], preset[3])
+					end
+				end
+			})
+		end
 
 
 		local function BuildFolderTree()
