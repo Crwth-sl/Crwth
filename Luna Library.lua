@@ -6551,7 +6551,6 @@ function Luna:CreateWindow(WindowSettings)
                 local h, s, v = kp.Value:ToHSV()
 
                 -- reduce intensity
-                h = h * 0.25
                 s = s * 0.15   -- lower saturation
                 v = v * 0.25   -- slightly darker
 
