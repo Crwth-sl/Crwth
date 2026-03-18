@@ -3701,8 +3701,8 @@ function Luna:CreateWindow(WindowSettings)
 					closedsize = 65   -- Was 48, now bigger
 					openedsize = 220  -- Was 170, now bigger
 				elseif not descriptionbool then
-					closedsize = 28   -- Was 38, now bigger
-					openedsize = 210  -- Was 160, now bigger
+					closedsize = 48   -- Was 38, now bigger
+					openedsize = 185  -- Was 160, now bigger
 				end
 				local opened = false
 
@@ -3723,7 +3723,7 @@ function Luna:CreateWindow(WindowSettings)
 						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize + 40)})
 					else
 						tween(Dropdown.icon, {Rotation = 0})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize + 15)})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize + 15)})  -- Add 15 to height when closed
 					end
 				end
 
