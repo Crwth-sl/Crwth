@@ -6493,17 +6493,33 @@ function Luna:CreateWindow(WindowSettings)
 			}
 		}
 
+        local function softenColor(color)
+            local h, s, v = color:ToHSV()
+            
+            s = s * 0.5
+            v = v * 0.8 
+
+            return Color3.fromHSV(h, s, v)
+        end
+
         function Luna:ApplyTheme()
             for _, obj in pairs(LunaUI:GetDescendants()) do
 
+                if obj:IsA("UIGradient") then
+                    obj.Color = self.ThemeGradient
+                end
+
                 if obj:IsA("Frame") then
-                    obj.BackgroundColor3 = self.ThemeGradient.Keypoints[1].Value
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
 
-                if obj:IsA("TextLabel") or obj:IsA("TextButton") then
-                    obj.TextColor3 = self.ThemeGradient.Keypoints[3].Value
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
 
+                if obj:IsA("TextLabel") then
+                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
+                end
             end
         end
 
