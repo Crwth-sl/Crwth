@@ -1562,68 +1562,19 @@ local IconModule = {
 -- Other Variables
 local request = (syn and syn.request) or (http and http.request) or http_request or nil
 local tweeninfo = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
-local PresetGradients = {
-
-    ["Ocean Blue"] = {
-        Color3.fromRGB(58, 123, 213),
-        Color3.fromRGB(91, 134, 229),
-        Color3.fromRGB(123, 167, 255)
-    },
-
-    ["Purple Dream"] = {
-        Color3.fromRGB(131, 58, 180),
-        Color3.fromRGB(193, 53, 132),
-        Color3.fromRGB(253, 29, 29)
-    },
-
-    ["Soft Mint"] = {
-        Color3.fromRGB(120, 220, 200),
-        Color3.fromRGB(140, 235, 210),
-        Color3.fromRGB(180, 255, 230)
-    },
-
-    ["Sunset Warm"] = {
-        Color3.fromRGB(255, 140, 100),
-        Color3.fromRGB(255, 180, 120),
-        Color3.fromRGB(255, 210, 150)
-    },
-
-    ["Dark Night"] = {
-        Color3.fromRGB(25, 25, 40),
-        Color3.fromRGB(35, 35, 55),
-        Color3.fromRGB(50, 50, 70)
-    },
-
-    ["Royal Blue"] = {
-        Color3.fromRGB(30, 60, 114),
-        Color3.fromRGB(42, 82, 152),
-        Color3.fromRGB(70, 120, 200)
-    },
-
-    ["Pink Soft"] = {
-        Color3.fromRGB(255, 160, 200),
-        Color3.fromRGB(255, 180, 210),
-        Color3.fromRGB(255, 210, 230)
-    },
-
-    ["Cyber Teal"] = {
-        Color3.fromRGB(0, 200, 170),
-        Color3.fromRGB(0, 170, 150),
-        Color3.fromRGB(0, 140, 130)
-    },
-
-    ["Lavender"] = {
-        Color3.fromRGB(180, 160, 255),
-        Color3.fromRGB(200, 180, 255),
-        Color3.fromRGB(220, 210, 255)
-    },
-
-    ["Minimal Gray"] = {
-        Color3.fromRGB(60, 60, 60),
-        Color3.fromRGB(80, 80, 80),
-        Color3.fromRGB(100, 100, 100)
-    },
-
+local themeGradients = {
+    ["Nightlight Neo"] = {Color3.fromRGB(117,164,206), Color3.fromRGB(123,201,201), Color3.fromRGB(224,138,175)},
+    Solar = {Color3.fromRGB(242,157,76), Color3.fromRGB(240,179,81), Color3.fromRGB(238,201,86)},
+    Blossom = {Color3.fromRGB(255,165,243), Color3.fromRGB(213,129,231), Color3.fromRGB(170,92,218)},
+    Vine = {Color3.fromRGB(0,191,143), Color3.fromRGB(0,126,94), Color3.fromRGB(0,61,46)},
+    Cherry = {Color3.fromRGB(148,54,54), Color3.fromRGB(168,67,70), Color3.fromRGB(188,80,86)},
+    Daylight = {Color3.fromRGB(51,156,255), Color3.fromRGB(89,171,237), Color3.fromRGB(127,186,218)},
+    Blood = {Color3.fromRGB(220,0,0), Color3.fromRGB(150,0,0), Color3.fromRGB(80,0,0) },
+    Grape = {Color3.fromRGB(180,90,255), Color3.fromRGB(140,60,210), Color3.fromRGB(100,40,170)},
+    Ocean = {Color3.fromRGB(0,200,255), Color3.fromRGB(0,140,220), Color3.fromRGB(0,90,180)},
+    Sentinel = {Color3.fromRGB(255,60,90), Color3.fromRGB(200,40,70), Color3.fromRGB(140,20,50)},
+    Synapse = {Color3.fromRGB(139,94,60), Color3.fromRGB(110,70,45), Color3.fromRGB(80,50,30)},
+    Serpent = {Color3.fromRGB(0,220,120), Color3.fromRGB(0,170,90), Color3.fromRGB(0,120,60)},
 }
 
 local function GetIcon(icon, source)
