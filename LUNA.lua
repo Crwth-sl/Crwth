@@ -6525,7 +6525,7 @@ function Luna:CreateWindow(WindowSettings)
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
 
-                if (obj:IsA("TextButton") or obj:IsA("ImageButton")) and not obj:FindFirstAncestor("Elements") then
+                if (obj:IsA("TextButton") or obj:IsA("ImageButton")) then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
 
