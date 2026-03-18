@@ -6552,12 +6552,14 @@ function Luna:CreateWindow(WindowSettings)
 
             return Color3.fromHSV(h, s, v)
         end
-
+        
         function Luna:ApplyTheme()
+            if not LunaUI then return end
+            if not LunaUI.GetDescendants then return end
+
             for _, obj in pairs(LunaUI:GetDescendants()) do
 
-                -- ❌ skip main frame
-                if obj == LunaUI.MainFrame then
+                if LunaUI.MainFrame and obj == LunaUI.MainFrame then
                     continue
                 end
 
@@ -6579,8 +6581,12 @@ function Luna:CreateWindow(WindowSettings)
             end
         end
 
-        LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
-            Luna:ApplyTheme()
+        task.spawn(function()
+            repeat task.wait() until LunaUI and LunaUI:FindFirstChild("ThemeRemote")
+
+            LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
+                Luna:ApplyTheme()
+            end)
         end)
 
 		function Tab:BuildThemeSection()
