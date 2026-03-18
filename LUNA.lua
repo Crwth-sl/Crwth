@@ -1527,12 +1527,12 @@ local PresetGradients = {
     Lava = {Color3.fromRGB(120, 20, 0), Color3.fromRGB(200, 50, 0), Color3.fromRGB(255, 120, 0)},
     Glacier = {Color3.fromRGB(200, 255, 255), Color3.fromRGB(150, 220, 255), Color3.fromRGB(100, 180, 255)},
     Sakura = {Color3.fromRGB(255, 200, 220), Color3.fromRGB(255, 150, 200), Color3.fromRGB(255, 100, 180)},
-    Matrix = {Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 180, 0), Color3.fromRGB(0, 100, 0)}
+    Matrix = {Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 180, 0), Color3.fromRGB(0, 100, 0)},
     Midnight = {Color3.fromRGB(25, 25, 40), Color3.fromRGB(50, 50, 80), Color3.fromRGB(120, 120, 200)},
     Frostbite = {Color3.fromRGB(180, 240, 255), Color3.fromRGB(120, 200, 255), Color3.fromRGB(80, 150, 220)},
     Velvet = {Color3.fromRGB(80, 0, 80), Color3.fromRGB(120, 0, 120), Color3.fromRGB(200, 0, 200)},
     Bronze = {Color3.fromRGB(205, 127, 50), Color3.fromRGB(180, 100, 40), Color3.fromRGB(140, 80, 30)},
-    Slatellllll = {Color3.fromRGB(70, 70, 90), Color3.fromRGB(100, 100, 120), Color3.fromRGB(150, 150, 180)}
+    Slatellllll = {Color3.fromRGB(70, 70, 90), Color3.fromRGB(100, 100, 120), Color3.fromRGB(150, 150, 180)},
     Aurora = {Color3.fromRGB(102, 255, 204), Color3.fromRGB(102, 178, 255), Color3.fromRGB(204, 153, 255)},
     Sunset = {Color3.fromRGB(255, 140, 102), Color3.fromRGB(255, 94, 98), Color3.fromRGB(199, 121, 208)},
     Ice = {Color3.fromRGB(204, 255, 255), Color3.fromRGB(153, 229, 255), Color3.fromRGB(102, 204, 255)},
@@ -6160,189 +6160,168 @@ function Luna:CreateWindow(WindowSettings)
 
 
 		function Tab:BuildConfigSection()
-			if isStudio then
-				Tab:CreateLabel({Text = "Config system unavailable. (Environment isStudio)", Style = 3})
-				return "Config system unavailable." 
-			end
+            local inputPath = nil
+            local selectedConfig = nil
 
-			local inputPath = nil
-			local selectedConfig = nil
+            local function getConfigPath()
+                return Luna.Folder .. "/" .. game.PlaceId .. "/settings/"
+            end
 
-			local Title = Elements.Template.Title:Clone()
-			Title.Text = "Configurations"
-			Title.Visible = true
-			Title.Parent = TabPage
-			Title.TextTransparency = 1
-			TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+            local function normalize(value)
+                if type(value) == "table" then
+                    return value[1]
+                end
+                return value
+            end
 
-			Tab:CreateSection("Config Creator")
+            local Title = Elements.Template.Title:Clone()
+            Title.Text = "Configurations"
+            Title.Visible = true
+            Title.Parent = TabPage
+            Title.TextTransparency = 1
+            TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
-			Tab:CreateInput({
-				Name = "Config Name",
-				Description = "Insert a name for your to be created config.",
-				PlaceholderText = "Name",
-				CurrentValue = "",
-				Numeric = false,
-				MaxCharacters = nil,
-				Enter = false,
-				Callback = function(input)
-					inputPath = input
-				end,
-			})
-
-			local configSelection
-
-			Tab:CreateButton({
-				Name = "Create Config",
-				Description = "Create a config with all of your current settings.",
-				Callback = function()
-					if not inputPath or string.gsub(inputPath, " ", "") == "" then
-						Luna:Notification({
-							Title = "Interface",
-							Icon = "warning",
-							ImageSource = "Material",
-							Content = "Config name cannot be empty."
-						})
-						return
-					end
-
-					local success, returned = Luna:SaveConfig(inputPath)
-					if not success then
-						Luna:Notification({
-							Title = "Interface",
-							Icon = "error",
-							ImageSource = "Material",
-							Content = "Unable to save config, return error: " .. returned
-						})
-					end
-
-					Luna:Notification({
-						Title = "Interface",
-						Icon = "info",
-						ImageSource = "Material",
-						Content = string.format("Created config %q", inputPath),
-					})
-
-					configSelection:Set({ Options = Luna:RefreshConfigList() })
-				end
-			})
-
-			Tab:CreateSection("Config Load/Settings")
+            Tab:CreateSection("Config Creator")
+            function Luna:RefreshConfigList()
 
 
-			configSelection = Tab:CreateDropdown({
-				Name = "Select Config",
-				Description = "Select a config to load your settings on.",
-				Options = Luna:RefreshConfigList(),
-				CurrentOption = {},
-				MultipleOptions = false,
-				SpecialType = nil,
-				Callback = function(Value)
-					selectedConfig = Value
-				end,
-			})
+                local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
 
-			Tab:CreateButton({
-				Name = "Load Config",
-				Description = "Load your saved config settings.",
-				Callback = function()
-					local success, returned = Luna:LoadConfig(selectedConfig)
-					if not success then
-						Luna:Notification({
-							Title = "Interface",
-							Icon = "error",
-							ImageSource = "Material",
-							Content = "Unable to load config, return error: " .. returned
-						})
-						return
-					end
+                local out = {}
+                for i = 1, #list do
+                    local file = list[i]
+                    if file:sub(-5) == ".luna" then
+                        local pos = file:find(".luna", 1, true)
+                        local start = pos
 
-					Luna:Notification({
-						Title = "Interface",
-						Icon = "info",
-						ImageSource = "Material",
-						Content = string.format("Loaded config %q", selectedConfig),
-					})
-				end
-			})
+                        local char = file:sub(pos, pos)
+                        while char ~= "/" and char ~= "\\" and char ~= "" do
+                            pos = pos - 1
+                            char = file:sub(pos, pos)
+                        end
 
-			Tab:CreateButton({
-				Name = "Overwrite Config",
-				Description = "Overwrite your current config settings.",
-				Callback = function()
-					local success, returned = Luna:SaveConfig(selectedConfig)
-					if not success then
-						Luna:Notification({
-							Title = "Interface",
-							Icon = "error",
-							ImageSource = "Material",
-							Content = "Unable to overwrite config, return error: " .. returned
-						})
-						return
-					end
+                        if char == "/" or char == "\\" then
+                            local name = file:sub(pos + 1, start - 1)
+                            if name ~= "options" then
+                                table.insert(out, name)
+                            end
+                        end
+                    end
+                end
 
-					Luna:Notification({
-						Title = "Interface",
-						Icon = "info",
-						ImageSource = "Material",
-						Content = string.format("Overwrote config %q", selectedConfig),
-					})
-				end
-			})
+                return out
+            end
+            Tab:CreateInput({
+                Name = "Config Name",
+                PlaceholderText = "Name",
+                Callback = function(input)
+                    inputPath = input
+                end,
+            })
 
-			Tab:CreateButton({
-				Name = "Refresh Config List",
-				Description = "Refresh the current config list.",
-				Callback = function()
-					configSelection:Set({ Options = Luna:RefreshConfigList() })
-				end,
-			})
+            local configSelection
 
-			local loadlabel
-			Tab:CreateButton({
-				Name = "Set as autoload",
-				Description = "Set a config to auto load setting in your next session.",
-				Callback = function()
-					local name = selectedConfig
-					writefile(Luna.Folder .. "/settings/autoload.txt", name)
-					loadlabel:Set({ Text = "Current autoload config: " .. name })
+            Tab:CreateButton({
+                Name = "Create Config",
+                Callback = function()
+                    if not inputPath or inputPath:gsub(" ", "") == "" then
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Config name cannot be empty."
+                        })
+                        return
+                    end
 
-					Luna:Notification({
-						Title = "Interface",
-						Icon = "info",
-						ImageSource = "Material",
-						Content = string.format("Set %q to auto load", name),
-					})
-				end,
-			})
+                    local success, err = Luna:SaveConfig(inputPath)
+                    if not success then
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Save failed: " .. err
+                        })
+                        return
+                    end
 
-			loadlabel = Tab:CreateParagraph({
-				Title = "Current Auto Load",
-				Text = "None"
-			})
+                    configSelection:Set({Options = Luna:RefreshConfigList()})
+                end
+            })
 
-			Tab:CreateButton({
-				Name = "Delete Autoload",
-				Description = "Delete The Autoload File",
-				Callback = function()
-					local name = selectedConfig
-					delfile(Luna.Folder .. "/settings/autoload.txt")
-					loadlabel:Set({ Text = "None" })
+            Tab:CreateSection("Config Load/Settings")
 
-					Luna:Notification({
-						Title = "Interface",
-						Icon = "info",
-						ImageSource = "Material",
-						Content = "Deleted Autoload",
-					})
-				end,
-			})
+            configSelection = Tab:CreateDropdown({
+                Name = "Select Config",
+                Options = Luna:RefreshConfigList(),
+                Callback = function(value)
+                    selectedConfig = normalize(value)
+                end,
+            })
 
-			if isfile(Luna.Folder .. "/settings/autoload.txt") then
-				local name = readfile(Luna.Folder .. "/settings/autoload.txt")
-				loadlabel:Set( { Text = "Current autoload config: " .. name })
-			end     
-		end
+            Tab:CreateButton({
+                Name = "Load Config",
+                Callback = function()
+                    if not selectedConfig then return end
+
+                    local success, err = Luna:LoadConfig(selectedConfig)
+                    if not success then
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Load failed: " .. err
+                        })
+                    end
+                end
+            })
+
+            Tab:CreateButton({
+                Name = "Overwrite Config",
+                Callback = function()
+                    if not selectedConfig then return end
+
+                    Luna:SaveConfig(selectedConfig)
+                end
+            })
+
+            Tab:CreateButton({
+                Name = "Refresh Config List",
+                Callback = function()
+                    configSelection:Set({Options = Luna:RefreshConfigList()})
+                end,
+            })
+
+            local loadlabel
+
+            Tab:CreateButton({
+                Name = "Set as autoload",
+                Callback = function()
+                    if not selectedConfig then return end
+
+                    writefile(getConfigPath() .. "autoload.txt", selectedConfig)
+
+                    loadlabel:Set({Text = "Current autoload: " .. selectedConfig})
+                end,
+            })
+
+            loadlabel = Tab:CreateParagraph({
+                Title = "Current Auto Load",
+                Text = "None"
+            })
+
+            Tab:CreateButton({
+                Name = "Delete Autoload",
+                Callback = function()
+                    local path = getConfigPath() .. "autoload.txt"
+                    if isfile(path) then
+                        delfile(path)
+                    end
+
+                    loadlabel:Set({Text = "None"})
+                end,
+            })
+
+            local autoloadPath = getConfigPath() .. "autoload.txt"
+            if isfile(autoloadPath) then
+                local name = readfile(autoloadPath)
+                loadlabel:Set({Text = "Current autoload: " .. name})
+            end
+        end
 
 		local ClassParser = {
 			["Toggle"] = {
@@ -6571,7 +6550,6 @@ function Luna:CreateWindow(WindowSettings)
 
 
 		local function BuildFolderTree()
-			if isStudio then return "Config system unavailable." end
 			local paths = {
 				Luna.Folder,
 				Luna.Folder .. "/" .. game.PlaceId .. "/settings"
@@ -6587,7 +6565,6 @@ function Luna:CreateWindow(WindowSettings)
 
 		local function SetFolder()
 
-			if isStudio then return "Config system unavailable." end
 
 			if WindowSettings.ConfigSettings.RootFolder ~= nil and WindowSettings.ConfigSettings.RootFolder ~= "" then
 				Luna.Folder = WindowSettings.ConfigSettings.RootFolder .. "/" .. WindowSettings.ConfigSettings.ConfigFolder
@@ -6601,7 +6578,7 @@ function Luna:CreateWindow(WindowSettings)
 		SetFolder()
 
 		function Luna:SaveConfig(Path)
-			if isStudio then return "Config system unavailable." end
+
 
 			if (not Path) then
 				return false, "Please select a config file."
@@ -6630,7 +6607,7 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:LoadConfig(Path)
-			if isStudio then return "Config system unavailable." end
+
 
 			if (not Path) then
 				return false, "Please select a config file."
@@ -6656,7 +6633,7 @@ function Luna:CreateWindow(WindowSettings)
 		function Luna:LoadAutoloadConfig()
 			if isfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt") then
 
-				if isStudio then return "Config system unavailable." end
+	
 
 				local name = readfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt")
 
@@ -6678,36 +6655,6 @@ function Luna:CreateWindow(WindowSettings)
 				})
 
 			end 
-		end
-
-		function Luna:RefreshConfigList()
-			if isStudio then return "Config system unavailable." end
-
-			local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
-
-			local out = {}
-			for i = 1, #list do
-				local file = list[i]
-				if file:sub(-5) == ".luna" then
-					local pos = file:find(".luna", 1, true)
-					local start = pos
-
-					local char = file:sub(pos, pos)
-					while char ~= "/" and char ~= "\\" and char ~= "" do
-						pos = pos - 1
-						char = file:sub(pos, pos)
-					end
-
-					if char == "/" or char == "\\" then
-						local name = file:sub(pos + 1, start - 1)
-						if name ~= "options" then
-							table.insert(out, name)
-						end
-					end
-				end
-			end
-
-			return out
 		end
 		return Tab
 	end
