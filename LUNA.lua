@@ -6197,26 +6197,31 @@ function Luna:CreateWindow(WindowSettings)
             Tab:CreateSection("Config Creator")
             
             function Luna:RefreshConfigList()
-                local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings/")
+                local basePath = Luna.Folder .. "/" .. game.PlaceId .. "/settings/"
+                basePath = basePath:gsub("//", "/")
+                
+                if not isfolder(basePath) then
+                    return {}
+                end
+                
+                local list = listfiles(basePath)
+                if not list then
+                    return {}
+                end
+                
                 local out = {}
                 for i = 1, #list do
                     local file = list[i]
+                    
                     if file:sub(-5) == ".luna" then
-                        local pos = file:find(".luna", 1, true)
-                        local start = pos
-                        local char = file:sub(pos, pos)
-                        while char ~= "/" and char ~= "\\" and char ~= "" do
-                            pos = pos - 1
-                            char = file:sub(pos, pos)
-                        end
-                        if char == "/" or char == "\\" then
-                            local name = file:sub(pos + 1, start - 1)
-                            if name ~= "options" then
-                                table.insert(out, name)
-                            end
+                        local filename = file:match("([^/\\]+)%.luna$")
+                        
+                        if filename and filename ~= "options" then
+                            table.insert(out, filename)
                         end
                     end
                 end
+                
                 return out
             end
             
