@@ -6638,15 +6638,15 @@ function Luna:CreateWindow(WindowSettings)
 
             Tab:CreateSection("Preset Gradients")
 
-            for i, v in pairs(PresetGradients) do
+            for name, colors in pairs(PresetGradients) do
                 Tab:CreateButton({
-                    Name = tostring(i),
+                    Name = name,
                     Callback = function()
-                        c1cp:Set({ Color = v[1] })
-                        c2cp:Set({ Color = v[2] })
-                        c3cp:Set({ Color = v[3] })
+                        c1cp:Set({ Color = colors[1] })
+                        c2cp:Set({ Color = colors[2] })
+                        c3cp:Set({ Color = colors[3] })
 
-                        updateTheme(v[1], v[2], v[3])
+                        updateTheme(colors[1], colors[2], colors[3])
                     end,
                 })
             end
