@@ -6204,6 +6204,7 @@ function Luna:CreateWindow(WindowSettings)
                     return {}
                 end
                 
+
                 local list = listfiles(basePath)
                 if not list then
                     return {}
@@ -6258,7 +6259,6 @@ function Luna:CreateWindow(WindowSettings)
                             Title = "Interface",
                             Content = "Config \"" .. inputPath .. "\" successfully saved!"
                         })
-                        return
                     end
 
                     if configSelection then
