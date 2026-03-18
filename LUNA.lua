@@ -6195,24 +6195,20 @@ function Luna:CreateWindow(WindowSettings)
             TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
             Tab:CreateSection("Config Creator")
+            
             function Luna:RefreshConfigList()
-
-
                 local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
-
                 local out = {}
                 for i = 1, #list do
                     local file = list[i]
                     if file:sub(-5) == ".luna" then
                         local pos = file:find(".luna", 1, true)
                         local start = pos
-
                         local char = file:sub(pos, pos)
                         while char ~= "/" and char ~= "\\" and char ~= "" do
                             pos = pos - 1
                             char = file:sub(pos, pos)
                         end
-
                         if char == "/" or char == "\\" then
                             local name = file:sub(pos + 1, start - 1)
                             if name ~= "options" then
@@ -6221,9 +6217,9 @@ function Luna:CreateWindow(WindowSettings)
                         end
                     end
                 end
-
                 return out
             end
+            
             Tab:CreateInput({
                 Name = "Config Name",
                 PlaceholderText = "Name",
@@ -6254,15 +6250,21 @@ function Luna:CreateWindow(WindowSettings)
                         return
                     end
 
-                    configSelection:Set({Options = Luna:RefreshConfigList()})
+                    -- Update the dropdown with new options
+                    if configSelection then
+                        configSelection:Set({
+                            Options = Luna:RefreshConfigList()
+                        })
+                    end
                 end
             })
 
             Tab:CreateSection("Config Load/Settings")
 
+            -- CORRECTED: Pass options as a table with the Options field
             configSelection = Tab:CreateDropdown({
                 Name = "Select Config",
-                Options = Luna:RefreshConfigList(),
+                Options = Luna:RefreshConfigList(),  -- This should be a table of strings
                 Callback = function(value)
                     selectedConfig = normalize(value)
                 end,
@@ -6271,13 +6273,24 @@ function Luna:CreateWindow(WindowSettings)
             Tab:CreateButton({
                 Name = "Load Config",
                 Callback = function()
-                    if not selectedConfig then return end
+                    if not selectedConfig then 
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "No config selected."
+                        })
+                        return 
+                    end
 
                     local success, err = Luna:LoadConfig(selectedConfig)
                     if not success then
                         Luna:Notification({
                             Title = "Interface",
                             Content = "Load failed: " .. err
+                        })
+                    else
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Config loaded successfully!"
                         })
                     end
                 end
@@ -6286,16 +6299,37 @@ function Luna:CreateWindow(WindowSettings)
             Tab:CreateButton({
                 Name = "Overwrite Config",
                 Callback = function()
-                    if not selectedConfig then return end
+                    if not selectedConfig then 
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "No config selected."
+                        })
+                        return 
+                    end
 
-                    Luna:SaveConfig(selectedConfig)
+                    local success, err = Luna:SaveConfig(selectedConfig)
+                    if success then
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Config overwritten successfully!"
+                        })
+                    else
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Overwrite failed: " .. err
+                        })
+                    end
                 end
             })
 
             Tab:CreateButton({
                 Name = "Refresh Config List",
                 Callback = function()
-                    configSelection:Set({Options = Luna:RefreshConfigList()})
+                    if configSelection then
+                        configSelection:Set({
+                            Options = Luna:RefreshConfigList()
+                        })
+                    end
                 end,
             })
 
@@ -6304,11 +6338,25 @@ function Luna:CreateWindow(WindowSettings)
             Tab:CreateButton({
                 Name = "Set as autoload",
                 Callback = function()
-                    if not selectedConfig then return end
+                    if not selectedConfig then 
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "No config selected."
+                        })
+                        return 
+                    end
 
-                    writefile(getConfigPath() .. "autoload.txt", selectedConfig)
-
-                    loadlabel:Set({Text = "Current autoload: " .. selectedConfig})
+                    local success = pcall(function()
+                        writefile(getConfigPath() .. "autoload.txt", selectedConfig)
+                    end)
+                    
+                    if success then
+                        loadlabel:Set({Text = "Current autoload: " .. selectedConfig})
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Autoload set successfully!"
+                        })
+                    end
                 end,
             })
 
@@ -6323,9 +6371,12 @@ function Luna:CreateWindow(WindowSettings)
                     local path = getConfigPath() .. "autoload.txt"
                     if isfile(path) then
                         delfile(path)
+                        loadlabel:Set({Text = "None"})
+                        Luna:Notification({
+                            Title = "Interface",
+                            Content = "Autoload deleted!"
+                        })
                     end
-
-                    loadlabel:Set({Text = "None"})
                 end,
             })
 
