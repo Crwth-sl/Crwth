@@ -3720,10 +3720,10 @@ function Luna:CreateWindow(WindowSettings)
 					opened = not opened
 					if opened then
 						tween(Dropdown.icon, {Rotation = 180})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize + 40)})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
 					else
 						tween(Dropdown.icon, {Rotation = 0})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize + 15)})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
 					end
 				end
 
