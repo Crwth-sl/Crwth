@@ -6415,7 +6415,7 @@ function Luna:CreateWindow(WindowSettings)
             return Color3.fromHSV(h, s, v)
         end
 
-       function Luna:ApplyTheme()
+        function Luna:ApplyTheme()
 
             if not LunaUI then
                 warn("LunaUI is nil")
@@ -6435,13 +6435,19 @@ function Luna:CreateWindow(WindowSettings)
                 if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
-
-                if (obj:IsA("TextButton") or obj:IsA("ImageButton")) then
+                
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
 
                 if obj:IsA("TextLabel") then
-                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
+                    local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
+
+                    obj.TextColor3 = newColor
+
+                    if obj:GetAttribute("ThemeTextColor") ~= nil then
+                        obj:SetAttribute("ThemeTextColor", newColor)
+                    end
                 end
 
             end
