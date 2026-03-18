@@ -6197,7 +6197,7 @@ function Luna:CreateWindow(WindowSettings)
             Tab:CreateSection("Config Creator")
             
             function Luna:RefreshConfigList()
-                local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
+                local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings/")
                 local out = {}
                 for i = 1, #list do
                     local file = list[i]
