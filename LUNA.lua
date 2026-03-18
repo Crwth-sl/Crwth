@@ -6870,4 +6870,4 @@ function Luna:Destroy()
 	LunaUI:Destroy()
 end
 
-return
+return Luna
