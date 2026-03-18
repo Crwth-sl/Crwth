@@ -1576,57 +1576,49 @@ local PresetGradients = {
 }
 
 local function GetIcon(icon, source)
-    if source == "Custom" then
-        return "rbxassetid://" .. icon
-    elseif source == "Lucide" then
-        -- full credit to latte softworks :)
-        local iconData = not isStudio and game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/refs/heads/master/lib/Icons.luau")
-        local icons = isStudio and IconModule.Lucide or loadstring(iconData)()
-        if not isStudio then
-            icon = string.match(string.lower(icon), "^%s*(.*)%s*$") :: string
-            local sizedicons = icons['48px']
+	if source == "Custom" then
+		return "rbxassetid://" .. icon
+	elseif source == "Lucide" then
+		-- full credit to latte softworks :)
+		local iconData = not isStudio and game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/refs/heads/master/lib/Icons.luau")
+		local icons = isStudio and IconModule.Lucide or loadstring(iconData)()
+		if not isStudio then
+			icon = string.match(string.lower(icon), "^%s*(.*)%s*$") :: string
+			local sizedicons = icons['48px']
 
-            local r = sizedicons[icon]
-            if not r then
-                error("Lucide Icons: Failed to find icon by the name of \"" .. icon .. "\.", 2)
-            end
+			local r = sizedicons[icon]
+			if not r then
+				error("Lucide Icons: Failed to find icon by the name of \"" .. icon .. "\.", 2)
+			end
 
-            local rirs = r[2]
-            local riro = r[3]
+			local rirs = r[2]
+			local riro = r[3]
 
-            if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
-                error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
-            end
+			if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+				error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+			end
 
-            local irs = Vector2.new(rirs[1], rirs[2])
-            local iro = Vector2.new(riro[1], riro[2])
+			local irs = Vector2.new(rirs[1], rirs[2])
+			local iro = Vector2.new(riro[1], riro[2])
 
-            local asset = {
-                id = r[1],
-                imageRectSize = irs,
-                imageRectOffset = iro,
-            }
+			local asset = {
+				id = r[1],
+				imageRectSize = irs,
+				imageRectOffset = iro,
+			}
 
-            return asset
-        else
-            return "rbxassetid://10723434557"
-        end
-    else    
-        if icon ~= nil and IconModule[source] then
-            local sourceicon = IconModule[source]
-            -- Add safety check here
-            local imageId = sourceicon[icon]
-            if imageId then
-                return imageId
-            else
-                -- Return a default icon if the requested one doesn't exist
-                warn(string.format("Luna UI: Icon '%s' not found in %s source", icon, source))
-                return "rbxassetid://6031097225" -- Return menu icon as default fallback
-            end
-        else
-            return nil
-        end
-    end
+			return asset
+		else
+			return "rbxassetid://10723434557"
+		end
+	else	
+		if icon ~= nil and IconModule[source] then
+			local sourceicon = IconModule[source]
+			return sourceicon[icon]
+		else
+			return nil
+		end
+	end
 end
 
 local function RemoveTable(tablre, value)
