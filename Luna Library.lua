@@ -6367,7 +6367,7 @@ function Luna:CreateWindow(WindowSettings)
 				Description = "Set a config to auto load setting in your next session.",
 				Callback = function()
 					local name = selectedConfig
-					writefile(Luna.Folder .. "/settings/autoload.txt", name)
+					writefile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt", name)
 					loadlabel:Set({ Text = "Current autoload config: " .. name })
 
 					Luna:Notification({
@@ -6389,7 +6389,7 @@ function Luna:CreateWindow(WindowSettings)
 				Description = "Delete The Autoload File",
 				Callback = function()
 					local name = selectedConfig
-					delfile(Luna.Folder .. "/settings/autoload.txt")
+					delfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt")
 					loadlabel:Set({ Text = "None" })
 
 					Luna:Notification({
@@ -6401,8 +6401,8 @@ function Luna:CreateWindow(WindowSettings)
 				end,
 			})
 
-			if isfile(Luna.Folder .. "/settings/autoload.txt") then
-				local name = readfile(Luna.Folder .. "/settings/autoload.txt")
+			if isfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt") then
+				local name = readfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt")
 				loadlabel:Set( { Text = "Current autoload config: " .. name })
 			end     
 		end
