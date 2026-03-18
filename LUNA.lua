@@ -6520,8 +6520,7 @@ function Luna:CreateWindow(WindowSettings)
 
     for _, obj in pairs(descendants) do
 
-        if obj:IsA("Frame") then
-            print(obj:GetFullName())
+        if obj:IsA("Frame") and obj.Name ~= "Elements" then
             obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
         end
 
