@@ -6505,35 +6505,36 @@ function Luna:CreateWindow(WindowSettings)
 
        function Luna:ApplyTheme()
 
-    if not LunaUI then
-        warn("LunaUI is nil")
-        return
-    end
+            if not LunaUI then
+                warn("LunaUI is nil")
+                return
+            end
 
-    if typeof(LunaUI) ~= "Instance" then
-        warn("LunaUI is not an Instance:", typeof(LunaUI))
-        return
-    end
+            if typeof(LunaUI) ~= "Instance" then
+                warn("LunaUI is not an Instance:", typeof(LunaUI))
+                return
+            end
 
-    local descendants = LunaUI:GetDescendants()
-    if not descendants then return end
+            local descendants = LunaUI:GetDescendants()
+            if not descendants then return end
 
-    for _, obj in pairs(descendants) do
+            for _, obj in pairs(descendants) do
 
-        if obj:IsA("Frame") and obj.Name ~= "Elements" then
-            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+                -- ❌ skip Elements and everything inside it
+                if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+                end
+
+                if (obj:IsA("TextButton") or obj:IsA("ImageButton")) and not obj:FindFirstAncestor("Elements") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
+                end
+
+                if obj:IsA("TextLabel") then
+                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
+                end
+
+            end
         end
-
-        if obj:IsA("TextButton") or obj:IsA("ImageButton") then
-            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
-        end
-
-        if obj:IsA("TextLabel") then
-            obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
-        end
-
-    end
-end
 
         LunaUI.ThemeRemote:GetPropertyChangedSignal("Value"):Connect(function()
             Luna:ApplyTheme()
