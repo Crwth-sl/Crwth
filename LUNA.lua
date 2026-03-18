@@ -3802,7 +3802,9 @@ function Luna:CreateWindow(WindowSettings)
 
                         Option.Text = v
                         if v == "Template" then v = "Template (Name)" end
-                        Option.Name = v
+                        local safeName = v:gsub("%s+", "_") -- replace spaces
+                        Option.Name = safeName
+                        Option:SetAttribute("RealName", v)
 
                         local ThemeTextColor = Option:GetAttribute("ThemeTextColor") or Option.TextColor3
                         Option:SetAttribute("ThemeTextColor", ThemeTextColor)
@@ -3983,15 +3985,24 @@ function Luna:CreateWindow(WindowSettings)
 						DropdownSettings.CurrentOption = {}
 						Dropdown.Selected.PlaceholderText = "None"
 					end
+                    local function getOptionByValue(value)
+                        for _, opt in pairs(Dropdown.List:GetChildren()) do
+                            if opt:GetAttribute("RealName") == value then
+                                return opt
+                            end
+                        end
+                    end
 					for _, name in pairs(DropdownSettings.CurrentOption) do
-						local opt = Dropdown.List[name]
-                        local base = opt:GetAttribute("ThemeTextColor")
+                        local opt = getOptionByValue(name)
+                        if opt then
+                            local base = opt:GetAttribute("ThemeTextColor")
 
-                        tween(opt, {
-                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
-                            BackgroundTransparency = 0.95
-                        })
-					end
+                            tween(opt, {
+                                TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
+                                BackgroundTransparency = 0.95
+                            })
+                        end
+                    end
 				else
 					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
 				end
@@ -5625,7 +5636,9 @@ function Luna:CreateWindow(WindowSettings)
 					local optionhover = false
 					Option.Text = v
 					if v == "Template" then v = "Template (Name)" end
-					Option.Name = v
+					local safeName = v:gsub("%s+", "_")
+                    Option.Name = safeName
+                    Option:SetAttribute("RealName", v)
 					Option.Interact.MouseButton1Click:Connect(function()
 						local bleh
 						if DropdownSettings.MultipleOptions then
