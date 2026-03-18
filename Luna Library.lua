@@ -6502,94 +6502,85 @@ function Luna:CreateWindow(WindowSettings)
             Title.Parent = TabPage
             Title.TextTransparency = 1
 
-            TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {
-                TextTransparency = 0
-            }):Play()
+            TweenService:Create(
+                Title,
+                TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+                {TextTransparency = 0}
+            ):Play()
 
             Tab:CreateSection("Custom Editor")
 
-            -- ✅ STORE COLORS YOURSELF (IMPORTANT)
-            local c1 = Color3.fromRGB(117, 164, 206)
-            local c2 = Color3.fromRGB(123, 201, 201)
-            local c3 = Color3.fromRGB(224, 138, 184)
-
-            -- ✅ SAFE COLOR FIX
-            local function GetColor(v)
+            -- 🔧 Helper: safely convert anything → Color3
+            local function toColor3(v)
                 if typeof(v) == "Color3" then
                     return v
-                elseif typeof(v) == "table" and v.Color then
-                    return v.Color
+                elseif type(v) == "table" then
+                    return Color3.fromRGB(v.R or 255, v.G or 255, v.B or 255)
                 end
                 return Color3.fromRGB(255,255,255)
             end
 
-            local function UpdateTheme()
-                Luna.ThemeGradient = ColorSequence.new{
-                    ColorSequenceKeypoint.new(0, c1),
-                    ColorSequenceKeypoint.new(0.5, c2),
-                    ColorSequenceKeypoint.new(1, c3)
-                }
-
-                if LunaUI and LunaUI.ThemeRemote then
-                    LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
-                end
-            end
-
+            -- 🎨 Color pickers
             local c1cp = Tab:CreateColorPicker({
                 Name = "Color 1",
-                Color = c1,
+                Color = Color3.fromRGB(117, 164, 206),
             }, "LunaInterfaceSuitePrebuiltCPC1")
 
             local c2cp = Tab:CreateColorPicker({
                 Name = "Color 2",
-                Color = c2,
+                Color = Color3.fromRGB(123, 201, 201),
             }, "LunaInterfaceSuitePrebuiltCPC2")
 
             local c3cp = Tab:CreateColorPicker({
                 Name = "Color 3",
-                Color = c3,
+                Color = Color3.fromRGB(224, 138, 184),
             }, "LunaInterfaceSuitePrebuiltCPC3")
 
-            -- ❌ REMOVE task.wait(1)
+            -- 🔥 Single function to update gradient (no repetition)
+            local function updateTheme(c1, c2, c3)
+                Luna.ThemeGradient = ColorSequence.new{
+                    ColorSequenceKeypoint.new(0.00, toColor3(c1)),
+                    ColorSequenceKeypoint.new(0.50, toColor3(c2)),
+                    ColorSequenceKeypoint.new(1.00, toColor3(c3))
+                }
 
-            -- ✅ FIX CALLBACKS
+                LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+            end
+
+            task.wait(1)
+
+            -- 🧠 Callbacks (fixed)
             c1cp:Set({
                 Callback = function(Value)
-                    c1 = GetColor(Value)
-                    UpdateTheme()
+                    updateTheme(Value, c2cp.Color, c3cp.Color)
                 end
             })
 
             c2cp:Set({
                 Callback = function(Value)
-                    c2 = GetColor(Value)
-                    UpdateTheme()
+                    updateTheme(c1cp.Color, Value, c3cp.Color)
                 end
             })
 
             c3cp:Set({
                 Callback = function(Value)
-                    c3 = GetColor(Value)
-                    UpdateTheme()
+                    updateTheme(c1cp.Color, c2cp.Color, Value)
                 end
             })
 
             Tab:CreateSection("Preset Gradients")
 
-            for i,v in pairs(PresetGradients) do
+            for i, v in pairs(PresetGradients) do
                 Tab:CreateButton({
                     Name = tostring(i),
                     Callback = function()
-                        c1 = v[1]
-                        c2 = v[2]
-                        c3 = v[3]
+                        -- set colors
+                        c1cp:Set({ Color = v[1] })
+                        c2cp:Set({ Color = v[2] })
+                        c3cp:Set({ Color = v[3] })
 
-                        if c1cp.Set then c1cp:Set({Color = c1}) end
-                        if c2cp.Set then c2cp:Set({Color = c2}) end
-                        if c3cp.Set then c3cp:Set({Color = c3}) end
-
-                        -- 🔥 FORCE UPDATE
-                        UpdateTheme()
+                        -- 🔥 also update theme instantly
+                        updateTheme(v[1], v[2], v[3])
                     end,
                 })
             end
