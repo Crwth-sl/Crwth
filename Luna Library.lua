@@ -5808,7 +5808,13 @@ function Luna:CreateWindow(WindowSettings)
 						Dropdown.Selected.PlaceholderText = "None"
 					end
 					for _, name in pairs(DropdownSettings.CurrentOption) do
-						tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+						local opt = Dropdown.List[name]
+                        local base = opt:GetAttribute("ThemeTextColor")
+
+                        tween(opt, {
+                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
+                            BackgroundTransparency = 0.95
+                        })
 					end
 				else
 					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
