@@ -2928,7 +2928,7 @@ function Luna:CreateWindow(WindowSettings)
 
 				SliderSettings = Kwargify({
 					Name = "Slider",
-					Range = {0, 200},
+					Range = {-1000, 1000},
 					Increment = 1,
 					CurrentValue = 100,
 					Callback = function(Value)
@@ -4601,7 +4601,7 @@ function Luna:CreateWindow(WindowSettings)
 
 			SliderSettings = Kwargify({
 				Name = "Slider",
-				Range = {0, 200},
+				Range = {-1000, 1000},
 				Increment = 1,
 				CurrentValue = 100,
 				Callback = function(Value)
@@ -6643,7 +6643,7 @@ function Luna:CreateWindow(WindowSettings)
 					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
 					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
 				},
-				CurrentOption = "Ice",
+				CurrentOption = "Velvet",
 				Callback = function(presetName)
 					local preset = PresetGradients[presetName]
 					if preset then
