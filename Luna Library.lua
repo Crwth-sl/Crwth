@@ -2104,14 +2104,29 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 	end)
 end
 
-function Luna:Notification(data) -- action e.g open messages
+function Luna:Notification(data)
 	task.spawn(function()
 		data = Kwargify({
 			Title = "Missing Title",
 			Content = "Missing or Unknown Content",
 			Icon = "view_in_ar",
-			ImageSource = "Material"
+			ImageSource = "Material",
+			Duration = nil
 		}, data or {})
+
+		-- SAFE ICON FETCH
+		local function SafeGetIcon(name, source)
+			local success, result = pcall(function()
+				return GetIcon(name, source)
+			end)
+
+			if success and result then
+				return result
+			end
+
+			-- fallback icon (never nil)
+			return "rbxassetid://0"
+		end
 
 		-- Notification Object Creation
 		local newNotification = Notifications.Template:Clone()
@@ -2123,10 +2138,12 @@ function Luna:Notification(data) -- action e.g open messages
 
 		-- Set Data
 		newNotification.Title.Text = data.Title
-		newNotification.Description.Text = data.Content 
-		newNotification.Icon.Image = GetIcon(data.Icon, data.ImageSource)
+		newNotification.Description.Text = data.Content
+		
+		local icon = SafeGetIcon(data.Icon, data.ImageSource)
+		newNotification.Icon.Image = icon
 
-		-- Set initial transparency values
+		-- Initial transparency
 		newNotification.BackgroundTransparency = 1
 		newNotification.Title.TextTransparency = 1
 		newNotification.Description.TextTransparency = 1
@@ -2137,8 +2154,9 @@ function Luna:Notification(data) -- action e.g open messages
 
 		task.wait()
 
-		-- Calculate textbounds and set initial values
-		newNotification.Size = UDim2.new(1, 0, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
+		-- Initial sizing
+		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
+		newNotification.Size = UDim2.new(1, 0, 0, -padding)
 
 		newNotification.Icon.Size = UDim2.new(0, 28, 0, 28)
 		newNotification.Icon.Position = UDim2.new(0, 16, 0.5, -1)
@@ -2147,38 +2165,82 @@ function Luna:Notification(data) -- action e.g open messages
 
 		newNotification.Description.Size = UDim2.new(1, -65, 0, math.huge)
 		local bounds = newNotification.Description.TextBounds.Y + 55
-		newNotification.Description.Size = UDim2.new(1,-65,0, bounds - 35)
-		newNotification.Size = UDim2.new(1, 0, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
-		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, bounds)}):Play()
+
+		newNotification.Description.Size = UDim2.new(1, -65, 0, bounds - 35)
+		newNotification.Size = UDim2.new(1, 0, 0, -padding)
+
+		TweenService:Create(
+			newNotification,
+			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
+			{Size = UDim2.new(1, 0, 0, bounds)}
+		):Play()
 
 		task.wait(0.15)
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+			BackgroundTransparency = 0.45
+		}):Play()
+
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			TextTransparency = 0
+		}):Play()
 
 		task.wait(0.05)
 
-		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			ImageTransparency = 0
+		}):Play()
 
 		task.wait(0.05)
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95}):Play()
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.82}):Play()
 
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			TextTransparency = 0.35
+		}):Play()
+
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+			Transparency = 0.95
+		}):Play()
+
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			ImageTransparency = 0.82
+		}):Play()
+
+		-- Auto duration based on text
 		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
 		task.wait(data.Duration or waitDuration)
 
+		-- Fade out
 		newNotification.Icon.Visible = false
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, 0)}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+			BackgroundTransparency = 1
+		}):Play()
+
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
+			Transparency = 1
+		}):Play()
+
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			ImageTransparency = 1
+		}):Play()
+
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			TextTransparency = 1
+		}):Play()
+
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+			TextTransparency = 1
+		}):Play()
+
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(1, -90, 0, 0)
+		}):Play()
 
 		task.wait(1)
 
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(1, -90, 0, -padding)
+		}):Play()
 
 		newNotification.Visible = false
 		newNotification:Destroy()
