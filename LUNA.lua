@@ -5910,7 +5910,6 @@ function Luna:CreateWindow(WindowSettings)
                         end
                     end
                 else
-                    -- Multiple selections
                     for _, value in pairs(bleh) do
                         for _, Option in pairs(Dropdown.List:GetChildren()) do
                             if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
@@ -6644,7 +6643,7 @@ function Luna:CreateWindow(WindowSettings)
 					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
 					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
 				},
-				CurrentOption = "Ice",
+				CurrentOption = "Void",
 				Callback = function(presetName)
 					local preset = PresetGradients[presetName]
 					if preset then
