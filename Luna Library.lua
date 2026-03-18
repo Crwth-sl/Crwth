@@ -6506,7 +6506,7 @@ function Luna:CreateWindow(WindowSettings)
         function Luna:ApplyTheme()
             for _, obj in pairs(LunaUI:GetDescendants()) do
 
-                if obj:IsA("UIGradient") then
+                if obj:IsA("UIGradient") and v.Parent.Name ~= "SmartWindow" then
                     obj.Color = self.ThemeGradient
                 end
             end
