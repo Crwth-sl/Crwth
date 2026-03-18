@@ -1931,13 +1931,13 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 			if dragBar and enableTaptic then
 				dragBar.MouseEnter:Connect(function()
 					if not Dragging then
-						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5, Size = UDim2.new(0, 120, 0, 4)}):Play()
+						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5, Size = UDim2.new(0, 180, 0, 6)}):Play()
 					end
 				end)
 
 				dragBar.MouseLeave:Connect(function()
 					if not Dragging then
-						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.7, Size = UDim2.new(0, 100, 0, 4)}):Play()
+						TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.7, Size = UDim2.new(0, 150, 0, 6)}):Play() 
 					end
 				end)
 			end
@@ -1952,7 +1952,7 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 				FramePos = Window.Position
 
 				if enableTaptic then
-					TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 110, 0, 4), BackgroundTransparency = 0}):Play()
+					TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 6), BackgroundTransparency = 0}):Play()
 				end
 
 				Input.Changed:Connect(function()
@@ -1961,7 +1961,7 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 						connectFunctions()
 
 						if enableTaptic then
-							TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 100, 0, 4), BackgroundTransparency = 0.7}):Play()
+							TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 150, 0, 6), BackgroundTransparency = 0.7}):Play()
 						end
 					end
 				end)
@@ -2163,11 +2163,11 @@ end
 local MainSize
 local MinSize 
 if Camera.ViewportSize.X > 774 and Camera.ViewportSize.Y > 503 then
-	MainSize = UDim2.fromOffset(800, 500)
-	MinSize = UDim2.fromOffset(500, 42)
+	MainSize = UDim2.fromOffset(900, 600)
+	MinSize = UDim2.fromOffset(700, 60)
 else
-	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100, Camera.ViewportSize.Y - 100)
-	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275, 42)
+	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 50, Camera.ViewportSize.Y - 50)
+	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 150, 60)
 end
 
 local function Maximise(Window)
@@ -2232,7 +2232,7 @@ function Luna:CreateWindow(WindowSettings)
 	Main.Visible = true
 	Main.BackgroundTransparency = 1
 	Main.Size = MainSize
-	Main.Size = UDim2.fromOffset(Main.Size.X.Offset - 70, Main.Size.Y.Offset - 55)
+	Main.Size = UDim2.fromOffset(Main.Size.X.Offset - 30, Main.Size.Y.Offset - 25)
 	Main.Parent.ShadowHolder.Size = Main.Size
 	LoadingFrame.Frame.Frame.Title.TextTransparency = 1
 	LoadingFrame.Frame.Frame.Subtitle.TextTransparency = 1
@@ -2928,7 +2928,7 @@ function Luna:CreateWindow(WindowSettings)
 
 				SliderSettings = Kwargify({
 					Name = "Slider",
-					Range = {-1000, 1000},
+					Range = {0, 500},
 					Increment = 1,
 					CurrentValue = 100,
 					Callback = function(Value)
@@ -3075,7 +3075,7 @@ function Luna:CreateWindow(WindowSettings)
 						Slider.Value.Text = text:match("[0-9.]*") or ""
 					end
 					if SliderSettings.Range[2] < (tonumber(Slider.Value.Text) or 0) then Slider.Value.Text = SliderSettings.Range[2] end
-					Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X, 23)
+					Slider.Value.Size = UDim2.fromOffset(Slider.Value.TextBounds.X + 10, 28)
 					Set(tonumber(Slider.Value.Text), true)
 				end)
 
@@ -3698,11 +3698,11 @@ function Luna:CreateWindow(WindowSettings)
 				local closedsize
 				local openedsize
 				if descriptionbool then
-					closedsize = 48
-					openedsize = 170
+					closedsize = 65
+					openedsize = 220
 				elseif not descriptionbool then
-					closedsize = 38
-					openedsize = 160
+					closedsize = 55
+					openedsize = 210
 				end
 				local opened = false
 
@@ -3720,10 +3720,10 @@ function Luna:CreateWindow(WindowSettings)
 					opened = not opened
 					if opened then
 						tween(Dropdown.icon, {Rotation = 180})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize + 40)})
 					else
 						tween(Dropdown.icon, {Rotation = 0})
-						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize + 15)})
 					end
 				end
 
@@ -4601,7 +4601,7 @@ function Luna:CreateWindow(WindowSettings)
 
 			SliderSettings = Kwargify({
 				Name = "Slider",
-				Range = {-1000, 1000},
+				Range = {0, 500},
 				Increment = 1,
 				CurrentValue = 100,
 				Callback = function(Value)
@@ -6858,6 +6858,16 @@ function Luna:CreateWindow(WindowSettings)
 
 	return Window
 end
+
+local function makeTextBigger()
+    task.wait(1)
+    for _, obj in ipairs(Main:GetDescendants()) do
+        if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+            obj.TextSize = 18
+        end
+    end
+end
+makeTextBigger()
 
 function Luna:Destroy()
 	Main.Visible = false
