@@ -6520,6 +6520,9 @@ function Luna:CreateWindow(WindowSettings)
 
     for _, obj in pairs(descendants) do
 
+        if obj:IsA("ScrollingFrame") then
+            obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+        end
 
         if obj:IsA("TextButton") or obj:IsA("ImageButton") then
             obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
