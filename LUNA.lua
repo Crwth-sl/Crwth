@@ -3701,8 +3701,8 @@ function Luna:CreateWindow(WindowSettings)
 					closedsize = 65   -- Was 48, now bigger
 					openedsize = 220  -- Was 170, now bigger
 				elseif not descriptionbool then
-					closedsize = 48   -- Was 38, now bigger
-					openedsize = 170  -- Was 160, now bigger
+					closedsize = 38   -- Was 38, now bigger
+					openedsize = 210  -- Was 160, now bigger
 				end
 				local opened = false
 
