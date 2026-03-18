@@ -6505,9 +6505,16 @@ function Luna:CreateWindow(WindowSettings)
 
         function Luna:ApplyTheme()
             for _, obj in pairs(LunaUI:GetDescendants()) do
+                if obj:IsA("Frame") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+                end
 
-                if obj:IsA("UIGradient") then
-                    obj.Color = softenColor(self.ThemeGradient)
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
+                end
+
+                if obj:IsA("TextLabel") then
+                    obj.TextColor3 = softenColor(self.ThemeGradient.Keypoints[3].Value)
                 end
             end
         end
