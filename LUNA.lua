@@ -6638,7 +6638,7 @@ function Luna:CreateWindow(WindowSettings)
 
             Tab:CreateSection("Preset Gradients")
 
-            for i, v in ipairs(PresetGradients) do
+            for i, v in pairs(PresetGradients) do
                 Tab:CreateButton({
                     Name = tostring(i),
                     Callback = function()
