@@ -3684,8 +3684,8 @@ function Luna:CreateWindow(WindowSettings)
                 DropdownSettings = Kwargify({
                     Name = "Dropdown",
                     Description = nil,
-                    Options = {"Option 1", "Option 2"},
-                    CurrentOption = {"Option 1"},
+                    Options = {},
+                    CurrentOption = {},
                     MultipleOptions = false,
                     SpecialType = nil,
                     Callback = function(Options)
@@ -5509,8 +5509,8 @@ function Luna:CreateWindow(WindowSettings)
 			DropdownSettings = Kwargify({
 				Name = "Dropdown",
 				Description = nil,
-				Options = {"Option 1", "Option 2"},
-				CurrentOption = {"Option 1"},
+				Options = {},
+				CurrentOption = {},
 				MultipleOptions = false,
 				SpecialType = nil,
 				Callback = function(Options)
