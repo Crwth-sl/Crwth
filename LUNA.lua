@@ -4596,7 +4596,8 @@ function Luna:CreateWindow(WindowSettings)
 			return ParagraphV
 		end
 
-		function Tab:CreateSlider(SliderSettings, Flag)
+		function Section:CreateSlider(SliderSettings, Flag)
+			TabPage.Position = UDim2.new(0,0,0,28)
 			local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
 
 			SliderSettings = Kwargify({
@@ -4768,6 +4769,7 @@ function Luna:CreateWindow(WindowSettings)
 				Slider.Title.Text = SliderSettings.Name
 
 				Set()
+
 			end
 
 			function SliderV:Destroy()
