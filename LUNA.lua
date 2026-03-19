@@ -2928,7 +2928,7 @@ function Luna:CreateWindow(WindowSettings)
 
 				SliderSettings = Kwargify({
 					Name = "Slider",
-					Range = {-1000, 1000},
+					Range = {0, 200},
 					Increment = 1,
 					CurrentValue = 100,
 					Callback = function(Value)
@@ -4601,7 +4601,7 @@ function Luna:CreateWindow(WindowSettings)
 
 			SliderSettings = Kwargify({
 				Name = "Slider",
-				Range = {-1000, 1000},
+				Range = {0, 200},
 				Increment = 1,
 				CurrentValue = 100,
 				Callback = function(Value)
