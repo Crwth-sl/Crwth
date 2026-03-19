@@ -3674,6 +3674,12 @@ function Luna:CreateWindow(WindowSettings)
 			end
 
 			function Section:CreateDropdown(DropdownSettings, Flag)
+				print("=== DEBUG ===")
+print("Running in Plugin?", plugin ~= nil)
+print("Running in Studio?", RunService:IsStudio())
+print("Current thread security:", debug.info(2, "s"))
+print("TabPage parent:", TabPage and TabPage.Parent)
+print("TabPage parent class:", TabPage and TabPage.Parent and TabPage.Parent.ClassName)
     TabPage.Position = UDim2.new(0,0,0,28)
     local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
 
