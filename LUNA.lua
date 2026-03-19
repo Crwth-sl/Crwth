@@ -6597,7 +6597,7 @@ function Luna:CreateWindow(WindowSettings)
 
 				if obj:IsA("TextLabel") then
 					-- Only apply TextLabel changes if parent is not "Template"
-					if obj.Parent.Name ~= "Template" then
+					if obj.Parent.Name ~= "Template" and obj.Parent.Name ~= tostring(getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aBthen) then
 						local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
 
 						obj.TextColor3 = newColor
