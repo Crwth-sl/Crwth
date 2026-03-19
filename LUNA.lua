@@ -2026,6 +2026,7 @@ function Luna:Notification(data)
 		local icon = SafeGetIcon(data.Icon, data.ImageSource)
 		newNotification.Icon.Image = icon
 
+		-- Transparency reset
 		newNotification.BackgroundTransparency = 1
 		newNotification.Title.TextTransparency = 1
 		newNotification.Description.TextTransparency = 1
@@ -2037,23 +2038,28 @@ function Luna:Notification(data)
 		task.wait()
 
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
-		newNotification.Size = UDim2.new(1, 0, 0, -padding)
+		
+		-- 🔥 BIGGER WIDTH
+		newNotification.Size = UDim2.new(1, -20, 0, -padding)
 
-		newNotification.Icon.Size = UDim2.new(0, 28, 0, 28)
-		newNotification.Icon.Position = UDim2.new(0, 16, 0.5, -1)
+		-- 🔥 BIGGER ICON
+		newNotification.Icon.Size = UDim2.new(0, 36, 0, 36)
+		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, -18)
 
 		newNotification.Visible = true
 
-		newNotification.Description.Size = UDim2.new(1, -65, 0, math.huge)
-		local bounds = newNotification.Description.TextBounds.Y + 55
+		-- 🔥 MORE TEXT SPACE
+		newNotification.Description.Size = UDim2.new(1, -90, 0, math.huge)
+		local bounds = newNotification.Description.TextBounds.Y + 80
 
-		newNotification.Description.Size = UDim2.new(1, -65, 0, bounds - 35)
-		newNotification.Size = UDim2.new(1, 0, 0, -padding)
+		newNotification.Description.Size = UDim2.new(1, -90, 0, bounds - 50)
+		newNotification.Size = UDim2.new(1, -20, 0, -padding)
 
+		-- 🔥 BIGGER EXPAND ANIMATION
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, 0, 0, bounds)}
+			{Size = UDim2.new(1, -20, 0, bounds)}
 		):Play()
 
 		task.wait(0.15)
@@ -2111,14 +2117,15 @@ function Luna:Notification(data)
 			TextTransparency = 1
 		}):Play()
 
+		-- 🔥 BIGGER CLOSE ANIMATION
 		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -90, 0, 0)
+			Size = UDim2.new(1, -20, 0, 0)
 		}):Play()
 
 		task.wait(1)
 
 		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -90, 0, -padding)
+			Size = UDim2.new(1, -20, 0, -padding)
 		}):Play()
 
 		newNotification.Visible = false
