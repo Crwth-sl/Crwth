@@ -2020,7 +2020,10 @@ function Luna:Notification(data)
 		newNotification.Visible = false
 		BlurModule(newNotification)
 
-		-- 🔥 BIGGER TEXT
+		-- 🔥 IMPORTANT: allow overflow
+		newNotification.ClipsDescendants = false
+
+		-- 🔥 BIG TEXT
 		newNotification.Title.Text = data.Title
 		newNotification.Title.TextSize = 22
 
@@ -2030,7 +2033,7 @@ function Luna:Notification(data)
 		local icon = SafeGetIcon(data.Icon, data.ImageSource)
 		newNotification.Icon.Image = icon
 
-		-- Transparency reset
+		-- reset transparency
 		newNotification.BackgroundTransparency = 1
 		newNotification.Title.TextTransparency = 1
 		newNotification.Description.TextTransparency = 1
@@ -2042,9 +2045,10 @@ function Luna:Notification(data)
 		task.wait()
 
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
-		
-		-- 🔥 MUCH WIDER + TALLER BASE
-		newNotification.Size = UDim2.new(1, 100, 0, 60)
+
+		-- 🔥 MAKE IT ACTUALLY WIDE
+		newNotification.Size = UDim2.new(1.5, 0, 0, 60)
+		newNotification.Position = UDim2.new(0, -100, 0, 0)
 
 		-- 🔥 BIG ICON
 		newNotification.Icon.Size = UDim2.new(0, 48, 0, 48)
@@ -2052,17 +2056,17 @@ function Luna:Notification(data)
 
 		newNotification.Visible = true
 
-		-- 🔥 MORE ROOM FOR TEXT
-		newNotification.Description.Size = UDim2.new(1, -80, 0, math.huge)
+		-- 🔥 TEXT USES WIDTH
+		newNotification.Description.Size = UDim2.new(1, -140, 0, math.huge)
 		local bounds = newNotification.Description.TextBounds.Y + 100
 
-		newNotification.Description.Size = UDim2.new(1, -80, 0, bounds - 60)
+		newNotification.Description.Size = UDim2.new(1, -140, 0, bounds - 60)
 
-		-- 🔥 EXPAND BIGGER
+		-- 🔥 EXPAND ANIMATION (WIDE)
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, 100, 0, bounds)}
+			{Size = UDim2.new(1.5, 0, 0, bounds)}
 		):Play()
 
 		task.wait(0.15)
@@ -2100,6 +2104,7 @@ function Luna:Notification(data)
 
 		newNotification.Icon.Visible = false
 
+		-- fade out
 		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
 			BackgroundTransparency = 1
 		}):Play()
@@ -2120,9 +2125,9 @@ function Luna:Notification(data)
 			TextTransparency = 1
 		}):Play()
 
-		-- 🔥 BIG CLOSE
+		-- 🔥 CLOSE WIDE
 		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, 100, 0, 0)
+			Size = UDim2.new(1.5, 0, 0, 0)
 		}):Play()
 
 		task.wait(0.6)
