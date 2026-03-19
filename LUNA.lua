@@ -2037,35 +2037,19 @@ function Luna:Notification(data)
 		task.wait()
 
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
-		
-		-- SCALE FACTOR - increase this to make everything bigger
-		local scale = 1.5 -- 1.5x bigger (adjust as needed)
-		
-		-- Initial size (will be tweened to full size)
 		newNotification.Size = UDim2.new(1, 0, 0, -padding)
 
-		-- Scale up icon
-		newNotification.Icon.Size = UDim2.new(0, 28 * scale, 0, 28 * scale)
-		newNotification.Icon.Position = UDim2.new(0, 16 * scale, 0.5, -1 * scale)
-
-		-- Scale up title
-		newNotification.Title.Position = UDim2.new(0, 60 * scale, 0, 8 * scale)
-		newNotification.Title.Size = UDim2.new(1, -(80 * scale), 0, 20 * scale)
-		newNotification.Title.TextSize = 18 * scale
+		newNotification.Icon.Size = UDim2.new(0, 28, 0, 28)
+		newNotification.Icon.Position = UDim2.new(0, 16, 0.5, -1)
 
 		newNotification.Visible = true
 
-		-- Scale up description
-		newNotification.Description.Position = UDim2.new(0, 60 * scale, 0, 38 * scale)
-		newNotification.Description.Size = UDim2.new(1, -(80 * scale), 0, math.huge)
-		newNotification.Description.TextSize = 14 * scale
-		
-		-- Calculate bounds with scaled padding
-		local bounds = newNotification.Description.TextBounds.Y + (55 * scale)
+		newNotification.Description.Size = UDim2.new(1, -65, 0, math.huge)
+		local bounds = newNotification.Description.TextBounds.Y + 55
 
-		newNotification.Description.Size = UDim2.new(1, -(80 * scale), 0, bounds - (35 * scale))
-		
-		-- Final size with scale factor applied to height
+		newNotification.Description.Size = UDim2.new(1, -65, 0, bounds - 35)
+		newNotification.Size = UDim2.new(1, 0, 0, -padding)
+
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
@@ -2179,11 +2163,11 @@ end
 local MainSize
 local MinSize 
 if Camera.ViewportSize.X > 774 and Camera.ViewportSize.Y > 503 then
-	MainSize = UDim2.fromOffset(675, 424)
-	MinSize = UDim2.fromOffset(500, 42)
+	MainSize = UDim2.fromOffset(675 * 1.34, 424 * 1.4)
+	MinSize = UDim2.fromOffset(500 * 1.34, 42 * 1.4)
 else
-	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100, Camera.ViewportSize.Y - 100)
-	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275, 42)
+	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100 * 1.34, Camera.ViewportSize.Y - 100 * 1.4)
+	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275 * 1.34, 42 * 1.4)
 end
 
 local function Maximise(Window)
@@ -6712,7 +6696,7 @@ function Luna:CreateWindow(WindowSettings)
 					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
 					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
 				},
-				CurrentOption = "Velvet",
+				CurrentOption = "Obsidian",
 				Callback = function(presetName)
 					local preset = PresetGradients[presetName]
 					if preset then
