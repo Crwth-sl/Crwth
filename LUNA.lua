@@ -2038,26 +2038,38 @@ function Luna:Notification(data)
 
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
 		
-		-- Make notification wider from the start (adjust the X offset)
-		newNotification.Size = UDim2.new(1, -50, 0, -padding) -- Changed from 0 to -50 to make it narrower initially? Actually let's make it wider
-		-- Better: Use a negative X offset to make it take more width
-		newNotification.Size = UDim2.new(1, -30, 0, -padding) -- Less negative = wider (0 is full width, -30 is slightly less than full)
+		-- SCALE FACTOR - increase this to make everything bigger
+		local scale = 1.5 -- 1.5x bigger (adjust as needed)
+		
+		-- Initial size (will be tweened to full size)
+		newNotification.Size = UDim2.new(1, 0, 0, -padding)
 
-		newNotification.Icon.Size = UDim2.new(0, 28, 0, 28)
-		newNotification.Icon.Position = UDim2.new(0, 16, 0.5, -1)
+		-- Scale up icon
+		newNotification.Icon.Size = UDim2.new(0, 28 * scale, 0, 28 * scale)
+		newNotification.Icon.Position = UDim2.new(0, 16 * scale, 0.5, -1 * scale)
+
+		-- Scale up title
+		newNotification.Title.Position = UDim2.new(0, 60 * scale, 0, 8 * scale)
+		newNotification.Title.Size = UDim2.new(1, -(80 * scale), 0, 20 * scale)
+		newNotification.Title.TextSize = 18 * scale
 
 		newNotification.Visible = true
 
-		newNotification.Description.Size = UDim2.new(1, -85, 0, math.huge) -- Increased negative offset from -65 to -85 for more right padding
-		local bounds = newNotification.Description.TextBounds.Y + 55
-
-		newNotification.Description.Size = UDim2.new(1, -85, 0, bounds - 35) -- Match the increased padding
+		-- Scale up description
+		newNotification.Description.Position = UDim2.new(0, 60 * scale, 0, 38 * scale)
+		newNotification.Description.Size = UDim2.new(1, -(80 * scale), 0, math.huge)
+		newNotification.Description.TextSize = 14 * scale
 		
-		-- Make the final size wider with a negative X offset
+		-- Calculate bounds with scaled padding
+		local bounds = newNotification.Description.TextBounds.Y + (55 * scale)
+
+		newNotification.Description.Size = UDim2.new(1, -(80 * scale), 0, bounds - (35 * scale))
+		
+		-- Final size with scale factor applied to height
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, -30, 0, bounds)} -- Changed from 1,0 to 1,-30 (less negative = wider)
+			{Size = UDim2.new(1, 0, 0, bounds)}
 		):Play()
 
 		task.wait(0.15)
@@ -2115,15 +2127,14 @@ function Luna:Notification(data)
 			TextTransparency = 1
 		}):Play()
 
-		-- Make the shrink animation match the new width
 		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -120, 0, 0) -- Adjusted from -90 to -120 for wider notifications
+			Size = UDim2.new(1, -90, 0, 0)
 		}):Play()
 
 		task.wait(1)
 
 		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -120, 0, -padding) -- Match the shrink offset
+			Size = UDim2.new(1, -90, 0, -padding)
 		}):Play()
 
 		newNotification.Visible = false
