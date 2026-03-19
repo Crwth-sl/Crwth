@@ -5555,6 +5555,21 @@ function Luna:CreateWindow(WindowSettings)
 
 
 		function Tab:CreateDropdown(DropdownSettings, Flag)
+			print("Creating dropdown in context:", debug.info(2, "s"))  -- Shows where called from
+			print("TabPage parent:", TabPage and TabPage.Parent)  -- Shows what TabPage is parented to
+			
+			-- Check if TabPage is in a valid UI hierarchy
+			local function findScreenGui(obj)
+				while obj and obj ~= game do
+					if obj:IsA("ScreenGui") then
+						return obj
+					end
+					obj = obj.Parent
+				end
+			end
+			
+			local screenGui = findScreenGui(TabPage)
+			print("Found ScreenGui:", screenGui and screenGui.Name)
 			local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
 
 			DropdownSettings = Kwargify({
