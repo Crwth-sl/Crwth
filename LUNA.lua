@@ -6588,15 +6588,15 @@ function Luna:CreateWindow(WindowSettings)
 
             for _, obj in pairs(descendants) do
 
-                if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") and not obj:FindFirstAncestor("Notifications") then
+                if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
 
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") and not obj:FindFirstAncestor("Notifications") then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
 
-                if obj:IsA("TextLabel") then
+                if obj:IsA("TextLabel") and not obj:FindFirstAncestor("Notifications") then
                     local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
 
                     obj.TextColor3 = newColor
