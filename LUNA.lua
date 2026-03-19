@@ -2044,7 +2044,7 @@ function Luna:Notification(data)
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
 		
 		-- 🔥 MUCH WIDER + TALLER BASE
-		newNotification.Size = UDim2.new(1, -10, 0, 60)
+		newNotification.Size = UDim2.new(1, 100, 0, 60)
 
 		-- 🔥 BIG ICON
 		newNotification.Icon.Size = UDim2.new(0, 48, 0, 48)
@@ -2062,7 +2062,7 @@ function Luna:Notification(data)
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, -10, 0, bounds)}
+			{Size = UDim2.new(1, 100, 0, bounds)}
 		):Play()
 
 		task.wait(0.15)
@@ -2122,7 +2122,7 @@ function Luna:Notification(data)
 
 		-- 🔥 BIG CLOSE
 		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -10, 0, 0)
+			Size = UDim2.new(1, 100, 0, 0)
 		}):Play()
 
 		task.wait(0.6)
