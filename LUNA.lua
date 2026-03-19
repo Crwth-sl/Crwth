@@ -2020,20 +2020,12 @@ function Luna:Notification(data)
 		newNotification.Visible = false
 		BlurModule(newNotification)
 
-		-- 🔥 IMPORTANT: allow overflow
-		newNotification.ClipsDescendants = false
-
-		-- 🔥 BIG TEXT
 		newNotification.Title.Text = data.Title
-		newNotification.Title.TextSize = 22
-
 		newNotification.Description.Text = data.Content
-		newNotification.Description.TextSize = 18
 		
 		local icon = SafeGetIcon(data.Icon, data.ImageSource)
 		newNotification.Icon.Image = icon
 
-		-- reset transparency
 		newNotification.BackgroundTransparency = 1
 		newNotification.Title.TextTransparency = 1
 		newNotification.Description.TextTransparency = 1
@@ -2045,34 +2037,40 @@ function Luna:Notification(data)
 		task.wait()
 
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
+		newNotification.Size = UDim2.new(1, 0, 0, -padding)
 
-		-- 🔥 MAKE IT ACTUALLY WIDE
-		newNotification.Size = UDim2.new(1, -40, 0, 60) -- 20px margin on both sides
-		newNotification.Position = UDim2.new(0, 60, 0, 0)
+		-- Increase icon size for better visibility
+		newNotification.Icon.Size = UDim2.new(0, 36, 0, 36) -- Increased from 28 to 36
+		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, -2) -- Adjusted position to match larger icon
 
-		-- 🔥 BIG ICON
-		newNotification.Icon.Size = UDim2.new(0, 37, 0, 37)
-		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, -24)
+		-- Adjust title position and size for larger notification
+		newNotification.Title.Position = UDim2.new(0, 70, 0, 12) -- Increased from original position
+		newNotification.Title.Size = UDim2.new(1, -90, 0, 22) -- Adjusted for larger text
+		newNotification.Title.TextSize = 20 -- Increased from default
 
 		newNotification.Visible = true
 
-		-- 🔥 TEXT USES WIDTH
-		newNotification.Description.Size = UDim2.new(1, -140, 0, math.huge)
-		local bounds = newNotification.Description.TextBounds.Y + 100
+		-- Calculate description size with more padding for larger notification
+		newNotification.Description.Position = UDim2.new(0, 70, 0, 38) -- Adjusted position
+		newNotification.Description.Size = UDim2.new(1, -90, 0, math.huge)
+		newNotification.Description.TextSize = 18 -- Increased from default
+		
+		local bounds = newNotification.Description.TextBounds.Y + 75 -- Increased padding from 55 to 75
 
-		newNotification.Description.Size = UDim2.new(1, -140, 0, bounds - 60)
+		newNotification.Description.Size = UDim2.new(1, -90, 0, bounds - 45) -- Adjusted size calculation
+		newNotification.Size = UDim2.new(1, 0, 0, -padding)
 
-		-- 🔥 EXPAND ANIMATION (WIDE)
+		-- Scale the final size with more height
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, -40, 0, bounds)}
+			{Size = UDim2.new(1, 0, 0, bounds + 10)} -- Added extra height for larger elements
 		):Play()
 
 		task.wait(0.15)
 
 		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			BackgroundTransparency = 0.4
+			BackgroundTransparency = 0.45
 		}):Play()
 
 		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
@@ -2088,23 +2086,22 @@ function Luna:Notification(data)
 		task.wait(0.05)
 
 		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			TextTransparency = 0.2
+			TextTransparency = 0.35
 		}):Play()
 
 		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			Transparency = 0.9
+			Transparency = 0.95
 		}):Play()
 
 		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			ImageTransparency = 0.75
+			ImageTransparency = 0.82
 		}):Play()
 
-		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 3, 4), 12)
+		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
 		task.wait(data.Duration or waitDuration)
 
 		newNotification.Icon.Visible = false
 
-		-- fade out
 		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
 			BackgroundTransparency = 1
 		}):Play()
@@ -2125,13 +2122,17 @@ function Luna:Notification(data)
 			TextTransparency = 1
 		}):Play()
 
-		-- 🔥 CLOSE WIDE
-		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -40, 0, 0)
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(1, -90, 0, 0)
 		}):Play()
 
-		task.wait(0.6)
+		task.wait(1)
 
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(1, -90, 0, -padding)
+		}):Play()
+
+		newNotification.Visible = false
 		newNotification:Destroy()
 	end)
 end
@@ -2173,11 +2174,11 @@ end
 local MainSize
 local MinSize 
 if Camera.ViewportSize.X > 774 and Camera.ViewportSize.Y > 503 then
-	MainSize = UDim2.fromOffset(675 * 1.34, 424 * 1.38)
-	MinSize = UDim2.fromOffset(500 * 1.34, 42 * 1.38)
+	MainSize = UDim2.fromOffset(675, 424)
+	MinSize = UDim2.fromOffset(500, 42)
 else
-	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100 * 1.34, Camera.ViewportSize.Y - 100 * 1.38)
-	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275 * 1.34, 42 * 1.38)
+	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100, Camera.ViewportSize.Y - 100)
+	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275, 42)
 end
 
 local function Maximise(Window)
