@@ -6592,11 +6592,11 @@ function Luna:CreateWindow(WindowSettings)
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
 
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") and obj.Parent.Name ~= getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aB then
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") and obj.Parent.Name ~= "Template" then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
 
-                if obj:IsA("TextLabel") and obj.Parent.Name ~= getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aB then
+                if obj:IsA("TextLabel") and obj.Parent.Name ~= "Template" then
                     local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
 
                     obj.TextColor3 = newColor
