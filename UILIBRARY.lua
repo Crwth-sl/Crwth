@@ -1,9 +1,55 @@
+--[[
+
+
+
+██╗     ██╗   ██╗███╗   ██╗ █████╗     ██╗███╗   ██╗████████╗███████╗██████╗ ███████╗ █████╗  ██████╗███████╗    ███████╗██╗   ██╗██╗████████╗███████╗
+██║     ██║   ██║████╗  ██║██╔══██╗    ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝    ██╔════╝██║   ██║██║╚══██╔══╝██╔════╝
+██║     ██║   ██║██╔██╗ ██║███████║    ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝█████╗  ███████║██║     █████╗      ███████╗██║   ██║██║   ██║   █████╗  
+██║     ██║   ██║██║╚██╗██║██╔══██║    ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗██╔══╝  ██╔══██║██║     ██╔══╝      ╚════██║██║   ██║██║   ██║   ██╔══╝  
+███████╗╚██████╔╝██║ ╚████║██║  ██║    ██║██║ ╚████║   ██║   ███████╗██║  ██║██║     ██║  ██║╚██████╗███████╗    ███████║╚██████╔╝██║   ██║   ███████╗
+╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝    ╚══════╝ ╚═════╝ ╚═╝   ╚═╝   ╚══════╝
+by    d8b   db d88888b d8888b. db    db db       .d8b.       .d8888.  .d88b.  d88888b d888888b db   d8b   db  .d88b.  d8888b. db   dD .d8888. 
+      888o  88 88'     88  `8D 88    88 88      d8' `8b      88'  YP .8P  Y8. 88'     `~~88~~' 88   I8I   88 .8P  Y8. 88  `8D 88 ,8P' 88'  YP 
+      88V8o 88 88ooooo 88oooY' 88    88 88      88ooo88      `8bo.   88    88 88ooo      88    88   I8I   88 88    88 88oobY' 88,8P   `8bo.   
+      88 V8o88 88~~~~~ 88~~~b. 88    88 88      88~~~88        `Y8b. 88    88 88~~~      88    Y8   I8I   88 88    88 88`8b   88`8b     `Y8b. 
+      88  V888 88.     88   8D 88b  d88 88booo. 88   88      db   8D `8b  d8' 88         88    `8b d8'8b d8' `8b  d8' 88 `88. 88 `88. db   8D 
+      VP   V8P Y88888P Y8888P' ~Y8888P' Y88888P YP   YP      `8888Y'  `Y88P'  YP         YP     `8b8' `8d8'   `Y88P'  88   YD YP   YD `8888Y' 
+
+
+Main Credits
+
+Hunter (Nebula Softworks) | Designing And Programming | Main Developer
+JustHey (Nebula Softworks) | Configurations, Bug Fixing And More! | Co Developer
+Throit | Color Picker
+Wally | Dragging And Certain Functions
+Sirius | PCall Parsing, Notifications, Slider And Home Tab
+Luna Executor | Original UI
+
+
+Extra Credits / Provided Certain Elements
+
+Pookie Pepelss | Bug Tester
+Inori | Configuration Concept
+Latte Softworks and qweery | Lucide Icons And Material Icons
+kirill9655 | Loading Circle
+Deity/dp4pv/x64x70 | Certain Scripting and Testing ig
+
+Contributors
+iPigTw | Typo Fixer, Fixed Key System!!
+pushByAccident | Fixing Executor Lists
+ImFloriz | Method Fixing
+
+Luna Interface Suite
+by Nebula Softworks
+
+]]
+
 local Release = "Prerelease Beta 6.1"
 
 local Luna = { 
 	Folder = "Luna", 
 	Options = {}, 
-	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(204, 255, 255)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(153, 229, 255)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(102, 204, 255))} 
+	ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(117, 164, 206)), ColorSequenceKeypoint.new(0.50, Color3.fromRGB(123, 201, 201)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(224, 138, 175))} 
 }
 
 local UserInputService = game:GetService("UserInputService")
@@ -16,6 +62,14 @@ local Player = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 local CoreGui = game:GetService("CoreGui")
 
+local isStudio
+local website = "github.com/Nebula-Softworks"
+
+if RunService:IsStudio() then
+	isStudio = true
+end
+
+-- Credits To Latte Softworks And qweery for Lucide And Material Icons Respectively.
 local IconModule = {
 	Lucide = nil,
 	Material = {
@@ -1505,57 +1559,27 @@ local IconModule = {
 	}
 }
 
+-- Other Variables
 local request = (syn and syn.request) or (http and http.request) or http_request or nil
 local tweeninfo = TweenInfo.new(0.3, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out)
 local PresetGradients = {
-    NeonSun = {Color3.fromRGB(255, 94, 0), Color3.fromRGB(255, 0, 128), Color3.fromRGB(255, 255, 0)},
-    Arctic = {Color3.fromRGB(180, 240, 255), Color3.fromRGB(120, 200, 255), Color3.fromRGB(80, 160, 255)},
-    Crimson = {Color3.fromRGB(120, 0, 0), Color3.fromRGB(180, 0, 0), Color3.fromRGB(255, 80, 80)},
-    Emerald = {Color3.fromRGB(0, 200, 120), Color3.fromRGB(0, 160, 100), Color3.fromRGB(0, 120, 80)},
-    Gold = {Color3.fromRGB(255, 215, 0), Color3.fromRGB(255, 200, 50), Color3.fromRGB(255, 170, 0)},
-    Obsidian = {Color3.fromRGB(15, 15, 15), Color3.fromRGB(35, 35, 35), Color3.fromRGB(70, 0, 100)},
-    Cyber = {Color3.fromRGB(0, 255, 255), Color3.fromRGB(0, 180, 255), Color3.fromRGB(120, 0, 255)},
-    ToxicGlow = {Color3.fromRGB(170, 255, 0), Color3.fromRGB(120, 255, 0), Color3.fromRGB(60, 200, 0)},
-    RoseGold = {Color3.fromRGB(255, 183, 197), Color3.fromRGB(255, 140, 150), Color3.fromRGB(212, 100, 120)},
-    DeepSea = {Color3.fromRGB(0, 70, 120), Color3.fromRGB(0, 110, 160), Color3.fromRGB(0, 150, 200)},
-    Thunder = {Color3.fromRGB(60, 60, 60), Color3.fromRGB(120, 120, 120), Color3.fromRGB(200, 200, 255)},
-    Plasma = {Color3.fromRGB(255, 0, 255), Color3.fromRGB(200, 0, 255), Color3.fromRGB(100, 0, 255)},
-    Inferno = {Color3.fromRGB(255, 60, 0), Color3.fromRGB(255, 120, 0), Color3.fromRGB(255, 200, 0)},
-    Aqua = {Color3.fromRGB(0, 255, 200), Color3.fromRGB(0, 200, 180), Color3.fromRGB(0, 150, 160)},
-    CottonCandy = {Color3.fromRGB(255, 200, 255), Color3.fromRGB(200, 180, 255), Color3.fromRGB(180, 220, 255)},
-    NightSky = {Color3.fromRGB(10, 10, 40), Color3.fromRGB(30, 30, 80), Color3.fromRGB(80, 80, 160)},
-    Lava = {Color3.fromRGB(120, 20, 0), Color3.fromRGB(200, 50, 0), Color3.fromRGB(255, 120, 0)},
-    Glacier = {Color3.fromRGB(200, 255, 255), Color3.fromRGB(150, 220, 255), Color3.fromRGB(100, 180, 255)},
-    Sakura = {Color3.fromRGB(255, 200, 220), Color3.fromRGB(255, 150, 200), Color3.fromRGB(255, 100, 180)},
-    Matrix = {Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 180, 0), Color3.fromRGB(0, 100, 0)}
-    Midnight = {Color3.fromRGB(25, 25, 40), Color3.fromRGB(50, 50, 80), Color3.fromRGB(120, 120, 200)},
-    Frostbite = {Color3.fromRGB(180, 240, 255), Color3.fromRGB(120, 200, 255), Color3.fromRGB(80, 150, 220)},
-    Velvet = {Color3.fromRGB(80, 0, 80), Color3.fromRGB(120, 0, 120), Color3.fromRGB(200, 0, 200)},
-    Bronze = {Color3.fromRGB(205, 127, 50), Color3.fromRGB(180, 100, 40), Color3.fromRGB(140, 80, 30)},
-    Slatellllll = {Color3.fromRGB(70, 70, 90), Color3.fromRGB(100, 100, 120), Color3.fromRGB(150, 150, 180)}
-    Aurora = {Color3.fromRGB(102, 255, 204), Color3.fromRGB(102, 178, 255), Color3.fromRGB(204, 153, 255)},
-    Sunset = {Color3.fromRGB(255, 140, 102), Color3.fromRGB(255, 94, 98), Color3.fromRGB(199, 121, 208)},
-    Ice = {Color3.fromRGB(204, 255, 255), Color3.fromRGB(153, 229, 255), Color3.fromRGB(102, 204, 255)},
-    Fire = {Color3.fromRGB(255, 85, 0), Color3.fromRGB(255, 140, 0), Color3.fromRGB(255, 200, 0)},
-    Ember = {Color3.fromRGB(255, 94, 77), Color3.fromRGB(204, 51, 0), Color3.fromRGB(102, 0, 0)},
-    Royal = {Color3.fromRGB(102, 51, 153), Color3.fromRGB(153, 102, 204), Color3.fromRGB(204, 153, 255)},
-    Candy = {Color3.fromRGB(255, 182, 193), Color3.fromRGB(255, 105, 180), Color3.fromRGB(255, 20, 147)},
-    Peach = {Color3.fromRGB(255, 178, 102), Color3.fromRGB(255, 153, 102), Color3.fromRGB(255, 128, 128)},
-    Mint = {Color3.fromRGB(170, 255, 204), Color3.fromRGB(102, 255, 178), Color3.fromRGB(51, 204, 153)},
-    Sky = {Color3.fromRGB(153, 204, 255), Color3.fromRGB(102, 178, 255), Color3.fromRGB(51, 153, 255)},
-    Galaxy = {Color3.fromRGB(51, 0, 102), Color3.fromRGB(102, 0, 153), Color3.fromRGB(204, 0, 255)},
-    Void = {Color3.fromRGB(20, 20, 20), Color3.fromRGB(40, 40, 60), Color3.fromRGB(80, 0, 120)},
-    Sand = {Color3.fromRGB(237, 201, 175), Color3.fromRGB(224, 172, 105), Color3.fromRGB(210, 140, 69)},
-    Forest = {Color3.fromRGB(34, 139, 34), Color3.fromRGB(60, 179, 113), Color3.fromRGB(107, 142, 35)},
-    Bubblegum = {Color3.fromRGB(255, 153, 204), Color3.fromRGB(255, 102, 178), Color3.fromRGB(255, 51, 153)},
-    Steel = {Color3.fromRGB(192, 192, 192), Color3.fromRGB(128, 128, 128), Color3.fromRGB(64, 64, 64)},
-    Lavender = {Color3.fromRGB(230, 230, 250), Color3.fromRGB(200, 162, 200), Color3.fromRGB(150, 123, 182)}
+	["Nightlight (Classic)"] = {Color3.fromRGB(147, 255, 239), Color3.fromRGB(201,211,233), Color3.fromRGB(255, 167, 227)},
+	["Nightlight (Neo)"] = {Color3.fromRGB(117, 164, 206), Color3.fromRGB(123, 201, 201), Color3.fromRGB(224, 138, 175)},
+	Starlight = {Color3.fromRGB(147, 255, 239), Color3.fromRGB(181, 206, 241), Color3.fromRGB(214, 158, 243)},
+	Solar = {Color3.fromRGB(242, 157, 76), Color3.fromRGB(240, 179, 81), Color3.fromRGB(238, 201, 86)},
+	Sparkle = {Color3.fromRGB(199, 130, 242), Color3.fromRGB(221, 130, 238), Color3.fromRGB(243, 129, 233)},
+	Lime = {Color3.fromRGB(170, 255, 127), Color3.fromRGB(163, 220, 138), Color3.fromRGB(155, 185, 149)},
+	Vine = {Color3.fromRGB(0, 191, 143), Color3.fromRGB(0, 126, 94), Color3.fromRGB(0, 61, 46)},
+	Cherry = {Color3.fromRGB(148, 54, 54), Color3.fromRGB(168, 67, 70), Color3.fromRGB(188, 80, 86)},
+	Daylight = {Color3.fromRGB(51, 156, 255), Color3.fromRGB(89, 171, 237), Color3.fromRGB(127, 186, 218)},
+	Blossom = {Color3.fromRGB(255, 165, 243), Color3.fromRGB(213, 129, 231), Color3.fromRGB(170, 92, 218)},
 }
 
 local function GetIcon(icon, source)
 	if source == "Custom" then
 		return "rbxassetid://" .. icon
 	elseif source == "Lucide" then
+		-- full credit to latte softworks :)
 		local iconData = not isStudio and game:HttpGet("https://raw.githubusercontent.com/latte-soft/lucide-roblox/refs/heads/master/lib/Icons.luau")
 		local icons = isStudio and IconModule.Lucide or loadstring(iconData)()
 		if not isStudio then
@@ -1653,7 +1677,7 @@ local function BlurModule(Frame)
 	frame.AnchorPoint = Vector2.new(0.5, 0.5)
 	frame.BackgroundTransparency = 1
 
-	local GenUid; do
+	local GenUid; do -- Generate unique names for RenderStepped bindings
 		local id = 0
 		function GenUid()
 			id = id + 1
@@ -1676,7 +1700,7 @@ local function BlurModule(Frame)
 
 		local acos, max, pi, sqrt = math.acos, math.max, math.pi, math.sqrt
 		local sz = 0.22
-		local function DrawTriangle(v1, v2, v3, p0, p1)
+		local function DrawTriangle(v1, v2, v3, p0, p1) -- I think Stravant wrote this function
 
 			local s1 = (v1 - v2).magnitude
 			local s2 = (v2 - v3).magnitude
@@ -1836,6 +1860,7 @@ local function unpackt(array : table)
 	return val
 end
 
+-- Interface Management
 local LunaUI = isStudio and script.Parent:WaitForChild("Luna UI") or game:GetObjects("rbxassetid://86467455075715")[1]
 
 local SizeBleh = nil
@@ -1927,6 +1952,90 @@ local Tabs = Navigation.Tabs
 local Notifications = LunaUI.Notifications
 local KeySystem : Frame = Main.KeySystem
 
+-- local function LoadConfiguration(Configuration, autoload)
+-- 	local Data = HttpService:JSONDecode(Configuration)
+-- 	local changed
+-- 	local notified = false
+
+-- 	-- Iterate through current UI elements' flags
+-- 	for FlagName, Flag in pairs(Luna.Flags) do
+-- 		local FlagValue = Data[FlagName]
+
+-- 		if FlagValue then
+-- 			task.spawn(function()
+-- 				if Flag.Type == "ColorPicker" then
+-- 					changed = true
+-- 					Flag:Set(UnpackColor(FlagValue))
+-- 				else
+-- 					if (Flag.CurrentValue or Flag.CurrentKeybind or Flag.CurrentOption or Flag.Color) ~= FlagValue then 
+-- 						changed = true
+-- 						Flag:Set(FlagValue) 	
+-- 					end
+-- 				end
+-- 			end)
+-- 		else
+-- 			notified = true
+-- 			Luna:Notification({Title = "Config Error", Content = "Luna was unable to load or find '"..FlagName.. "'' in the current script. Check ".. website .." for help.", Icon = "flag"})
+-- 		end
+-- 	end
+-- 	if autoload and notified == false then
+-- 		Luna:Notification({
+-- 			Title = "Config Autoloaded",
+-- 			Content = "The Configuration Has Been Automatically Loaded. Thank You For Using Luna Library",
+-- 			Icon = "file-code-2",
+-- 			ImageSource = "Lucide"
+-- 		})
+-- 	elseif notified == false then
+-- 		Luna:Notification({
+-- 			Title = "Config Loaded",
+-- 			Content = "The Configuration Has Been Loaded. Thank You For Using Luna Library",
+-- 			Icon = "file-code-2",
+-- 			ImageSource = "Lucide"
+-- 		})
+-- 	end
+
+-- 	return changed
+-- end
+
+-- local function SaveConfiguration(Configuration, ConfigFolder, hasRoot)
+-- 	local Data = {}
+-- 	for i,v in pairs(Luna.Flags) do
+-- 		if v.Type == "ColorPicker" then
+-- 			Data[i] = PackColor(v.Color)
+-- 		else
+-- 			Data[i] = v.CurrentValue or v.CurrentBind or v.CurrentOption or v.Color
+-- 		end
+-- 	end	
+-- 	if hasRoot then
+-- 		writefile(ConfigurationFolder .. "/" .. hasRoot .. "/" .. ConfigFolder .. "/" .. Configuration .. ConfigurationExtension, tostring(HttpService:JSONEncode(Data)))
+-- 	else
+-- 		writefile(ConfigurationFolder .. "/" .. "/" .. ConfigFolder .. Configuration .. ConfigurationExtension, tostring(HttpService:JSONEncode(Data)))
+-- 	end
+-- end
+
+-- local function SetAutoload(ConfigName, ConfigFolder, hasRoot)
+-- 	if hasRoot then
+-- 		writefile(ConfigurationFolder .. "/" .. hasRoot .. "/" .. ConfigFolder .. "/" .. "autoload.txt", tostring(ConfigName) .. ConfigurationExtension)
+-- 	else
+-- 		writefile(ConfigurationFolder .. "/" .. "/" .. ConfigFolder .. "autoload.txt", tostring(ConfigName) .. ConfigurationExtension)
+-- 	end
+-- end
+
+-- local function LoadAutoLoad(ConfigFolder, hasRoot)
+-- 	local autoload = isfile(ConfigurationFolder .. "/" .. "/" .. ConfigFolder .. "autoload.txt")
+-- 	if hasRoot then
+-- 		autoload = isfile(ConfigurationFolder .. "/" .. hasRoot .. "/" .. ConfigFolder .. "/" .. "autoload.txt")
+-- 	end
+
+-- 	if autoload then
+-- 		if hasRoot then
+-- 			LoadConfiguration(readfile(ConfigurationFolder .. "/" .. hasRoot .. "/" .. ConfigFolder .. "/" .. readfile(ConfigurationFolder .. "/" .. hasRoot .. "/" .. ConfigFolder .. "/" .. "autoload.txt")), true)
+-- 		else
+-- 			LoadConfiguration(readfile(ConfigurationFolder .. "/" .. ConfigFolder .. "/" .. readfile(ConfigurationFolder .. "/" .. ConfigFolder .. "/" .. "autoload.txt")), true)
+-- 		end
+-- 	end
+-- end
+
 local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 	pcall(function()
 		local Dragging, DragInput, MousePos, FramePos
@@ -1995,28 +2104,16 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 	end)
 end
 
-function Luna:Notification(data)
+function Luna:Notification(data) -- action e.g open messages
 	task.spawn(function()
 		data = Kwargify({
 			Title = "Missing Title",
 			Content = "Missing or Unknown Content",
 			Icon = "view_in_ar",
-			ImageSource = "Material",
-			Duration = nil
+			ImageSource = "Material"
 		}, data or {})
 
-		local function SafeGetIcon(name, source)
-			local success, result = pcall(function()
-				return GetIcon(name, source)
-			end)
-
-			if success and result then
-				return result
-			end
-
-			return "rbxassetid://0"
-		end
-
+		-- Notification Object Creation
 		local newNotification = Notifications.Template:Clone()
 		newNotification.Name = data.Title
 		newNotification.Parent = Notifications
@@ -2024,12 +2121,12 @@ function Luna:Notification(data)
 		newNotification.Visible = false
 		BlurModule(newNotification)
 
+		-- Set Data
 		newNotification.Title.Text = data.Title
-		newNotification.Description.Text = data.Content
-		
-		local icon = SafeGetIcon(data.Icon, data.ImageSource)
-		newNotification.Icon.Image = icon
+		newNotification.Description.Text = data.Content 
+		newNotification.Icon.Image = GetIcon(data.Icon, data.ImageSource)
 
+		-- Set initial transparency values
 		newNotification.BackgroundTransparency = 1
 		newNotification.Title.TextTransparency = 1
 		newNotification.Description.TextTransparency = 1
@@ -2040,8 +2137,8 @@ function Luna:Notification(data)
 
 		task.wait()
 
-		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
-		newNotification.Size = UDim2.new(1, 0, 0, -padding)
+		-- Calculate textbounds and set initial values
+		newNotification.Size = UDim2.new(1, 0, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
 
 		newNotification.Icon.Size = UDim2.new(0, 28, 0, 28)
 		newNotification.Icon.Position = UDim2.new(0, 16, 0.5, -1)
@@ -2050,80 +2147,38 @@ function Luna:Notification(data)
 
 		newNotification.Description.Size = UDim2.new(1, -65, 0, math.huge)
 		local bounds = newNotification.Description.TextBounds.Y + 55
-
-		newNotification.Description.Size = UDim2.new(1, -65, 0, bounds - 35)
-		newNotification.Size = UDim2.new(1, 0, 0, -padding)
-
-		TweenService:Create(
-			newNotification,
-			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, 0, 0, bounds)}
-		):Play()
+		newNotification.Description.Size = UDim2.new(1,-65,0, bounds - 35)
+		newNotification.Size = UDim2.new(1, 0, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
+		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, bounds)}):Play()
 
 		task.wait(0.15)
-
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			BackgroundTransparency = 0.45
-		}):Play()
-
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			TextTransparency = 0
-		}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
 		task.wait(0.05)
 
-		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			ImageTransparency = 0
-		}):Play()
+		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
 
 		task.wait(0.05)
-
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			TextTransparency = 0.35
-		}):Play()
-
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			Transparency = 0.95
-		}):Play()
-
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			ImageTransparency = 0.82
-		}):Play()
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95}):Play()
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.82}):Play()
 
 		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
 		task.wait(data.Duration or waitDuration)
 
 		newNotification.Icon.Visible = false
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			BackgroundTransparency = 1
-		}):Play()
-
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			Transparency = 1
-		}):Play()
-
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			ImageTransparency = 1
-		}):Play()
-
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			TextTransparency = 1
-		}):Play()
-
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			TextTransparency = 1
-		}):Play()
-
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -90, 0, 0)
-		}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, 0)}):Play()
 
 		task.wait(1)
 
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -90, 0, -padding)
-		}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)}):Play()
 
 		newNotification.Visible = false
 		newNotification:Destroy()
@@ -2214,16 +2269,16 @@ function Luna:CreateWindow(WindowSettings)
 		Title = WindowSettings.Name,
 		Subtitle = "Key System",
 		Note = "No Instructions",
-		SaveInRoot = false,
-		SaveKey = true,
-		Key = {""},
+		SaveInRoot = false, -- Enabling will save the key in your RootFolder (YOU MUST HAVE ONE BEFORE ENABLING THIS OPTION)
+		SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+		Key = {""}, -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
 		SecondAction = {}	
 	}, WindowSettings.KeySettings or {})
 
 	WindowSettings.KeySettings.SecondAction = Kwargify({
 		Enabled = false,
-		Type = "Discord",
-		Parameter = ""
+		Type = "Discord", -- Link/Discord
+		Parameter = "" -- for discord, add the invite link like home tab. for link, type the link of ur key sys
 	}, WindowSettings.KeySettings.SecondAction)
 
 	local Passthrough = false
@@ -2266,6 +2321,26 @@ function Luna:CreateWindow(WindowSettings)
 	end)
 
 	LoadingFrame.Visible = true
+
+	-- pcall(function()
+	-- 	if not isfolder(ConfigurationFolder) then
+	-- 		makefolder(ConfigurationFolder)
+	-- 	end
+	-- 	if WindowSettings.ConfigSettings.RootFolder then
+	-- 		if not isfolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder) then
+	-- 			makefolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder)
+	-- 			if not isfolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder .. WindowSettings.ConfigSettings.ConfigFolder) then
+	-- 				makefolder(ConfigurationFolder .. WindowSettings.ConfigSettings.RootFolder .. WindowSettings.ConfigSettings.ConfigFolder)
+	-- 			end
+	-- 		end
+	-- 	else
+	-- 		if not isfolder(ConfigurationFolder .. WindowSettings.ConfigSettings.ConfigFolder) then
+	-- 			makefolder(ConfigurationFolder .. WindowSettings.ConfigSettings.ConfigFolder)
+	-- 		end
+	-- 	end
+
+	-- 	LoadAutoLoad(WindowSettings.ConfigSettings.ConfigFolder, WindowSettings.ConfigSettings.RootFolder)
+	-- end)
 
 	LunaUI.Enabled = true
 
@@ -2320,7 +2395,7 @@ function Luna:CreateWindow(WindowSettings)
 			
 			Btn.Interact.MouseButton1Click:Connect(function()
 				if typesys == "Discord" then
-					setclipboard(tostring("https://discord.gg/"..KeySettings.SecondAction.Parameter))
+					setclipboard(tostring("https://discord.gg/"..KeySettings.SecondAction.Parameter)) -- Hunter if you see this I added copy also was too lazy to send u msg
 					if request then
 						request({
 							Url = 'http://127.0.0.1:6463/rpc?v=1',
@@ -2450,8 +2525,8 @@ function Luna:CreateWindow(WindowSettings)
 
 		HomeTabSettings = Kwargify({
 			Icon = 1,
-			SupportedExecutors = {"Vega X", "Delta", "Nihon", "Xeno"},
-			DiscordInvite = "noinvitelink"
+			SupportedExecutors = {"Vega X", "Delta", "Nihon", "Xeno"}, -- THESE DEFAULTS ARE PLACEHOLDERS!! I DO NOT ADVERTISE THESE, THEY ARE JUS THE FIRST THAT CAME TO MIND. I HAVE NO IDEA WHETHER THEYA RE RATS (they prob are) AND IM NOT RESPONSIBLE IF U GET VIRUSES FROM INSTALLING AFTER SEEING THIS LIST
+			DiscordInvite = "noinvitelink" -- The disvord invite link. Do not include the link so for example if my invite was discord.gg/nebula I would put nebula
 		}, HomeTabSettings or {})
 
 		local HomeTab = {}
@@ -2509,8 +2584,10 @@ function Luna:CreateWindow(WindowSettings)
 			end
 		end
 
+		-- Stolen From Sirius Stuff Begins Here
+
 		HomeTabPage.detailsholder.dashboard.Discord.Interact.MouseButton1Click:Connect(function()
-			setclipboard(tostring("https://discord.gg/"..HomeTabSettings.DiscordInvite))
+			setclipboard(tostring("https://discord.gg/"..HomeTabSettings.DiscordInvite)) -- Hunter if you see this I added copy also was too lazy to send u msg
 			if request then
 				request({
 					Url = 'http://127.0.0.1:6463/rpc?v=1',
@@ -2542,15 +2619,17 @@ function Luna:CreateWindow(WindowSettings)
 				local friendsInGame = 0 
 
 				local list = Players:GetFriendsAsync(Player.UserId)
-				while true do
+				while true do -- loop through all the pages
 					for _, data in list:GetCurrentPage() do
 						friendsInTotal +=1
 						table.insert(playersFriends, Data)
 					end
 
 					if list.IsFinished then
+						-- stop the loop since this is the last page
 						break
 					else 
+						-- go to the next page
 						list:AdvanceToNextPageAsync()
 					end
 				end
@@ -2590,17 +2669,25 @@ function Luna:CreateWindow(WindowSettings)
 			while task.wait() do
 
 
+				-- Players
 				HomeTabPage.detailsholder.dashboard.Server.Players.Value.Text = #Players:GetPlayers().." playing"
 				HomeTabPage.detailsholder.dashboard.Server.MaxPlayers.Value.Text = Players.MaxPlayers.." players can join this server"
 
+				-- Ping
 				HomeTabPage.detailsholder.dashboard.Server.Latency.Value.Text = isStudio and tostring(math.round((Players.LocalPlayer:GetNetworkPing() * 2 ) / 0.01)) .."ms" or tostring(math.floor(getPing()) .."ms")
 
+				-- Time
 				HomeTabPage.detailsholder.dashboard.Server.Time.Value.Text = convertToHMS(time())
+
+				-- Region
 				HomeTabPage.detailsholder.dashboard.Server.Region.Value.Text = Localization:GetCountryRegionForPlayerAsync(Players.LocalPlayer)
 
 				checkFriends()
 			end
 		end)()
+
+		-- Stolen From Sirius Stuff ends here
+
 	end
 
 	function Window:CreateTab(TabSettings)
@@ -2677,6 +2764,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		FirstTab = false
 
+		-- Section
 		function Tab:CreateSection(name : string)
 
 			local Section = {}
@@ -2702,6 +2790,7 @@ function Luna:CreateWindow(WindowSettings)
 				Sectiont:Destroy()
 			end
 
+			-- Divider
 			function Section:CreateDivider()
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local b = Elements.Template.Divider:Clone()
@@ -2711,6 +2800,7 @@ function Luna:CreateWindow(WindowSettings)
 				tween(b.Line, {BackgroundTransparency = 0})
 			end
 
+			-- Button
 			function Section:CreateButton(ButtonSettings)
 				TabPage.Position = UDim2.new(0,0,0,28)
 
@@ -2815,6 +2905,7 @@ function Luna:CreateWindow(WindowSettings)
 				return ButtonV
 			end
 
+			-- Label
 			function Section:CreateLabel(LabelSettings)
 				TabPage.Position = UDim2.new(0,0,0,28)
 
@@ -2866,6 +2957,7 @@ function Luna:CreateWindow(WindowSettings)
 				return LabelV
 			end
 
+			-- Paragraph
 			function Section:CreateParagraph(ParagraphSettings)
 				TabPage.Position = UDim2.new(0,0,0,28)
 
@@ -2926,6 +3018,7 @@ function Luna:CreateWindow(WindowSettings)
 				return ParagraphV
 			end
 
+			-- Slider
 			function Section:CreateSlider(SliderSettings, Flag)
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
@@ -3034,6 +3127,7 @@ function Luna:CreateWindow(WindowSettings)
 
 								SliderSettings.CurrentValue = NewValue
 								SliderV.CurrentValue = SliderSettings.CurrentValue
+								-- Luna.Flags[SliderSettings.Flag] = SliderSettings
 							end
 						else
 							TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.In, 0, false), {Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X > 5 and Location - Slider.Main.AbsolutePosition.X or 5, 1, 0)}):Play()
@@ -3066,6 +3160,7 @@ function Luna:CreateWindow(WindowSettings)
 
 					SliderSettings.CurrentValue = NewVal
 					SliderV.CurrentValue = SliderSettings.CurrentValue
+					-- Luna.Flags[SliderSettings.Flag] = SliderSettings
 
 				end
 
@@ -3100,6 +3195,7 @@ function Luna:CreateWindow(WindowSettings)
 
 					Set()
 
+					-- Luna.Flags[SliderSettings.Flag] = SliderSettings
 				end
 
 				function SliderV:Destroy()
@@ -3120,6 +3216,7 @@ function Luna:CreateWindow(WindowSettings)
 
 			end
 
+			-- Toggle
 			function Section:CreateToggle(ToggleSettings, Flag)    
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local ToggleV = { IgnoreConfig = false, Class = "Toggle" }
@@ -3296,6 +3393,7 @@ function Luna:CreateWindow(WindowSettings)
 
 			end
 
+			-- Bind
 			function Section:CreateBind(BindSettings, Flag)
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local BindV = { Class = "Keybind", IgnoreConfig = false, Settings = BindSettings, Active = false }
@@ -3304,13 +3402,15 @@ function Luna:CreateWindow(WindowSettings)
 					Name = "Bind",
 					Description = nil,
 					CurrentBind = "Q",
-					HoldToInteract = false,
+					HoldToInteract = false, -- setting this makes the Bind in toggle mode
 					Callback = function(Bind)
-
+						-- The function that takes place when the Bind is pressed
+						-- The variable (Bind) is a boolean for whether the Bind is being held or not (HoldToInteract needs to be true) or whether the Bind is currently active
 					end,
 
 					OnChangedCallback = function(Bind)
-
+						-- The function that takes place when the binded key changes
+						-- The variable (Bind) is a Enum.KeyCode for the new Binded Key
 					end,
 				}, BindSettings or {})
 
@@ -3397,7 +3497,7 @@ function Luna:CreateWindow(WindowSettings)
 							end
 							Bind.BindFrame.BindBox:ReleaseFocus()
 						end
-					elseif BindSettings.CurrentBind ~= nil and (input.KeyCode == Enum.KeyCode[BindSettings.CurrentBind] and not processed) then
+					elseif BindSettings.CurrentBind ~= nil and (input.KeyCode == Enum.KeyCode[BindSettings.CurrentBind] and not processed) then -- Test
 						local Held = true
 						local Connection
 						Connection = input.Changed:Connect(function(prop)
@@ -3507,10 +3607,13 @@ function Luna:CreateWindow(WindowSettings)
 					Luna.Options[Flag] = BindV
 				end
 
+				-- Luna.Flags[BindSettings.Flag] = BindSettings
+
 				return BindV
 
 			end
 
+			-- Dynamic Input
 			function Section:CreateInput(InputSettings, Flag)
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local InputV = { IgnoreConfig = false, Class = "Input", Settings = InputSettings }
@@ -3526,7 +3629,7 @@ function Luna:CreateWindow(WindowSettings)
 					MaxCharacters = nil,
 					Callback = function(Text)
 
-					end,
+					end, -- 52
 				}, InputSettings or {})
 
 				InputV.CurrentValue = InputSettings.CurrentValue
@@ -3677,6 +3780,7 @@ function Luna:CreateWindow(WindowSettings)
 
 			end
 
+			-- Dropdown
 			function Section:CreateDropdown(DropdownSettings, Flag)
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
@@ -3687,9 +3791,10 @@ function Luna:CreateWindow(WindowSettings)
 					Options = {"Option 1", "Option 2"},
 					CurrentOption = {"Option 1"},
 					MultipleOptions = false,
-					SpecialType = nil,
+					SpecialType = nil, -- currently onl player, might add more soon
 					Callback = function(Options)
-						
+						-- The function that takes place when the selected option is changed
+						-- The variable (Options) is a table of strings for the current selected options or a string if multioptions is false
 					end,
 				}, DropdownSettings or {})
 
@@ -3752,6 +3857,7 @@ function Luna:CreateWindow(WindowSettings)
 					end
 				end
 
+				-- fixed by justhey
 				Dropdown.Selected:GetPropertyChangedSignal("Text"):Connect(function()
 					local text = Dropdown.Selected.Text:lower()
 					for _, Item in ipairs(Dropdown.List:GetChildren()) do
@@ -3770,131 +3876,89 @@ function Luna:CreateWindow(WindowSettings)
 					end
 				end
 
-                local function ActivateColorSingle(name)
-                    for _, Option in pairs(Dropdown.List:GetChildren()) do
-                        if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
-                            tween(Option, {BackgroundTransparency = 0.98})
+				local function ActivateColorSingle(name)
+					for _, Option in pairs(Dropdown.List:GetChildren()) do
+						if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
+							tween(Option, {BackgroundTransparency = 0.98})
+						end
+					end
 
-                            local base = Option:GetAttribute("ThemeTextColor")
-                            if base then
-                                tween(Option, {TextColor3 = base})
-                            end
-                        end
-                    end
+					Toggle()
+					tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
+				end
 
-                    Toggle()
+				local function Refresh()
+					Clear()
+					for i,v in pairs(DropdownSettings.Options) do
+						local Option = Dropdown.List.Template:Clone()
+						local optionhover = false
+						Option.Text = v
+						if v == "Template" then v = "Template (Name)" end
+						Option.Name = v
+						Option.Interact.MouseButton1Click:Connect(function()
+							local bleh
+							if DropdownSettings.MultipleOptions then
+								if table.find(DropdownSettings.CurrentOption, v) then
+									RemoveTable(DropdownSettings.CurrentOption, v)
+									DropdownV.CurrentOption = DropdownSettings.CurrentOption
+									if not optionhover then
+										tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+									end
+									tween(Option, {BackgroundTransparency = 0.98})
+								else
+									table.insert(DropdownSettings.CurrentOption, v)
+									DropdownV.CurrentOption = DropdownSettings.CurrentOption
+									tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+								end
+								bleh = DropdownSettings.CurrentOption
+							else
+								DropdownSettings.CurrentOption = {v}
+								bleh = v
+								DropdownV.CurrentOption = bleh
+								ActivateColorSingle(v)
+							end
 
-                    local Selected = Dropdown.List[name]
-                    local base = Selected:GetAttribute("ThemeTextColor")
-
-                    tween(Selected, {
-                        BackgroundTransparency = 0.95,
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3) or Selected.TextColor3
-                    })
-                end
-
-                local function Refresh()
-                    Clear()
-
-                    for i, v in pairs(DropdownSettings.Options) do
-                        local Option = Dropdown.List.Template:Clone()
-                        local optionhover = false
-
-                        Option.Text = v
-                        if v == "Template" then v = "Template (Name)" end
-                        Option.Name = v
-
-                        local ThemeTextColor = Option:GetAttribute("ThemeTextColor") or Option.TextColor3
-                        Option:SetAttribute("ThemeTextColor", ThemeTextColor)
-                        Option.TextColor3 = ThemeTextColor
-
-                        Option.Interact.MouseButton1Click:Connect(function()
-                            local bleh
-
-                            if DropdownSettings.MultipleOptions then
-                                if table.find(DropdownSettings.CurrentOption, v) then
-                                    RemoveTable(DropdownSettings.CurrentOption, v)
-                                    DropdownV.CurrentOption = DropdownSettings.CurrentOption
-
-                                    if not optionhover then
-                                        local base = Option:GetAttribute("ThemeTextColor")
-                                        tween(Option, {TextColor3 = base})
-                                    end
-
-                                    tween(Option, {BackgroundTransparency = 0.98})
-                                else
-                                    table.insert(DropdownSettings.CurrentOption, v)
-                                    DropdownV.CurrentOption = DropdownSettings.CurrentOption
-
-                                    local base = Option:GetAttribute("ThemeTextColor")
-                                    tween(Option, {
-                                        TextColor3 = base:Lerp(Color3.new(1,1,1), 0.3),
-                                        BackgroundTransparency = 0.95
-                                    })
-                                end
-
-                                bleh = DropdownSettings.CurrentOption
-                            else
-                                DropdownSettings.CurrentOption = {v}
-                                bleh = v
-                                DropdownV.CurrentOption = bleh
-                                ActivateColorSingle(v)
-                            end
-
-                            SafeCallback(bleh, function()
-                                if DropdownSettings.MultipleOptions then
-                                    if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
-                                        if #DropdownSettings.CurrentOption == 1 then
-                                            Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
-                                        elseif #DropdownSettings.CurrentOption == 0 then
-                                            Dropdown.Selected.PlaceholderText = "None"
-                                        else
-                                            Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
-                                        end
-                                    else
-                                        DropdownSettings.CurrentOption = {}
-                                        Dropdown.Selected.PlaceholderText = "None"
-                                    end
-                                end
-
-                                if not DropdownSettings.MultipleOptions then
-                                    Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
-                                end
-
-                                Dropdown.Selected.Text = ""
-                            end)
-                        end)
-
-                        Option.Visible = true
-                        Option.Parent = Dropdown.List
-
-                        Option.MouseEnter:Connect(function()
-                            optionhover = true
-
-                            if Option.BackgroundTransparency == 0.95 then
-                                return
-                            else
-                                local base = Option:GetAttribute("ThemeTextColor")
-                                tween(Option, {
-                                    TextColor3 = base:Lerp(Color3.new(1,1,1), 0.2)
-                                })
-                            end
-                        end)
-
-                        Option.MouseLeave:Connect(function()
-                            optionhover = false
-
-                            if Option.BackgroundTransparency == 0.95 then
-                                return
-                            else
-                                local base = Option:GetAttribute("ThemeTextColor")
-                                tween(Option, {
-                                    TextColor3 = base
-                                })
-                            end
-                        end)
-                    end
-                end
+							SafeCallback(bleh, function()
+								if DropdownSettings.MultipleOptions then
+									if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
+										if #DropdownSettings.CurrentOption == 1 then
+											Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
+										elseif #DropdownSettings.CurrentOption == 0 then
+											Dropdown.Selected.PlaceholderText = "None"
+										else
+											Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
+										end
+									else
+										DropdownSettings.CurrentOption = {}
+										Dropdown.Selected.PlaceholderText = "None"
+									end
+								end
+								if not DropdownSettings.MultipleOptions then
+									Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
+								end
+								Dropdown.Selected.Text = ""
+							end)
+						end)
+						Option.Visible = true
+						Option.Parent = Dropdown.List
+						Option.MouseEnter:Connect(function()
+							optionhover = true
+							if Option.BackgroundTransparency == 0.95 then
+								return
+							else
+								tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
+							end
+						end)
+						Option.MouseLeave:Connect(function()
+							optionhover = false
+							if Option.BackgroundTransparency == 0.95 then
+								return
+							else
+								tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+							end
+						end)	
+					end
+				end
 
 				local function PlayerTableRefresh()
 					for i,v in pairs(DropdownSettings.Options) do
@@ -3951,23 +4015,11 @@ function Luna:CreateWindow(WindowSettings)
 				if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 				SafeCallback(bleh)
 				if type(bleh) == "string" then 
-					local opt = Dropdown.List[bleh]
-                    local base = opt:GetAttribute("ThemeTextColor")
-
-                    tween(opt, {
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                        BackgroundTransparency = 0.95
-                    })
+					tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 				else
 					for i,v in pairs(bleh) do
-                        local opt = Dropdown.List[v]
-                        local base = opt:GetAttribute("ThemeTextColor")
-
-                        tween(opt, {
-                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                            BackgroundTransparency = 0.95
-                        })
-                    end
+						tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+					end
 				end
 
 				if DropdownSettings.MultipleOptions then
@@ -3984,13 +4036,7 @@ function Luna:CreateWindow(WindowSettings)
 						Dropdown.Selected.PlaceholderText = "None"
 					end
 					for _, name in pairs(DropdownSettings.CurrentOption) do
-						local opt = Dropdown.List[name]
-                        local base = opt:GetAttribute("ThemeTextColor")
-
-                        tween(opt, {
-                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
-                            BackgroundTransparency = 0.95
-                        })
+						tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 					end
 				else
 					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
@@ -4042,21 +4088,10 @@ function Luna:CreateWindow(WindowSettings)
 					SafeCallback(bleh)
 					for _, Option in pairs(Dropdown.List:GetChildren()) do
 						if Option.ClassName == "TextLabel" then
-							local base = Option:GetAttribute("ThemeTextColor")
-
-                            tween(Option, {
-                                TextColor3 = base,
-                                BackgroundTransparency = 0.98
-                            })
+							tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
 						end
 					end
-					local opt = Dropdown.List[bleh]
-                    local base = opt:GetAttribute("ThemeTextColor")
-
-                    tween(opt, {
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                        BackgroundTransparency = 0.95
-                    })
+					tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 
 					if DropdownSettings.MultipleOptions then
 						if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
@@ -4072,18 +4107,14 @@ function Luna:CreateWindow(WindowSettings)
 							Dropdown.Selected.PlaceholderText = "None"
 						end
 						for _, name in pairs(DropdownSettings.CurrentOption) do
-							local opt = Dropdown.List[name]
-                            local base = opt:GetAttribute("ThemeTextColor")
-
-                            tween(opt, {
-                                TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
-                                BackgroundTransparency = 0.95
-                            })
+							tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 						end
 					else
 						Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
 					end
 					Dropdown.Selected.Text = ""
+
+					-- Luna.Flags[DropdownSettings.Flag] = DropdownSettings
 
 				end
 
@@ -4096,12 +4127,14 @@ function Luna:CreateWindow(WindowSettings)
 					Luna.Options[Flag] = DropdownV
 				end
 
+				-- Luna.Flags[DropdownSettings.Flag] = DropdownSettings
 
 				return DropdownV
 
 			end
 
-			function Section:CreateColorPicker(ColorPickerSettings, Flag)
+			-- Color Picker
+			function Section:CreateColorPicker(ColorPickerSettings, Flag) -- by Rayfield/Throit
 				TabPage.Position = UDim2.new(0,0,0,28)
 				local ColorPickerV = {IgnoreClass = false, Class = "Colorpicker", Settings = ColorPickerSettings}
 
@@ -4109,7 +4142,8 @@ function Luna:CreateWindow(WindowSettings)
 					Name = "Color Picker",
 					Color = Color3.fromRGB(255,255,255),
 					Callback = function(Value)
-
+						-- The function that takes place every time the color picker is moved/changed
+						-- The variable (Value) is a Color3fromRGB value based on which color is selected
 					end
 				}, ColorPickerSettings or {})
 
@@ -4209,10 +4243,12 @@ function Luna:CreateWindow(WindowSettings)
 				local hex = string.format("#%02X%02X%02X",color.R*0xFF,color.G*0xFF,color.B*0xFF)
 				ColorPicker.HexInput.InputBox.Text = hex
 				local function setDisplay(hp,sp,vp)
+					--Main
 					Main.MainPoint.Position = UDim2.new(s,-Main.MainPoint.AbsoluteSize.X/2,1-v,-Main.MainPoint.AbsoluteSize.Y/2)
 					Main.MainPoint.ImageColor3 = Color3.fromHSV(hp,sp,vp)
 					Background.BackgroundColor3 = Color3.fromHSV(hp,1,1)
 					Display.BackgroundColor3 = Color3.fromHSV(hp,sp,vp)
+					--Slider 
 					local x = hp * Slider.AbsoluteSize.X
 					Slider.SliderPoint.Position = UDim2.new(0,x-Slider.SliderPoint.AbsoluteSize.X/2,0.5,0)
 					Slider.SliderPoint.ImageColor3 = Color3.fromHSV(hp,1,1)
@@ -4241,7 +4277,7 @@ function Luna:CreateWindow(WindowSettings)
 					ColorPickerSettings.Color = Color3.fromRGB(r,g,b)
 					SafeCallback( Color3.fromRGB(r,g,b))
 				end)
-
+				--RGB
 				local function rgbBoxes(box,toChange)
 					local value = tonumber(box.Text) 
 					local color = Color3.fromHSV(h,s,v) 
@@ -4349,6 +4385,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		end
 
+		-- Divider
 		function Tab:CreateDivider()
 			local b = Elements.Template.Divider:Clone()
 			b.Parent = TabPage
@@ -4356,6 +4393,7 @@ function Luna:CreateWindow(WindowSettings)
 			tween(b.Line, {BackgroundTransparency = 0})
 		end
 
+		-- Button
 		function Tab:CreateButton(ButtonSettings)
 
 			ButtonSettings = Kwargify({
@@ -4459,6 +4497,7 @@ function Luna:CreateWindow(WindowSettings)
 			return ButtonV
 		end
 
+		-- Label
 		function Tab:CreateLabel(LabelSettings)
 
 			local LabelV = {}
@@ -4509,6 +4548,7 @@ function Luna:CreateWindow(WindowSettings)
 			return LabelV
 		end
 
+		-- Paragraph
 		function Tab:CreateParagraph(ParagraphSettings)
 
 			ParagraphSettings = Kwargify({
@@ -4568,6 +4608,7 @@ function Luna:CreateWindow(WindowSettings)
 			return ParagraphV
 		end
 
+		-- Slider
 		function Tab:CreateSlider(SliderSettings, Flag)
 			local SliderV = { IgnoreConfig = false, Class = "Slider", Settings = SliderSettings }
 
@@ -4675,6 +4716,7 @@ function Luna:CreateWindow(WindowSettings)
 
 							SliderSettings.CurrentValue = NewValue
 							SliderV.CurrentValue = SliderSettings.CurrentValue
+							-- Luna.Flags[SliderSettings.Flag] = SliderSettings
 						end
 					else
 						TweenService:Create(Slider.Main.Progress, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.In, 0, false), {Size = UDim2.new(0, Location - Slider.Main.AbsolutePosition.X > 5 and Location - Slider.Main.AbsolutePosition.X or 5, 1, 0)}):Play()
@@ -4707,6 +4749,7 @@ function Luna:CreateWindow(WindowSettings)
 
 				SliderSettings.CurrentValue = NewVal
 				SliderV.CurrentValue = SliderSettings.CurrentValue
+				-- Luna.Flags[SliderSettings.Flag] = SliderSettings
 
 			end
 
@@ -4740,6 +4783,8 @@ function Luna:CreateWindow(WindowSettings)
 				Slider.Title.Text = SliderSettings.Name
 
 				Set()
+
+				-- Luna.Flags[SliderSettings.Flag] = SliderSettings
 			end
 
 			function SliderV:Destroy()
@@ -4760,6 +4805,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		end
 
+		-- Toggle
 		function Tab:CreateToggle(ToggleSettings, Flag)    
 			local ToggleV = { IgnoreConfig = false, Class = "Toggle" }
 
@@ -4935,6 +4981,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		end
 
+		-- Bind
 		function Tab:CreateBind(BindSettings, Flag)
 			local BindV = { Class = "Keybind", IgnoreConfig = false, Settings = BindSettings, Active = false }
 
@@ -4942,13 +4989,15 @@ function Luna:CreateWindow(WindowSettings)
 				Name = "Bind",
 				Description = nil,
 				CurrentBind = "Q",
-				HoldToInteract = false,
+				HoldToInteract = false, -- setting this makes the Bind in toggle mode
 				Callback = function(Bind)
-					
+					-- The function that takes place when the Bind is pressed
+					-- The variable (Bind) is a boolean for whether the Bind is being held or not (HoldToInteract needs to be true) or whether the Bind is currently active
 				end,
 
 				OnChangedCallback = function(Bind)
-
+					-- The function that takes place when the binded key changes
+					-- The variable (Bind) is a Enum.KeyCode for the new Binded Key
 				end,
 			}, BindSettings or {})
 
@@ -5035,7 +5084,7 @@ function Luna:CreateWindow(WindowSettings)
 						end
 						Bind.BindFrame.BindBox:ReleaseFocus()
 					end
-				elseif BindSettings.CurrentBind ~= nil and (input.KeyCode == Enum.KeyCode[BindSettings.CurrentBind] and not processed) then
+				elseif BindSettings.CurrentBind ~= nil and (input.KeyCode == Enum.KeyCode[BindSettings.CurrentBind] and not processed) then -- Test
 					local Held = true
 					local Connection
 					Connection = input.Changed:Connect(function(prop)
@@ -5145,6 +5194,7 @@ function Luna:CreateWindow(WindowSettings)
 				Luna.Options[Flag] = BindV
 			end
 
+			-- Luna.Flags[BindSettings.Flag] = BindSettings
 
 			return BindV
 
@@ -5156,9 +5206,10 @@ function Luna:CreateWindow(WindowSettings)
 				Name = "Bind",
 				Description = nil,
 				CurrentBind = "Q",
-				HoldToInteract = false,
+				HoldToInteract = false, -- setting this makes the Bind in toggle mode
 				Callback = function(Bind)
-					
+					-- The function that takes place when the Bind is pressed
+					-- The variable (Bind) is a boolean for whether the Bind is being held or not (HoldToInteract needs to be true) or whether the Bind is currently active
 				end
 			}, BindSettings or {})
 
@@ -5231,7 +5282,7 @@ function Luna:CreateWindow(WindowSettings)
 						BindSettings.CurrentBind = tostring(NewKeyNoEnum)
 						Bind.BindFrame.BindBox:ReleaseFocus()
 					end
-				elseif BindSettings.CurrentBind ~= nil and (input.KeyCode == Enum.KeyCode[BindSettings.CurrentBind] and not processed) then
+				elseif BindSettings.CurrentBind ~= nil and (input.KeyCode == Enum.KeyCode[BindSettings.CurrentBind] and not processed) then -- Test
 					local Held = true
 					local Connection
 					Connection = input.Changed:Connect(function(prop)
@@ -5328,6 +5379,7 @@ function Luna:CreateWindow(WindowSettings)
 				Bind.BindFrame.BindBox.Text = BindSettings.CurrentBind
 				Bind.BindFrame.BindBox.Size = UDim2.new(0, Bind.BindFrame.BindBox.TextBounds.X + 16, 0, 42)
 
+				-- Luna.Flags[BindSettings.Flag] = BindSettings
 
 			end
 
@@ -5336,13 +5388,13 @@ function Luna:CreateWindow(WindowSettings)
 				Bind:Destroy()
 			end
 
-
+			-- Luna.Flags[BindSettings.Flag] = BindSettings
 
 			return BindV
 
 		end
 
-
+		-- Dynamic Input
 		function Tab:CreateInput(InputSettings, Flag)
 			local InputV = { IgnoreConfig = false, Class = "Input", Settings = InputSettings }
 
@@ -5357,7 +5409,7 @@ function Luna:CreateWindow(WindowSettings)
 				MaxCharacters = nil,
 				Callback = function(Text)
 
-				end,
+				end, -- 52
 			}, InputSettings or {})
 
 			InputV.CurrentValue = InputSettings.CurrentValue
@@ -5508,7 +5560,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		end
 
-
+		-- Dropdown
 		function Tab:CreateDropdown(DropdownSettings, Flag)
 			local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
 
@@ -5518,9 +5570,10 @@ function Luna:CreateWindow(WindowSettings)
 				Options = {"Option 1", "Option 2"},
 				CurrentOption = {"Option 1"},
 				MultipleOptions = false,
-				SpecialType = nil,
+				SpecialType = nil, -- currently onl player, might add more soon
 				Callback = function(Options)
-					
+					-- The function that takes place when the selected option is changed
+					-- The variable (Options) is a table of strings for the current selected options or a string if multioptions is false
 				end,
 			}, DropdownSettings or {})
 
@@ -5583,6 +5636,7 @@ function Luna:CreateWindow(WindowSettings)
 				end
 			end
 
+			-- fixed by justhey
 			Dropdown.Selected:GetPropertyChangedSignal("Text"):Connect(function()
 				local text = Dropdown.Selected.Text:lower()
 				for _, Item in ipairs(Dropdown.List:GetChildren()) do
@@ -5609,13 +5663,7 @@ function Luna:CreateWindow(WindowSettings)
 				end
 
 				Toggle()
-				local opt = Dropdown.List[name]
-                local base = opt:GetAttribute("ThemeTextColor")
-
-                tween(opt, {
-                    BackgroundTransparency = 0.95,
-                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3)
-                })
+				tween(Dropdown.List[name], {BackgroundTransparency = 0.95, TextColor3 = Color3.fromRGB(240,240,240)})
 			end
 
 			local function Refresh()
@@ -5630,26 +5678,17 @@ function Luna:CreateWindow(WindowSettings)
 						local bleh
 						if DropdownSettings.MultipleOptions then
 							if table.find(DropdownSettings.CurrentOption, v) then
-                                RemoveTable(DropdownSettings.CurrentOption, v)
-                                DropdownV.CurrentOption = DropdownSettings.CurrentOption
-
-                                if not optionhover then
-                                    local base = Option:GetAttribute("ThemeTextColor")
-                                    tween(Option, {TextColor3 = base})
-                                end
-
-                                tween(Option, {BackgroundTransparency = 0.98})
-                            else
-                                table.insert(DropdownSettings.CurrentOption, v)
-                                DropdownV.CurrentOption = DropdownSettings.CurrentOption
-
-                                local base = Option:GetAttribute("ThemeTextColor")
-
-                                tween(Option, {
-                                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                                    BackgroundTransparency = 0.95
-                                })
-                            end
+								RemoveTable(DropdownSettings.CurrentOption, v)
+								DropdownV.CurrentOption = DropdownSettings.CurrentOption
+								if not optionhover then
+									tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+								end
+								tween(Option, {BackgroundTransparency = 0.98})
+							else
+								table.insert(DropdownSettings.CurrentOption, v)
+								DropdownV.CurrentOption = DropdownSettings.CurrentOption
+								tween(Option, {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+							end
 							bleh = DropdownSettings.CurrentOption
 						else
 							DropdownSettings.CurrentOption = {v}
@@ -5682,32 +5721,21 @@ function Luna:CreateWindow(WindowSettings)
 					Option.Visible = true
 					Option.Parent = Dropdown.List
 					Option.MouseEnter:Connect(function()
-                        optionhover = true
-
-                        if Option.BackgroundTransparency == 0.95 then
-                            return
-                        else
-                            local base = Option:GetAttribute("ThemeTextColor")
-
-                            tween(Option, {
-                                TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.2)
-                            })
-                        end
-                    end)
-
-                    Option.MouseLeave:Connect(function()
-                        optionhover = false
-
-                        if Option.BackgroundTransparency == 0.95 then
-                            return
-                        else
-                            local base = Option:GetAttribute("ThemeTextColor")
-
-                            tween(Option, {
-                                TextColor3 = base
-                            })
-                        end
-                    end)	
+						optionhover = true
+						if Option.BackgroundTransparency == 0.95 then
+							return
+						else
+							tween(Option, {TextColor3 = Color3.fromRGB(240,240,240)})
+						end
+					end)
+					Option.MouseLeave:Connect(function()
+						optionhover = false
+						if Option.BackgroundTransparency == 0.95 then
+							return
+						else
+							tween(Option, {TextColor3 = Color3.fromRGB(200,200,200)})
+						end
+					end)	
 				end
 			end
 
@@ -5765,25 +5793,13 @@ function Luna:CreateWindow(WindowSettings)
 			end
 			if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 			SafeCallback(bleh)
-            if type(bleh) == "string" then
-                local opt = Dropdown.List[bleh]
-                local base = opt:GetAttribute("ThemeTextColor")
-
-                tween(opt, {
-                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                    BackgroundTransparency = 0.95
-                })
-            else
-                for i, v in pairs(bleh) do
-                    local opt = Dropdown.List[v]
-                    local base = opt:GetAttribute("ThemeTextColor")
-
-                    tween(opt, {
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                        BackgroundTransparency = 0.95
-                    })
-                end
-            end
+			if type(bleh) == "string" then 
+				tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+			else
+				for i,v in pairs(bleh) do
+					tween(Dropdown.List[v], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
+				end
+			end
 
 			if DropdownSettings.MultipleOptions then
 				if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
@@ -5799,14 +5815,8 @@ function Luna:CreateWindow(WindowSettings)
 					Dropdown.Selected.PlaceholderText = "None"
 				end
 				for _, name in pairs(DropdownSettings.CurrentOption) do
-                    local opt = Dropdown.List[name]
-                    local base = opt:GetAttribute("ThemeTextColor")
-
-                    tween(opt, {
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
-                        BackgroundTransparency = 0.95
-                    })
-                end
+					tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
+				end
 			else
 				Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
 			end
@@ -5856,22 +5866,11 @@ function Luna:CreateWindow(WindowSettings)
 				if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
 				SafeCallback(bleh)
 				for _, Option in pairs(Dropdown.List:GetChildren()) do
-                    if Option.ClassName == "TextLabel" then
-                        local base = Option:GetAttribute("ThemeTextColor")
-
-                        tween(Option, {
-                            TextColor3 = base,
-                            BackgroundTransparency = 0.98
-                        })
-                    end
-                end
-				local opt = Dropdown.List[bleh]
-                local base = opt:GetAttribute("ThemeTextColor")
-
-                tween(opt, {
-                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                    BackgroundTransparency = 0.95
-                })
+					if Option.ClassName == "TextLabel" then
+						tween(Option, {TextColor3 = Color3.fromRGB(200,200,200), BackgroundTransparency = 0.98})
+					end
+				end
+				tween(Dropdown.List[bleh], {TextColor3 = Color3.fromRGB(240,240,240), BackgroundTransparency = 0.95})
 
 				if DropdownSettings.MultipleOptions then
 					if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
@@ -5887,19 +5886,14 @@ function Luna:CreateWindow(WindowSettings)
 						Dropdown.Selected.PlaceholderText = "None"
 					end
 					for _, name in pairs(DropdownSettings.CurrentOption) do
-						local opt = Dropdown.List[name]
-                        local base = opt:GetAttribute("ThemeTextColor")
-
-                        tween(opt, {
-                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
-                            BackgroundTransparency = 0.95
-                        })
+						tween(Dropdown.List[name], {TextColor3 = Color3.fromRGB(227,227,227), BackgroundTransparency = 0.95})
 					end
 				else
 					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
 				end
 				Dropdown.Selected.Text = ""
 
+				-- Luna.Flags[DropdownSettings.Flag] = DropdownSettings
 
 			end
 
@@ -5912,18 +5906,22 @@ function Luna:CreateWindow(WindowSettings)
 				Luna.Options[Flag] = DropdownV
 			end
 
+			-- Luna.Flags[DropdownSettings.Flag] = DropdownSettings
 
 			return DropdownV
 
 		end
 
-		function Tab:CreateColorPicker(ColorPickerSettings, Flag)
+		-- Color Picker
+		function Tab:CreateColorPicker(ColorPickerSettings, Flag) -- by Rayfield/Throit
 			local ColorPickerV = {IgnoreClass = false, Class = "Colorpicker", Settings = ColorPickerSettings}
 
 			ColorPickerSettings = Kwargify({
 				Name = "Color Picker",
 				Color = Color3.fromRGB(255,255,255),
 				Callback = function(Value)
+					-- The function that takes place every time the color picker is moved/changed
+					-- The variable (Value) is a Color3fromRGB value based on which color is selected
 				end
 			}, ColorPickerSettings or {})
 
@@ -6023,10 +6021,12 @@ function Luna:CreateWindow(WindowSettings)
 			local hex = string.format("#%02X%02X%02X",color.R*0xFF,color.G*0xFF,color.B*0xFF)
 			ColorPicker.HexInput.InputBox.Text = hex
 			local function setDisplay(hp,sp,vp)
+				--Main
 				Main.MainPoint.Position = UDim2.new(s,-Main.MainPoint.AbsoluteSize.X/2,1-v,-Main.MainPoint.AbsoluteSize.Y/2)
 				Main.MainPoint.ImageColor3 = Color3.fromHSV(hp,sp,vp)
 				Background.BackgroundColor3 = Color3.fromHSV(hp,1,1)
 				Display.BackgroundColor3 = Color3.fromHSV(hp,sp,vp)
+				--Slider 
 				local x = hp * Slider.AbsoluteSize.X
 				Slider.SliderPoint.Position = UDim2.new(0,x-Slider.SliderPoint.AbsoluteSize.X/2,0.5,0)
 				Slider.SliderPoint.ImageColor3 = Color3.fromHSV(hp,1,1)
@@ -6055,6 +6055,7 @@ function Luna:CreateWindow(WindowSettings)
 				ColorPickerSettings.Color = Color3.fromRGB(r,g,b)
 				SafeCallback( Color3.fromRGB(r,g,b))
 			end)
+			--RGB
 			local function rgbBoxes(box,toChange)
 				local value = tonumber(box.Text) 
 				local color = Color3.fromHSV(h,s,v) 
@@ -6160,140 +6161,189 @@ function Luna:CreateWindow(WindowSettings)
 
 
 		function Tab:BuildConfigSection()
-            local inputPath = nil
-            local selectedConfig = nil
+			if isStudio then
+				Tab:CreateLabel({Text = "Config system unavailable. (Environment isStudio)", Style = 3})
+				return "Config system unavailable." 
+			end
 
-            local function getConfigPath()
-                return Luna.Folder .. "/" .. game.PlaceId .. "/settings/"
-            end
+			local inputPath = nil
+			local selectedConfig = nil
 
-            local function normalize(value)
-                if type(value) == "table" then
-                    return value[1]
-                end
-                return value
-            end
+			local Title = Elements.Template.Title:Clone()
+			Title.Text = "Configurations"
+			Title.Visible = true
+			Title.Parent = TabPage
+			Title.TextTransparency = 1
+			TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 
-            local Title = Elements.Template.Title:Clone()
-            Title.Text = "Configurations"
-            Title.Visible = true
-            Title.Parent = TabPage
-            Title.TextTransparency = 1
-            TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+			Tab:CreateSection("Config Creator")
 
-            Tab:CreateSection("Config Creator")
+			Tab:CreateInput({
+				Name = "Config Name",
+				Description = "Insert a name for your to be created config.",
+				PlaceholderText = "Name",
+				CurrentValue = "",
+				Numeric = false,
+				MaxCharacters = nil,
+				Enter = false,
+				Callback = function(input)
+					inputPath = input
+				end,
+			})
 
-            Tab:CreateInput({
-                Name = "Config Name",
-                PlaceholderText = "Name",
-                Callback = function(input)
-                    inputPath = input
-                end,
-            })
+			local configSelection
 
-            local configSelection
+			Tab:CreateButton({
+				Name = "Create Config",
+				Description = "Create a config with all of your current settings.",
+				Callback = function()
+					if not inputPath or string.gsub(inputPath, " ", "") == "" then
+						Luna:Notification({
+							Title = "Interface",
+							Icon = "warning",
+							ImageSource = "Material",
+							Content = "Config name cannot be empty."
+						})
+						return
+					end
 
-            Tab:CreateButton({
-                Name = "Create Config",
-                Callback = function()
-                    if not inputPath or inputPath:gsub(" ", "") == "" then
-                        Luna:Notification({
-                            Title = "Interface",
-                            Content = "Config name cannot be empty."
-                        })
-                        return
-                    end
+					local success, returned = Luna:SaveConfig(inputPath)
+					if not success then
+						Luna:Notification({
+							Title = "Interface",
+							Icon = "error",
+							ImageSource = "Material",
+							Content = "Unable to save config, return error: " .. returned
+						})
+					end
 
-                    local success, err = Luna:SaveConfig(inputPath)
-                    if not success then
-                        Luna:Notification({
-                            Title = "Interface",
-                            Content = "Save failed: " .. err
-                        })
-                        return
-                    end
+					Luna:Notification({
+						Title = "Interface",
+						Icon = "info",
+						ImageSource = "Material",
+						Content = string.format("Created config %q", inputPath),
+					})
 
-                    configSelection:Set({Options = Luna:RefreshConfigList()})
-                end
-            })
+					configSelection:Set({ Options = Luna:RefreshConfigList() })
+				end
+			})
 
-            Tab:CreateSection("Config Load/Settings")
+			Tab:CreateSection("Config Load/Settings")
 
-            configSelection = Tab:CreateDropdown({
-                Name = "Select Config",
-                Options = Luna:RefreshConfigList(),
-                Callback = function(value)
-                    selectedConfig = normalize(value)
-                end,
-            })
 
-            Tab:CreateButton({
-                Name = "Load Config",
-                Callback = function()
-                    if not selectedConfig then return end
+			configSelection = Tab:CreateDropdown({
+				Name = "Select Config",
+				Description = "Select a config to load your settings on.",
+				Options = Luna:RefreshConfigList(),
+				CurrentOption = {},
+				MultipleOptions = false,
+				SpecialType = nil,
+				Callback = function(Value)
+					selectedConfig = Value
+				end,
+			})
 
-                    local success, err = Luna:LoadConfig(selectedConfig)
-                    if not success then
-                        Luna:Notification({
-                            Title = "Interface",
-                            Content = "Load failed: " .. err
-                        })
-                    end
-                end
-            })
+			Tab:CreateButton({
+				Name = "Load Config",
+				Description = "Load your saved config settings.",
+				Callback = function()
+					local success, returned = Luna:LoadConfig(selectedConfig)
+					if not success then
+						Luna:Notification({
+							Title = "Interface",
+							Icon = "error",
+							ImageSource = "Material",
+							Content = "Unable to load config, return error: " .. returned
+						})
+						return
+					end
 
-            Tab:CreateButton({
-                Name = "Overwrite Config",
-                Callback = function()
-                    if not selectedConfig then return end
+					Luna:Notification({
+						Title = "Interface",
+						Icon = "info",
+						ImageSource = "Material",
+						Content = string.format("Loaded config %q", selectedConfig),
+					})
+				end
+			})
 
-                    Luna:SaveConfig(selectedConfig)
-                end
-            })
+			Tab:CreateButton({
+				Name = "Overwrite Config",
+				Description = "Overwrite your current config settings.",
+				Callback = function()
+					local success, returned = Luna:SaveConfig(selectedConfig)
+					if not success then
+						Luna:Notification({
+							Title = "Interface",
+							Icon = "error",
+							ImageSource = "Material",
+							Content = "Unable to overwrite config, return error: " .. returned
+						})
+						return
+					end
 
-            Tab:CreateButton({
-                Name = "Refresh Config List",
-                Callback = function()
-                    configSelection:Set({Options = Luna:RefreshConfigList()})
-                end,
-            })
+					Luna:Notification({
+						Title = "Interface",
+						Icon = "info",
+						ImageSource = "Material",
+						Content = string.format("Overwrote config %q", selectedConfig),
+					})
+				end
+			})
 
-            local loadlabel
+			Tab:CreateButton({
+				Name = "Refresh Config List",
+				Description = "Refresh the current config list.",
+				Callback = function()
+					configSelection:Set({ Options = Luna:RefreshConfigList() })
+				end,
+			})
 
-            Tab:CreateButton({
-                Name = "Set as autoload",
-                Callback = function()
-                    if not selectedConfig then return end
+			local loadlabel
+			Tab:CreateButton({
+				Name = "Set as autoload",
+				Description = "Set a config to auto load setting in your next session.",
+				Callback = function()
+					local name = selectedConfig
+					writefile(Luna.Folder .. "/settings/autoload.txt", name)
+					loadlabel:Set({ Text = "Current autoload config: " .. name })
 
-                    writefile(getConfigPath() .. "autoload.txt", selectedConfig)
+					Luna:Notification({
+						Title = "Interface",
+						Icon = "info",
+						ImageSource = "Material",
+						Content = string.format("Set %q to auto load", name),
+					})
+				end,
+			})
 
-                    loadlabel:Set({Text = "Current autoload: " .. selectedConfig})
-                end,
-            })
+			loadlabel = Tab:CreateParagraph({
+				Title = "Current Auto Load",
+				Text = "None"
+			})
 
-            loadlabel = Tab:CreateParagraph({
-                Title = "Current Auto Load",
-                Text = "None"
-            })
+			Tab:CreateButton({
+				Name = "Delete Autoload",
+				Description = "Delete The Autoload File",
+				Callback = function()
+					local name = selectedConfig
+					delfile(Luna.Folder .. "/settings/autoload.txt")
+					loadlabel:Set({ Text = "None" })
 
-            Tab:CreateButton({
-                Name = "Delete Autoload",
-                Callback = function()
-                    local path = getConfigPath() .. "autoload.txt"
-                    if isfile(path) then
-                        delfile(path)
-                    end
+					Luna:Notification({
+						Title = "Interface",
+						Icon = "info",
+						ImageSource = "Material",
+						Content = "Deleted Autoload",
+					})
+				end,
+			})
 
-                    loadlabel:Set({Text = "None"})
-                end,
-            })
-
-            local autoloadPath = getConfigPath() .. "autoload.txt"
-            if isfile(autoloadPath) then
-                local name = readfile(autoloadPath)
-                loadlabel:Set({Text = "Current autoload: " .. name})
-            end
-        end
+			if isfile(Luna.Folder .. "/settings/autoload.txt") then
+				local name = readfile(Luna.Folder .. "/settings/autoload.txt")
+				loadlabel:Set( { Text = "Current autoload config: " .. name })
+			end     
+		end
 
 		local ClassParser = {
 			["Toggle"] = {
@@ -6352,7 +6402,7 @@ function Luna:CreateWindow(WindowSettings)
 					end
 				end
 			},
-
+			-- buggy as hell stil
 			["Colorpicker"] = {
 				Save = function(Flag, data)
 					local function Color3ToHex(color)
@@ -6380,8 +6430,7 @@ function Luna:CreateWindow(WindowSettings)
 				end
 			}
 		}
-
-        local function softenColor(color)
+		local function softenColor(color)
             local h, s, v = color:ToHSV()
             
             s = s * 0.5
@@ -6434,97 +6483,80 @@ function Luna:CreateWindow(WindowSettings)
 
 		function Tab:BuildThemeSection()
 
-            local Title = Elements.Template.Title:Clone()
-            Title.Text = "Theming"
-            Title.Visible = true
-            Title.Parent = TabPage
-            Title.TextTransparency = 1
+			local Title = Elements.Template.Title:Clone()
+			Title.Text = "Theming"
+			Title.Visible = true
+			Title.Parent = TabPage
+			Title.TextTransparency = 1
+			TweenService:Create(Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
 
-            TweenService:Create(
-                Title,
-                TweenInfo.new(0.4, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-                {TextTransparency = 0}
-            ):Play()
+			Tab:CreateSection("Custom Editor")
 
-            Tab:CreateSection("Custom Editor")
+			local c1cp = Tab:CreateColorPicker({
+				Name = "Color 1",
+				Color = Color3.fromRGB(117, 164, 206),
+			}, "LunaInterfaceSuitePrebuiltCPC1") -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
 
-            local function toColor3(v)
-                if typeof(v) == "Color3" then
-                    return v
-                elseif type(v) == "table" then
-                    return Color3.fromRGB(v.R or 255, v.G or 255, v.B or 255)
-                end
-                return Color3.fromRGB(255,255,255)
-            end
+			local c2cp = Tab:CreateColorPicker({
+				Name = "Color 2",
+				Color = Color3.fromRGB(123, 201, 201),
+			}, "LunaInterfaceSuitePrebuiltCPC2")
 
-            local c1cp = Tab:CreateColorPicker({
-                Name = "Color 1",
-                Color = Color3.fromRGB(117, 164, 206),
-            }, "LunaInterfaceSuitePrebuiltCPC1")
+			local c3cp = Tab:CreateColorPicker({
+				Name = "Color 3",
+				Color = Color3.fromRGB(224, 138, 184),
+			}, "LunaInterfaceSuitePrebuiltCPC3") 
 
-            local c2cp = Tab:CreateColorPicker({
-                Name = "Color 2",
-                Color = Color3.fromRGB(123, 201, 201),
-            }, "LunaInterfaceSuitePrebuiltCPC2")
+			task.wait(1)
 
-            local c3cp = Tab:CreateColorPicker({
-                Name = "Color 3",
-                Color = Color3.fromRGB(224, 138, 184),
-            }, "LunaInterfaceSuitePrebuiltCPC3")
+			c1cp:Set({
+				Callback = function(Value)
+					if c2cp and c3cp then
+						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Value or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, c2cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, c3cp.Color or Color3.fromRGB(255,255,255))}
+						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+					end
+				end
+			})
 
-            local function updateTheme(c1, c2, c3)
-                Luna.ThemeGradient = ColorSequence.new{
-                    ColorSequenceKeypoint.new(0.00, toColor3(c1)),
-                    ColorSequenceKeypoint.new(0.50, toColor3(c2)),
-                    ColorSequenceKeypoint.new(1.00, toColor3(c3))
-                }
+			c2cp:Set({
+				Callback = function(Value)
+					if c1cp and c3cp then
+						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, c1cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, Value or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, c3cp.Color or Color3.fromRGB(255,255,255))}
+						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+					end
+				end
+			})
 
-                LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+			c3cp:Set({
+				Callback = function(Valuex)
+					if c2cp and c1cp then
+						Luna.ThemeGradient = ColorSequence.new{ColorSequenceKeypoint.new(0.00, c1cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(0.50, c2cp.Color or Color3.fromRGB(255,255,255)), ColorSequenceKeypoint.new(1.00, Valuex or Color3.fromRGB(255,255,255))}
+						LunaUI.ThemeRemote.Value = not LunaUI.ThemeRemote.Value
+					end
+				end
+			})
 
-                Luna:ApplyTheme()
-            end
+			Tab:CreateSection("Preset Gradients")
 
-            task.wait(1)
+			for i,v in pairs(PresetGradients) do
+				Tab:CreateButton({
+					Name = tostring(i),
+					Callback = function()
+						c1cp:Set({ Color = v[1] })
+						c2cp:Set({ Color = v[2] })
+						c3cp:Set({ Color = v[3] })
+					end,
+				})
+			end
 
-            c1cp:Set({
-                Callback = function(Value)
-                    updateTheme(Value, c2cp.Color, c3cp.Color)
-                end
-            })
-
-            c2cp:Set({
-                Callback = function(Value)
-                    updateTheme(c1cp.Color, Value, c3cp.Color)
-                end
-            })
-
-            c3cp:Set({
-                Callback = function(Value)
-                    updateTheme(c1cp.Color, c2cp.Color, Value)
-                end
-            })
-
-            Tab:CreateSection("Preset Gradients")
-
-            for i, v in ipairs(PresetGradients) do
-                Tab:CreateButton({
-                    Name = tostring(i),
-                    Callback = function()
-                        c1cp:Set({ Color = v[1] })
-                        c2cp:Set({ Color = v[2] })
-                        c3cp:Set({ Color = v[3] })
-
-                        updateTheme(v[1], v[2], v[3])
-                    end,
-                })
-            end
-        end
+		end
 
 
 		local function BuildFolderTree()
+			if isStudio then return "Config system unavailable." end
 			local paths = {
 				Luna.Folder,
-				Luna.Folder .. "/" .. game.PlaceId .. "/settings"
+				Luna.Folder .. "/settings"
 			}
 
 			for i = 1, #paths do
@@ -6537,6 +6569,7 @@ function Luna:CreateWindow(WindowSettings)
 
 		local function SetFolder()
 
+			if isStudio then return "Config system unavailable." end
 
 			if WindowSettings.ConfigSettings.RootFolder ~= nil and WindowSettings.ConfigSettings.RootFolder ~= "" then
 				Luna.Folder = WindowSettings.ConfigSettings.RootFolder .. "/" .. WindowSettings.ConfigSettings.ConfigFolder
@@ -6550,13 +6583,13 @@ function Luna:CreateWindow(WindowSettings)
 		SetFolder()
 
 		function Luna:SaveConfig(Path)
-
+			if isStudio then return "Config system unavailable." end
 
 			if (not Path) then
 				return false, "Please select a config file."
 			end
 
-			local fullPath = Luna.Folder .. "/" .. game.PlaceId .. "/settings/" .. Path .. ".luna"
+			local fullPath = Luna.Folder .. "/settings/" .. Path .. ".luna"
 
 			local data = {
 				objects = {}
@@ -6579,13 +6612,13 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:LoadConfig(Path)
-
+			if isStudio then return "Config system unavailable." end
 
 			if (not Path) then
 				return false, "Please select a config file."
 			end
 
-			local file = Luna.Folder .. "/" .. game.PlaceId .. "/settings/" .. Path .. ".luna"
+			local file = Luna.Folder .. "/settings/" .. Path .. ".luna"
 			if not isfile(file) then return false, "Invalid file" end
 
 			local success, decoded = pcall(HttpService.JSONDecode, HttpService, readfile(file))
@@ -6603,11 +6636,11 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:LoadAutoloadConfig()
-			if isfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt") then
+			if isfile(Luna.Folder .. "/settings/autoload.txt") then
 
-	
+				if isStudio then return "Config system unavailable." end
 
-				local name = readfile(Luna.Folder .. "/" .. game.PlaceId .. "/settings/autoload.txt")
+				local name = readfile(Luna.Folder .. "/settings/autoload.txt")
 
 				local success, err = Luna:LoadConfig(name)
 				if not success then
@@ -6630,9 +6663,9 @@ function Luna:CreateWindow(WindowSettings)
 		end
 
 		function Luna:RefreshConfigList()
+			if isStudio then return "Config system unavailable." end
 
-
-			local list = listfiles(Luna.Folder .. "/" .. game.PlaceId .. "/settings")
+			local list = listfiles(Luna.Folder .. "/settings")
 
 			local out = {}
 			for i = 1, #list do
@@ -6764,4 +6797,270 @@ function Luna:Destroy()
 	LunaUI:Destroy()
 end
 
+if (getgenv and not getgenv().ConfirmLuna) or (not getgenv) then
+	Luna:Notification({ 
+    	Title = "Luna Is Deprecated",
+    	Icon = "warning",
+    	ImageSource = "Material",
+    	Content = "If you are not the script developer, ignore this message. \n\n The Luna Interface Library Is Deprecated And Not Recommended to Use. A New Library Is Available at nebulasoftworks.xyz/starlight. If you insist on using Luna, set the getgenv().ConfirmLuna variable to true. "
+	})
+end
+
+if isStudio then
+	local Window = Luna:CreateWindow({
+		Name = "Nebula Client - Luna Hub | Blade Ball",
+		Subtitle = "by Nebula Softworks",
+		LogoID = "123795201100198",
+		LoadingEnabled = true,
+		LoadingTitle = "Nebula Client (Luna Hub)",
+		LoadingSubtitle = "Loading script for Blade Ball",
+		KeySystem = true,
+		KeySettings = {
+			Title = "Nebula Client | Key System",
+			Subtitle = "Blade Ball",
+			Note = "Please Enter Your Key To Use Nebula Client",
+			FileName = "Key", -- the name of the key file. this will be saved in ur RootFolder. However, if you don't have one, it'll save in ur config folder instead
+			SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+			Key = {"Example Key"}, -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
+			SecondAction = {
+				Enabled = true,
+				Type = "Link", -- Link/Discord
+				Parameter = "" -- for discord, add the invite link like home tab. for link, type the link of ur key sys
+			}
+		}
+	})
+	
+	--[[local Window = Luna:CreateWindow({
+		Name = "Luna Example Window",
+		Subtitle = "Test",
+		LogoID = "6031097225",
+		LoadingEnabled = true,
+		LoadingTitle = "Luna Interface Suite",
+		LoadingSubtitle = "by Nebula Softworks",
+		KeySystem = true,
+		KeySettings = {
+			Title = "Luna Example Key",
+			Subtitle = "Key System",
+			Note = "Please Enter Your Key To Use Example Hub",
+			FileName = "Key", -- the name of the key file. this will be saved in ur RootFolder. However, if you don't have one, it'll save in ur config folder instead
+			SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+			Key = {"Example Key"} -- List of keys that will be accepted by the system, please use a system like Pelican or Luarmor that provide key strings based on your HWID since putting a simple string is very easy to bypass
+		}
+	})
+
+	Luna:Notification({ 
+		Title = "Welcome to Luna",
+		Icon = "sparkle",
+		ImageSource = "Material",
+		Content = "Welcome to the Luna Interface Suite. This Is an Amazing Quality Freemium UI Library For Roblox Exploiting Made By Nebula Softworks. Luna was Created in hopes of improving the standard of UI Library designs by being the golden standard for it. Luna Has Amazing Features like a key system, notification and perfection in aesthetics and design. So, What Are You Waiting For? Start Using Luna Today at " .. website
+	})
+
+	local Tabs = {
+		Main = Window:CreateTab({
+			Name = "Tab Example 1",
+			Icon = "view_in_ar",
+			ImageSource = "Material",
+			ShowTitle = true
+		}),
+		Main2 = Window:CreateTab({
+			Name = "Tab Example 2",
+			Icon = "location_searching",
+			ImageSource = "Material",
+			ShowTitle = false
+		}),
+		Premium = Window:CreateTab({
+			Name = "Premium Tab",
+			Icon = "sparkle",
+			ImageSource = "Material",
+			ShowTitle = true
+		}),
+		Debug = Window:CreateTab({
+			Name = "Debug",
+			Icon = "settings"
+		})
+	}
+
+
+	Window:CreateHomeTab()
+	local bleh =Tabs.Debug:CreateColorPicker()
+	Tabs.Debug:CreateButton({
+		Callback = function()
+			bleh:Set({
+				Color = Color3.fromRGB(0,0,0)
+			})
+		end,
+	})
+
+	Tabs.Main:CreateSection("Section Example")
+	Tabs.Main:CreateButton({
+		Name = "Button Example!",
+		Description = "Every Element Except For Sliders Can Have a description like this"
+	})
+	Tabs.Main:CreateLabel({
+		Text = "Label Example",
+		Style = 1
+	})
+	Tabs.Main:CreateLabel({
+		Text = "Information Example",
+		Style = 2
+	})
+	Tabs.Main:CreateLabel({
+		Text = "Warning Example",
+		Style = 3
+	})
+	Tabs.Main:CreateParagraph({
+		Title = "Paragraph Example ",
+		Text = "This Is A Paragraph. You Can Type Very Long Strings Here And They'll Automatically Fit! This Counts As A Description Right? Right? Right? Right? Right? Right? Right? Right? Right? Right? Right? Right? Right? Right? Right? Also Did I Mention This Has Rich Text? Also Did I Mention This Has Rich Text? Also Did I Mention This Has Rich Text? Also Did I Mention This Has Rich Text? Also Did I Mention This Has Rich Text? Also Did I Mention This Has Rich Text?"
+	})
+	Tabs.Main:CreateSlider({
+		Name = "Slider Example",
+		Range = {0, 200},
+		Increment = 0.1,
+		CurrentValue = 100,
+		Flag = "Slider",
+	})
+	Tabs.Main:CreateToggle({
+		Name = "Toggle Example",
+		Description = "This Is A Toggle. See I Was Right? Sliders Don't Have Descriptions!",
+		CurrentValue = false,
+	})
+
+	Tabs.Main:CreateBind({
+		Name = "Bind Example",
+		Description = "Btw Using CreateKeybind is deprecated, use CreateBind For Future Binds :)",
+		CurrentKeybind = "Q",
+		HoldToInteract = false,
+	})
+	Tabs.Main:CreateInput({
+		Name = "Dynamic Input Example",
+		Description = "Every Element has :Set(). Sadly this one is broken;the text wont update :(",
+		PlaceholderText = "Input Placeholder",
+		CurrentValue = "",
+		Numeric = false,
+		MaxCharacters = nil,
+		Enter = false
+	})
+	Tabs.Main:CreateDropdown({
+		Name = "Dropdown Example",
+		Description = "U can access a element's values using .Settings!",
+		Options = {"Option 1","Option 2","Option 3","Option 4","Option 5","Option 6"},
+		CurrentOption = "Option 1",
+		MultipleOptions = false,
+		SpecialType = nil
+	})
+
+	Tabs.Main:CreateColorPicker({
+		Name = "Color Picker Example",
+		Color = Color3.fromRGB(86, 171, 128),
+		Flag = "ColorPicker1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			-- The function that takes place every time the color picker is moved/changed
+			-- The variable (Value) is a Color3fromRGB value based on which color is selected
+		end
+	})
+
+	Tabs.Main2:CreateSection("The Elements Here Are To Show Unique Features")
+	Tabs.Main2:CreateToggle({
+		Name = "Toggle - Default On",
+		Description = "Toggles Can be Onned By Default!",
+		CurrentValue = true
+	})
+	Tabs.Main2:CreateBind({
+		Name = "Hold To Interact - Walkspeed Example",
+		Description = "Binds Can Be Made to only Callback when held",
+		HoldToInteract = true,
+		CurrentBind = "E",
+		Callback = function(v)
+			if v then 
+				Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+			else
+				Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+			end
+		end,
+	})
+	Tabs.Main2:CreateInput({
+		Name = "Numeric And 12 Max Characters",
+		Description = "You Can Limit The Max Characters or Allow Only Numbers",
+		Numeric = true,
+		MaxCharacters = 12
+	})
+	Tabs.Main2:CreateInput({
+		Name = "Require Enter",
+		Description = "You Can Only make the callback happen after user hits enter",
+		Enter = true
+	})
+	Tabs.Main2:CreateLabel({
+		Text = "Every Element Can be Destroyed as well!"
+	})
+	Tabs.Main2:CreateDropdown({
+		Name = "Dropdown - Multi Options",
+		Description = "Multiple Special Features can be used on the same element!",
+		Options = {"Option 1","Option 2","Option 3","Option 4","Option 5","Option 6"},
+		CurrentOption = {"Option 1","Option 3","Option 6"},
+		MultipleOptions = true
+	})
+	Tabs.Main2:CreateDropdown({
+		Name = "Dropdown - Players",
+		Description = "Luna's Dropdowns Has a built in Player Dropdown!",
+		Options = {"u can put anything here, it wont be shown anyway"},
+		CurrentOption = {"same here, itll be the first option"},
+		MultipleOptions = false,
+		SpecialType = "Player"
+	})
+
+	local s = Tabs.Premium:CreateSection("You can add elements inside section too")
+	s:CreateButton()
+	s:CreateLabel()
+	s:CreateDivider()
+	s:CreateDropdown()
+
+	Tabs.Premium:BuildConfigSection()
+	Tabs.Premium:BuildThemeSection()]]
+end
+
+-- THIS IS THE DEBUG DEMO, ONLY USED WHEN TESTING NEW ELEMENTS AND CODE
+--[[if isStudio then
+    window = Luna:CreateWindow({LoadingEnabled = false})
+    t1 = window:CreateTab()
+    t2 = window:CreateTab({ Name = "Tab 2", Icon = "location_searching"})
+    Luna:Notification({ 
+        Title = "Welcome to Luna",
+        Icon = "sparkle",
+        ImageSource = "Material",
+        Content = "Welcome to the Luna Interface Suite. This Is an Amazing Quality Freemium UI Library For Roblox Exploiting Made By Nebula Softworks. Luna was Created in hopes of improving the standard of UI Library designs by being the golden standard for it. Luna Has Amazing Features like a key system, notification and perfection in aesthetics and design. So, What Are You Waiting For? Start Using Luna Today at " .. website
+    })
+    t1:CreateSection()
+    local btn = t1:CreateButton({Callback = "", Description = "This Is A Description"})
+    local l = t1:CreateLabel({ Style = 2})
+    local l2 = t1:CreateLabel({ Text = "Another Label" })
+    t2:CreateButton({ Callback = function() 
+        l:Destroy()
+        l2:Set("New Text")
+    end})
+    t2:CreateLabel({Style = 3})
+    t1:CreateParagraph({Text = "Single String"})
+    t1:CreateParagraph({Text = "Welcome to the Luna Interface Suite. This Is an Amazing Quality Freemium UI Library For Roblox Exploiting Made By Nebula Softworks. Luna was Created in hopes of improving the standard of UI Library designs by being the golden standard for it. Luna Has Amazing Features like a key system, notification and perfection in aesthetics and design. So, What Are You Waiting For? Start Using Luna Today at " .. website})
+    s = t2:CreateSlider({ Callback = function(v) print(v) end })	
+    t1:CreateButton({ Callback = function()
+        s:Set({Name = "new name", Callback = ""})
+        wait(5)
+        s:Destroy()
+    end})
+    t1:CreateColorPicker()
+    local toggle = t1:CreateToggle({Name = "test", Description = "test", CurrentValue = true, Callback = ""}, "toggle2")
+    t1:CreateToggle({Callback = function(Value) toggle:Destroy() print(Value) end})
+    local bind = t2:CreateBind({Name = "test", Description = "test", CurrentBind = "E", HoldToInteract = false, Callback = ""})
+    t2:CreateKeybind({HoldToInteract = true, Callback = function(v)
+        if v then
+            Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+        else
+            Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+        end
+    end,})
+    local input = t2:CreateInput({Name = "test",ClearTextAfterFocusLost = false, Description = "Numbers only, 8 max characters and enter required.",MaxCharacters = 8 ,Numeric = true, Enter = true, Callback = ""})
+    t2:CreateInput({Callback = function(text) print(text) end})
+    local d = t1:CreateDropdown({Name = "test", Options = {"Apples", "Bananas", "Strawberries", "Elixir"}, Description = "MultiOptions", MultipleOptions = true, Callback = function(t) print(t) end, CurrentOption = {"Apples", "Elixir"}})
+    t1:CreateDropdown({Callback = function(t) print(unpack(t)) end})
+    t1:CreateDropdown({Description = "Special Type - Player", Callback = "", SpecialType = "Player"})
+end]]--
 return Luna
