@@ -2053,10 +2053,10 @@ function Luna:Notification(data)
 		newNotification.Visible = true
 
 		-- 🔥 MORE ROOM FOR TEXT
-		newNotification.Description.Size = UDim2.new(1, -120, 0, math.huge)
+		newNotification.Description.Size = UDim2.new(1, -80, 0, math.huge)
 		local bounds = newNotification.Description.TextBounds.Y + 100
 
-		newNotification.Description.Size = UDim2.new(1, -120, 0, bounds - 60)
+		newNotification.Description.Size = UDim2.new(1, -80, 0, bounds - 60)
 
 		-- 🔥 EXPAND BIGGER
 		TweenService:Create(
