@@ -2020,8 +2020,12 @@ function Luna:Notification(data)
 		newNotification.Visible = false
 		BlurModule(newNotification)
 
+		-- 🔥 BIGGER TEXT
 		newNotification.Title.Text = data.Title
+		newNotification.Title.TextSize = 22
+
 		newNotification.Description.Text = data.Content
+		newNotification.Description.TextSize = 18
 		
 		local icon = SafeGetIcon(data.Icon, data.ImageSource)
 		newNotification.Icon.Image = icon
@@ -2039,33 +2043,32 @@ function Luna:Notification(data)
 
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
 		
-		-- 🔥 BIGGER WIDTH
-		newNotification.Size = UDim2.new(1, -20, 0, -padding)
+		-- 🔥 MUCH WIDER + TALLER BASE
+		newNotification.Size = UDim2.new(1, -10, 0, 60)
 
-		-- 🔥 BIGGER ICON
-		newNotification.Icon.Size = UDim2.new(0, 36, 0, 36)
-		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, -18)
+		-- 🔥 BIG ICON
+		newNotification.Icon.Size = UDim2.new(0, 48, 0, 48)
+		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, -24)
 
 		newNotification.Visible = true
 
-		-- 🔥 MORE TEXT SPACE
-		newNotification.Description.Size = UDim2.new(1, -90, 0, math.huge)
-		local bounds = newNotification.Description.TextBounds.Y + 80
+		-- 🔥 MORE ROOM FOR TEXT
+		newNotification.Description.Size = UDim2.new(1, -120, 0, math.huge)
+		local bounds = newNotification.Description.TextBounds.Y + 100
 
-		newNotification.Description.Size = UDim2.new(1, -90, 0, bounds - 50)
-		newNotification.Size = UDim2.new(1, -20, 0, -padding)
+		newNotification.Description.Size = UDim2.new(1, -120, 0, bounds - 60)
 
-		-- 🔥 BIGGER EXPAND ANIMATION
+		-- 🔥 EXPAND BIGGER
 		TweenService:Create(
 			newNotification,
 			TweenInfo.new(0.6, Enum.EasingStyle.Exponential),
-			{Size = UDim2.new(1, -20, 0, bounds)}
+			{Size = UDim2.new(1, -10, 0, bounds)}
 		):Play()
 
 		task.wait(0.15)
 
 		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			BackgroundTransparency = 0.45
+			BackgroundTransparency = 0.4
 		}):Play()
 
 		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
@@ -2081,18 +2084,18 @@ function Luna:Notification(data)
 		task.wait(0.05)
 
 		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			TextTransparency = 0.35
+			TextTransparency = 0.2
 		}):Play()
 
 		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {
-			Transparency = 0.95
+			Transparency = 0.9
 		}):Play()
 
 		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-			ImageTransparency = 0.82
+			ImageTransparency = 0.75
 		}):Play()
 
-		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
+		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 3, 4), 12)
 		task.wait(data.Duration or waitDuration)
 
 		newNotification.Icon.Visible = false
@@ -2117,18 +2120,13 @@ function Luna:Notification(data)
 			TextTransparency = 1
 		}):Play()
 
-		-- 🔥 BIGGER CLOSE ANIMATION
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -20, 0, 0)
+		-- 🔥 BIG CLOSE
+		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(1, -10, 0, 0)
 		}):Play()
 
-		task.wait(1)
+		task.wait(0.6)
 
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {
-			Size = UDim2.new(1, -20, 0, -padding)
-		}):Play()
-
-		newNotification.Visible = false
 		newNotification:Destroy()
 	end)
 end
