@@ -6587,25 +6587,25 @@ function Luna:CreateWindow(WindowSettings)
             if not descendants then return end
 
             for _, obj in pairs(descendants) do
+				if obj.Parent.Name ~= "Template" then
+					if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
+						obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
+					end
 
-                if obj:IsA("Frame") and not obj:FindFirstAncestor("Elements") then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
-                end
+					if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+						obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
+					end
 
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") and obj.Parent.Name ~= "Template" then
-                    obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
-                end
+					if obj:IsA("TextLabel")  then
+						local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
 
-                if obj:IsA("TextLabel") and obj.Parent.Name ~= "Template" then
-                    local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
+						obj.TextColor3 = newColor
 
-                    obj.TextColor3 = newColor
-
-                    if obj:GetAttribute("ThemeTextColor") ~= nil then
-                        obj:SetAttribute("ThemeTextColor", newColor)
-                    end
-                end
-
+						if obj:GetAttribute("ThemeTextColor") ~= nil then
+							obj:SetAttribute("ThemeTextColor", newColor)
+						end
+					end
+				end
             end
         end
 
