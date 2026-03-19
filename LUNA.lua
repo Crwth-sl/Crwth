@@ -3674,7 +3674,7 @@ function Luna:CreateWindow(WindowSettings)
 			end
 
 			function Section:CreateDropdown(DropdownSettings, Flag)
-				TabPage.Position = UDim2.new(0,0,0,28)
+				--TabPage.Position = UDim2.new(0,0,0,28)
 				local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
 
 				DropdownSettings = Kwargify({
