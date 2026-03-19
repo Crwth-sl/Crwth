@@ -2047,7 +2047,7 @@ function Luna:Notification(data)
 		local padding = Notifications:FindFirstChild("UIListLayout").Padding.Offset
 
 		-- 🔥 MAKE IT ACTUALLY WIDE
-		newNotification.Size = UDim2.new(1, -40, 0, 60) -- 20px margin on both sides
+		newNotification.Size = UDim2.new(1, -10, 0, 10) -- 20px margin on both sides
 		newNotification.Position = UDim2.new(0, 20, 0, 0)
 
 		-- 🔥 BIG ICON
