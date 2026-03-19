@@ -2163,11 +2163,11 @@ end
 local MainSize
 local MinSize 
 if Camera.ViewportSize.X > 774 and Camera.ViewportSize.Y > 503 then
-	MainSize = UDim2.fromOffset(675 * 1.34, 424 * 1.34)
-	MinSize = UDim2.fromOffset(500 * 1.34, 42 * 1.34)
+	MainSize = UDim2.fromOffset(675 * 1.34, 424 * 1.38)
+	MinSize = UDim2.fromOffset(500 * 1.34, 42 * 1.38)
 else
-	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100, Camera.ViewportSize.Y - 100)
-	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275, 42)
+	MainSize = UDim2.fromOffset(Camera.ViewportSize.X - 100 * 1.34, Camera.ViewportSize.Y - 100 * 1.38)
+	MinSize = UDim2.fromOffset(Camera.ViewportSize.X - 275 * 1.34, 42 * 1.38)
 end
 
 local function Maximise(Window)
