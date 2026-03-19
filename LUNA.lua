@@ -1990,7 +1990,7 @@ local function Draggable(Bar, Window, enableTaptic, tapticOffset)
 
 	end)
 end
-
+getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aB = ""
 function Luna:Notification(data)
 	task.spawn(function()
 		data = Kwargify({
@@ -2012,7 +2012,7 @@ function Luna:Notification(data)
 
 			return "rbxassetid://0"
 		end
-
+		getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aB = data.Title
 		local newNotification = Notifications.Template:Clone()
 		newNotification.Name = data.Title
 		newNotification.Parent = Notifications
@@ -6592,11 +6592,11 @@ function Luna:CreateWindow(WindowSettings)
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[1].Value)
                 end
 
-                if obj:IsA("TextButton") or obj:IsA("ImageButton") and not obj:FindFirstAncestor("Notifications") then
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") and obj.Parent.Name ~= getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aB then
                     obj.BackgroundColor3 = softenColor(self.ThemeGradient.Keypoints[2].Value)
                 end
 
-                if obj:IsA("TextLabel") and not obj:FindFirstAncestor("Notifications") then
+                if obj:IsA("TextLabel") and obj.Parent.Name ~= getgenv().x7KpQ9vNotificationNameL2Zr8mT4yWcF1uHj6NsD3aB then
                     local newColor = softenColor(self.ThemeGradient.Keypoints[3].Value)
 
                     obj.TextColor3 = newColor
