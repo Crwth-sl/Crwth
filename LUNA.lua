@@ -3674,477 +3674,471 @@ function Luna:CreateWindow(WindowSettings)
 			end
 
 			function Section:CreateDropdown(DropdownSettings, Flag)
-				print("=== DEBUG ===")
-print("Running in Plugin?", plugin ~= nil)
-print("Running in Studio?", RunService:IsStudio())
-print("Current thread security:", debug.info(2, "s"))
-print("TabPage parent:", TabPage and TabPage.Parent)
-print("TabPage parent class:", TabPage and TabPage.Parent and TabPage.Parent.ClassName)
-    TabPage.Position = UDim2.new(0,0,0,28)
-    local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
+				TabPage.Position = UDim2.new(0,0,0,28)
+				local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
 
-    DropdownSettings = Kwargify({
-        Name = "Dropdown",
-        Description = nil,
-        Options = {},
-        CurrentOption = {},
-        MultipleOptions = false,
-        SpecialType = nil,
-        Callback = function(Options)
-            
-        end,
-    }, DropdownSettings or {})
+				DropdownSettings = Kwargify({
+					Name = "Dropdown",
+					Description = nil,
+					Options = {},
+					CurrentOption = {},
+					MultipleOptions = false,
+					SpecialType = nil,
+					Callback = function(Options)
+						
+					end,
+				}, DropdownSettings or {})
 
-    DropdownV.CurrentOption = DropdownSettings.CurrentOption
+				DropdownV.CurrentOption = DropdownSettings.CurrentOption
 
-    local descriptionbool = false
-    if DropdownSettings.Description ~= nil and DropdownSettings.Description ~= "" then
-        descriptionbool = true
-    end
-    local closedsize
-    local openedsize
-    if descriptionbool then
-        closedsize = 48
-        openedsize = 170
-    elseif not descriptionbool then
-        closedsize = 38
-        openedsize = 160
-    end
-    local opened = false
+				local descriptionbool = false
+				if DropdownSettings.Description ~= nil and DropdownSettings.Description ~= "" then
+					descriptionbool = true
+				end
+				local closedsize
+				local openedsize
+				if descriptionbool then
+					closedsize = 48
+					openedsize = 170
+				elseif not descriptionbool then
+					closedsize = 38
+					openedsize = 160
+				end
+				local opened = false
 
-    local Dropdown
-    if descriptionbool then Dropdown = Elements.Template.DropdownDesc:Clone() else Dropdown = Elements.Template.Dropdown:Clone() end
+				local Dropdown
+				if descriptionbool then Dropdown = Elements.Template.DropdownDesc:Clone() else Dropdown = Elements.Template.Dropdown:Clone() end
 
-    Dropdown.Name = DropdownSettings.Name
-    Dropdown.Title.Text = DropdownSettings.Name
-    if descriptionbool then Dropdown.Desc.Text = DropdownSettings.Description end
+				Dropdown.Name = DropdownSettings.Name
+				Dropdown.Title.Text = DropdownSettings.Name
+				if descriptionbool then Dropdown.Desc.Text = DropdownSettings.Description end
 
-    Dropdown.Parent = TabPage
-    Dropdown.Visible = true
+				Dropdown.Parent = TabPage
+				Dropdown.Visible = true
 
-    local function Toggle()
-        opened = not opened
-        if opened then
-            tween(Dropdown.icon, {Rotation = 180})
-            tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
-        else
-            tween(Dropdown.icon, {Rotation = 0})
-            tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
-        end
-    end
+				local function Toggle()
+					opened = not opened
+					if opened then
+						tween(Dropdown.icon, {Rotation = 180})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, openedsize)})
+					else
+						tween(Dropdown.icon, {Rotation = 0})
+						tween(Dropdown, {Size = UDim2.new(1, -25, 0, closedsize)})
+					end
+				end
 
-    local function SafeCallback(param, c2)
-        local Success, Response = pcall(function()
-            DropdownSettings.Callback(param)
-        end)
-        if not Success then
-            TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-            TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
-            TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-            Dropdown.Title.Text = "Callback Error"
-            print("Luna Interface Suite | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
-            wait(0.5)
-            Dropdown.Title.Text = DropdownSettings.Name
-            TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
-            TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
-            TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-        end
-        if Success and c2 then
-            c2()
-        end
-    end
+				local function SafeCallback(param, c2)
+					local Success, Response = pcall(function()
+						DropdownSettings.Callback(param)
+					end)
+					if not Success then
+						TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+						TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+						Dropdown.Title.Text = "Callback Error"
+						print("Luna Interface Suite | "..DropdownSettings.Name.." Callback Error " ..tostring(Response))
+						wait(0.5)
+						Dropdown.Title.Text = DropdownSettings.Name
+						TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.5}):Play()
+						TweenService:Create(Dropdown, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = Color3.fromRGB(32, 30, 38)}):Play()
+						TweenService:Create(Dropdown.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+					end
+					if Success and c2 then
+						c2()
+					end
+				end
 
-    Dropdown.Selected:GetPropertyChangedSignal("Text"):Connect(function()
-        local text = Dropdown.Selected.Text:lower()
-        for _, Item in ipairs(Dropdown.List:GetChildren()) do
-            if Item:IsA("TextLabel") and Item.Name ~= "Template" then
-                Item.Visible = text == "" or string.find(Item.Name:lower(), text, 1, true) ~= nil
-            end
-        end
-    end)
+				Dropdown.Selected:GetPropertyChangedSignal("Text"):Connect(function()
+					local text = Dropdown.Selected.Text:lower()
+					for _, Item in ipairs(Dropdown.List:GetChildren()) do
+						if Item:IsA("TextLabel") and Item.Name ~= "Template" then
+							Item.Visible = text == "" or string.find(Item.Name:lower(), text, 1, true) ~= nil
+						end
+					end
+				end)
 
 
-    local function Clear()
-        for _, option in ipairs(Dropdown.List:GetChildren()) do
-            if option.ClassName == "TextLabel" and option.Name ~= "Template" then
-                option:Destroy()
-            end
-        end
-    end
+				local function Clear()
+					for _, option in ipairs(Dropdown.List:GetChildren()) do
+						if option.ClassName == "TextLabel" and option.Name ~= "Template" then
+							option:Destroy()
+						end
+					end
+				end
 
-    -- FIXED: ActivateColorSingle now properly handles theme colors
-    local function ActivateColorSingle(name)
-        for _, Option in pairs(Dropdown.List:GetChildren()) do
-            if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
-                tween(Option, {BackgroundTransparency = 0.98})
+				-- FIXED: ActivateColorSingle now properly handles theme colors
+				local function ActivateColorSingle(name)
+					for _, Option in pairs(Dropdown.List:GetChildren()) do
+						if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
+							tween(Option, {BackgroundTransparency = 0.98})
 
-                local base = Option:GetAttribute("ThemeTextColor")
-                if base then
-                    tween(Option, {TextColor3 = base})
-                end
-            end
-        end
+							local base = Option:GetAttribute("ThemeTextColor")
+							if base then
+								tween(Option, {TextColor3 = base})
+							end
+						end
+					end
 
-        Toggle()
+					Toggle()
 
-        local Selected = nil
-        for _, Option in pairs(Dropdown.List:GetChildren()) do
-            if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == name then
-                Selected = Option
-                break
-            end
-        end
+					local Selected = nil
+					for _, Option in pairs(Dropdown.List:GetChildren()) do
+						if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == name then
+							Selected = Option
+							break
+						end
+					end
 
-        if Selected then
-            local base = Selected:GetAttribute("ThemeTextColor")
-            tween(Selected, {
-                BackgroundTransparency = 0.95,
-                TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3) or Selected.TextColor3
-            })
-        end
-    end
+					if Selected then
+						local base = Selected:GetAttribute("ThemeTextColor")
+						tween(Selected, {
+							BackgroundTransparency = 0.95,
+							TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3) or Selected.TextColor3
+						})
+					end
+				end
 
-    -- FIXED: Refresh now properly sets attributes and handles theme colors
-    local function Refresh()
-        Clear()
+				-- FIXED: Refresh now properly sets attributes and handles theme colors
+				local function Refresh()
+					Clear()
 
-        for i, v in pairs(DropdownSettings.Options) do
-            local Option = Dropdown.List.Template:Clone()
-            local optionhover = false
+					for i, v in pairs(DropdownSettings.Options) do
+						local Option = Dropdown.List.Template:Clone()
+						local optionhover = false
 
-            Option.Text = v
-            if v == "Template" then v = "Template (Name)" end
-            local safeName = v:gsub("%s+", "_")
-            Option.Name = safeName
-            Option:SetAttribute("RealName", v)
+						Option.Text = v
+						if v == "Template" then v = "Template (Name)" end
+						local safeName = v:gsub("%s+", "_")
+						Option.Name = safeName
+						Option:SetAttribute("RealName", v)
 
-            -- Store theme color
-            local ThemeTextColor = Option:GetAttribute("ThemeTextColor") or Option.TextColor3
-            Option:SetAttribute("ThemeTextColor", ThemeTextColor)
-            Option.TextColor3 = ThemeTextColor
+						-- Store theme color
+						local ThemeTextColor = Option:GetAttribute("ThemeTextColor") or Option.TextColor3
+						Option:SetAttribute("ThemeTextColor", ThemeTextColor)
+						Option.TextColor3 = ThemeTextColor
 
-            Option.Interact.MouseButton1Click:Connect(function()
-                local bleh
+						Option.Interact.MouseButton1Click:Connect(function()
+							local bleh
 
-                if DropdownSettings.MultipleOptions then
-                    if table.find(DropdownSettings.CurrentOption, v) then
-                        RemoveTable(DropdownSettings.CurrentOption, v)
-                        DropdownV.CurrentOption = DropdownSettings.CurrentOption
+							if DropdownSettings.MultipleOptions then
+								if table.find(DropdownSettings.CurrentOption, v) then
+									RemoveTable(DropdownSettings.CurrentOption, v)
+									DropdownV.CurrentOption = DropdownSettings.CurrentOption
 
-                        if not optionhover then
-                            local base = Option:GetAttribute("ThemeTextColor")
-                            tween(Option, {TextColor3 = base})
-                        end
+									if not optionhover then
+										local base = Option:GetAttribute("ThemeTextColor")
+										tween(Option, {TextColor3 = base})
+									end
 
-                        tween(Option, {BackgroundTransparency = 0.98})
-                    else
-                        table.insert(DropdownSettings.CurrentOption, v)
-                        DropdownV.CurrentOption = DropdownSettings.CurrentOption
+									tween(Option, {BackgroundTransparency = 0.98})
+								else
+									table.insert(DropdownSettings.CurrentOption, v)
+									DropdownV.CurrentOption = DropdownSettings.CurrentOption
 
-                        local base = Option:GetAttribute("ThemeTextColor")
-                        tween(Option, {
-                            TextColor3 = base:Lerp(Color3.new(1,1,1), 0.3),
-                            BackgroundTransparency = 0.95
-                        })
-                    end
+									local base = Option:GetAttribute("ThemeTextColor")
+									tween(Option, {
+										TextColor3 = base:Lerp(Color3.new(1,1,1), 0.3),
+										BackgroundTransparency = 0.95
+									})
+								end
 
-                    bleh = DropdownSettings.CurrentOption
-                else
-                    DropdownSettings.CurrentOption = {v}
-                    bleh = v
-                    DropdownV.CurrentOption = bleh
-                    ActivateColorSingle(v)
-                end
+								bleh = DropdownSettings.CurrentOption
+							else
+								DropdownSettings.CurrentOption = {v}
+								bleh = v
+								DropdownV.CurrentOption = bleh
+								ActivateColorSingle(v)
+							end
 
-                SafeCallback(bleh, function()
-                    if DropdownSettings.MultipleOptions then
-                        if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
-                            if #DropdownSettings.CurrentOption == 1 then
-                                Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
-                            elseif #DropdownSettings.CurrentOption == 0 then
-                                Dropdown.Selected.PlaceholderText = "None"
-                            else
-                                Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
-                            end
-                        else
-                            DropdownSettings.CurrentOption = {}
-                            Dropdown.Selected.PlaceholderText = "None"
-                        end
-                    end
+							SafeCallback(bleh, function()
+								if DropdownSettings.MultipleOptions then
+									if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
+										if #DropdownSettings.CurrentOption == 1 then
+											Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
+										elseif #DropdownSettings.CurrentOption == 0 then
+											Dropdown.Selected.PlaceholderText = "None"
+										else
+											Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
+										end
+									else
+										DropdownSettings.CurrentOption = {}
+										Dropdown.Selected.PlaceholderText = "None"
+									end
+								end
 
-                    if not DropdownSettings.MultipleOptions then
-                        Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
-                    end
+								if not DropdownSettings.MultipleOptions then
+									Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
+								end
 
-                    Dropdown.Selected.Text = ""
-                end)
-            end)
+								Dropdown.Selected.Text = ""
+							end)
+						end)
 
-            Option.Visible = true
-            Option.Parent = Dropdown.List
+						Option.Visible = true
+						Option.Parent = Dropdown.List
 
-            Option.MouseEnter:Connect(function()
-                optionhover = true
+						Option.MouseEnter:Connect(function()
+							optionhover = true
 
-                if Option.BackgroundTransparency == 0.95 then
-                    return
-                else
-                    local base = Option:GetAttribute("ThemeTextColor")
-                    tween(Option, {
-                        TextColor3 = base:Lerp(Color3.new(1,1,1), 0.2)
-                    })
-                end
-            end)
+							if Option.BackgroundTransparency == 0.95 then
+								return
+							else
+								local base = Option:GetAttribute("ThemeTextColor")
+								tween(Option, {
+									TextColor3 = base:Lerp(Color3.new(1,1,1), 0.2)
+								})
+							end
+						end)
 
-            Option.MouseLeave:Connect(function()
-                optionhover = false
+						Option.MouseLeave:Connect(function()
+							optionhover = false
 
-                if Option.BackgroundTransparency == 0.95 then
-                    return
-                else
-                    local base = Option:GetAttribute("ThemeTextColor")
-                    tween(Option, {
-                        TextColor3 = base
-                    })
-                end
-            end)
-        end
-    end
+							if Option.BackgroundTransparency == 0.95 then
+								return
+							else
+								local base = Option:GetAttribute("ThemeTextColor")
+								tween(Option, {
+									TextColor3 = base
+								})
+							end
+						end)
+					end
+				end
 
-    local function PlayerTableRefresh()
-        for i,v in pairs(DropdownSettings.Options) do
-            table.remove(DropdownSettings.Options, i)
-        end
+				local function PlayerTableRefresh()
+					for i,v in pairs(DropdownSettings.Options) do
+						table.remove(DropdownSettings.Options, i)
+					end
 
-        for i,v in pairs(Players:GetChildren()) do
-            table.insert(DropdownSettings.Options, v.Name)
-        end
-    end
+					for i,v in pairs(Players:GetChildren()) do
+						table.insert(DropdownSettings.Options, v.Name)
+					end
+				end
 
-    Dropdown.Interact.MouseButton1Click:Connect(function()
-        Toggle()
-    end)
+				Dropdown.Interact.MouseButton1Click:Connect(function()
+					Toggle()
+				end)
 
-    Dropdown["MouseEnter"]:Connect(function()
-        tween(Dropdown.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
-    end)
+				Dropdown["MouseEnter"]:Connect(function()
+					tween(Dropdown.UIStroke, {Color = Color3.fromRGB(87, 84, 104)})
+				end)
 
-    Dropdown["MouseLeave"]:Connect(function()
-        tween(Dropdown.UIStroke, {Color = Color3.fromRGB(64,61,76)})
-    end)
+				Dropdown["MouseLeave"]:Connect(function()
+					tween(Dropdown.UIStroke, {Color = Color3.fromRGB(64,61,76)})
+				end)
 
-    if DropdownSettings.SpecialType == "Player" then
+				if DropdownSettings.SpecialType == "Player" then
 
-        for i,v in pairs(DropdownSettings.Options) do
-            table.remove(DropdownSettings.Options, i)
-        end
-        PlayerTableRefresh()
-        DropdownSettings.CurrentOption = DropdownSettings.Options[1]
+					for i,v in pairs(DropdownSettings.Options) do
+						table.remove(DropdownSettings.Options, i)
+					end
+					PlayerTableRefresh()
+					DropdownSettings.CurrentOption = DropdownSettings.Options[1]
 
-        Players.PlayerAdded:Connect(function() PlayerTableRefresh() end)
-        Players.PlayerRemoving:Connect(function() PlayerTableRefresh() end)
+					Players.PlayerAdded:Connect(function() PlayerTableRefresh() end)
+					Players.PlayerRemoving:Connect(function() PlayerTableRefresh() end)
 
-    end
+				end
 
-    Refresh()
+				Refresh()
 
-    if DropdownSettings.CurrentOption then
-        if type(DropdownSettings.CurrentOption) == "string" then
-            DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption}
-        end
-        if not DropdownSettings.MultipleOptions and type(DropdownSettings.CurrentOption) == "table" then
-            DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption[1]}
-        end
-    else
-        DropdownSettings.CurrentOption = {}
-    end
+				if DropdownSettings.CurrentOption then
+					if type(DropdownSettings.CurrentOption) == "string" then
+						DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption}
+					end
+					if not DropdownSettings.MultipleOptions and type(DropdownSettings.CurrentOption) == "table" then
+						DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption[1]}
+					end
+				else
+					DropdownSettings.CurrentOption = {}
+				end
 
-    local bleh, ind = nil,0
-    for i,v in pairs(DropdownSettings.CurrentOption) do
-        ind = ind + 1
-    end
-    if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
-    SafeCallback(bleh)
-    
-    -- FIXED: Initial selection highlighting now uses attributes
-    if type(bleh) == "string" then 
-        for _, Option in pairs(Dropdown.List:GetChildren()) do
-            if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
-                local base = Option:GetAttribute("ThemeTextColor")
-                tween(Option, {
-                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                    BackgroundTransparency = 0.95
-                })
-                break
-            end
-        end
-    else
-        for i,v in pairs(bleh) do
-            for _, Option in pairs(Dropdown.List:GetChildren()) do
-                if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == v then
-                    local base = Option:GetAttribute("ThemeTextColor")
-                    tween(Option, {
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                        BackgroundTransparency = 0.95
-                    })
-                    break
-                end
-            end
-        end
-    end
+				local bleh, ind = nil,0
+				for i,v in pairs(DropdownSettings.CurrentOption) do
+					ind = ind + 1
+				end
+				if ind == 1 then bleh = DropdownSettings.CurrentOption[1] else bleh = DropdownSettings.CurrentOption end
+				SafeCallback(bleh)
+				
+				-- FIXED: Initial selection highlighting now uses attributes
+				if type(bleh) == "string" then 
+					for _, Option in pairs(Dropdown.List:GetChildren()) do
+						if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
+							local base = Option:GetAttribute("ThemeTextColor")
+							tween(Option, {
+								TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+								BackgroundTransparency = 0.95
+							})
+							break
+						end
+					end
+				else
+					for i,v in pairs(bleh) do
+						for _, Option in pairs(Dropdown.List:GetChildren()) do
+							if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == v then
+								local base = Option:GetAttribute("ThemeTextColor")
+								tween(Option, {
+									TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+									BackgroundTransparency = 0.95
+								})
+								break
+							end
+						end
+					end
+				end
 
-    if DropdownSettings.MultipleOptions then
-        if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
-            if #DropdownSettings.CurrentOption == 1 then
-                Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
-            elseif #DropdownSettings.CurrentOption == 0 then
-                Dropdown.Selected.PlaceholderText = "None"
-            else
-                Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
-            end
-        else
-            DropdownSettings.CurrentOption = {}
-            Dropdown.Selected.PlaceholderText = "None"
-        end
-        local function getOptionByValue(value)
-            for _, opt in pairs(Dropdown.List:GetChildren()) do
-                if opt:GetAttribute("RealName") == value then
-                    return opt
-                end
-            end
-        end
-        for _, name in pairs(DropdownSettings.CurrentOption) do
-            local opt = getOptionByValue(name)
-            if opt then
-                local base = opt:GetAttribute("ThemeTextColor")
+				if DropdownSettings.MultipleOptions then
+					if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
+						if #DropdownSettings.CurrentOption == 1 then
+							Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
+						elseif #DropdownSettings.CurrentOption == 0 then
+							Dropdown.Selected.PlaceholderText = "None"
+						else
+							Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
+						end
+					else
+						DropdownSettings.CurrentOption = {}
+						Dropdown.Selected.PlaceholderText = "None"
+					end
+					local function getOptionByValue(value)
+						for _, opt in pairs(Dropdown.List:GetChildren()) do
+							if opt:GetAttribute("RealName") == value then
+								return opt
+							end
+						end
+					end
+					for _, name in pairs(DropdownSettings.CurrentOption) do
+						local opt = getOptionByValue(name)
+						if opt then
+							local base = opt:GetAttribute("ThemeTextColor")
 
-                tween(opt, {
-                    TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
-                    BackgroundTransparency = 0.95
-                })
-            end
-        end
-    else
-        Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
-    end
-    Dropdown.Selected.Text = ""
+							tween(opt, {
+								TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.25),
+								BackgroundTransparency = 0.95
+							})
+						end
+					end
+				else
+					Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
+				end
+				Dropdown.Selected.Text = ""
 
-    function DropdownV:Set(NewDropdownSettings)
-        NewDropdownSettings = Kwargify(DropdownSettings, NewDropdownSettings or {})
+				function DropdownV:Set(NewDropdownSettings)
+					NewDropdownSettings = Kwargify(DropdownSettings, NewDropdownSettings or {})
 
-        DropdownV.Settings = NewDropdownSettings
-        DropdownSettings = NewDropdownSettings
+					DropdownV.Settings = NewDropdownSettings
+					DropdownSettings = NewDropdownSettings
 
-        Dropdown.Name = DropdownSettings.Name
-        Dropdown.Title.Text = DropdownSettings.Name
-        if DropdownSettings.Description ~= nil and DropdownSettings.Description ~= "" and Dropdown.Desc ~= nil then
-            Dropdown.Desc.Text = DropdownSettings.Description
-        end
+					Dropdown.Name = DropdownSettings.Name
+					Dropdown.Title.Text = DropdownSettings.Name
+					if DropdownSettings.Description ~= nil and DropdownSettings.Description ~= "" and Dropdown.Desc ~= nil then
+						Dropdown.Desc.Text = DropdownSettings.Description
+					end
 
-        if DropdownSettings.SpecialType == "Player" then
-            for i, v in pairs(DropdownSettings.Options) do
-                table.remove(DropdownSettings.Options, i)
-            end
-            PlayerTableRefresh()
-            DropdownSettings.CurrentOption = DropdownSettings.Options[1]                    
-            Players.PlayerAdded:Connect(function() PlayerTableRefresh() end)
-            Players.PlayerRemoving:Connect(function() PlayerTableRefresh() end)
-        end
+					if DropdownSettings.SpecialType == "Player" then
+						for i, v in pairs(DropdownSettings.Options) do
+							table.remove(DropdownSettings.Options, i)
+						end
+						PlayerTableRefresh()
+						DropdownSettings.CurrentOption = DropdownSettings.Options[1]                    
+						Players.PlayerAdded:Connect(function() PlayerTableRefresh() end)
+						Players.PlayerRemoving:Connect(function() PlayerTableRefresh() end)
+					end
 
-        Refresh()
+					Refresh()
 
-        if DropdownSettings.CurrentOption then
-            if type(DropdownSettings.CurrentOption) == "string" then
-                DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption}
-            end
-            if not DropdownSettings.MultipleOptions and type(DropdownSettings.CurrentOption) == "table" then
-                DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption[1]}
-            end
-        else
-            DropdownSettings.CurrentOption = {}
-        end
+					if DropdownSettings.CurrentOption then
+						if type(DropdownSettings.CurrentOption) == "string" then
+							DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption}
+						end
+						if not DropdownSettings.MultipleOptions and type(DropdownSettings.CurrentOption) == "table" then
+							DropdownSettings.CurrentOption = {DropdownSettings.CurrentOption[1]}
+						end
+					else
+						DropdownSettings.CurrentOption = {}
+					end
 
-        local bleh, ind = nil, 0
-        for i, v in pairs(DropdownSettings.CurrentOption) do
-            ind = ind + 1
-        end
-        
-        if ind == 1 then 
-            bleh = DropdownSettings.CurrentOption[1]
-        else 
-            bleh = DropdownSettings.CurrentOption
-        end
-        
-        SafeCallback(bleh)
-        
-        -- Reset all options
-        for _, Option in pairs(Dropdown.List:GetChildren()) do
-            if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
-                local base = Option:GetAttribute("ThemeTextColor")
-                tween(Option, {
-                    TextColor3 = base,
-                    BackgroundTransparency = 0.98
-                })
-            end
-        end
+					local bleh, ind = nil, 0
+					for i, v in pairs(DropdownSettings.CurrentOption) do
+						ind = ind + 1
+					end
+					
+					if ind == 1 then 
+						bleh = DropdownSettings.CurrentOption[1]
+					else 
+						bleh = DropdownSettings.CurrentOption
+					end
+					
+					SafeCallback(bleh)
+					
+					-- Reset all options
+					for _, Option in pairs(Dropdown.List:GetChildren()) do
+						if Option.ClassName == "TextLabel" and Option.Name ~= "Template" then
+							local base = Option:GetAttribute("ThemeTextColor")
+							tween(Option, {
+								TextColor3 = base,
+								BackgroundTransparency = 0.98
+							})
+						end
+					end
 
-        -- Highlight selected options
-        if type(bleh) == "string" then
-            for _, Option in pairs(Dropdown.List:GetChildren()) do
-                if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
-                    local base = Option:GetAttribute("ThemeTextColor")
-                    tween(Option, {
-                        TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                        BackgroundTransparency = 0.95
-                    })
-                    break
-                end
-            end
-        else
-            for _, value in pairs(bleh) do
-                for _, Option in pairs(Dropdown.List:GetChildren()) do
-                    if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
-                        local base = Option:GetAttribute("ThemeTextColor")
-                        tween(Option, {
-                            TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
-                            BackgroundTransparency = 0.95
-                        })
-                        break
-                    end
-                end
-            end
-        end
+					-- Highlight selected options
+					if type(bleh) == "string" then
+						for _, Option in pairs(Dropdown.List:GetChildren()) do
+							if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == bleh then
+								local base = Option:GetAttribute("ThemeTextColor")
+								tween(Option, {
+									TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+									BackgroundTransparency = 0.95
+								})
+								break
+							end
+						end
+					else
+						for _, value in pairs(bleh) do
+							for _, Option in pairs(Dropdown.List:GetChildren()) do
+								if Option.ClassName == "TextLabel" and Option:GetAttribute("RealName") == value then
+									local base = Option:GetAttribute("ThemeTextColor")
+									tween(Option, {
+										TextColor3 = base and base:Lerp(Color3.new(1,1,1), 0.3),
+										BackgroundTransparency = 0.95
+									})
+									break
+								end
+							end
+						end
+					end
 
-        if DropdownSettings.MultipleOptions then
-            if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
-                if #DropdownSettings.CurrentOption == 1 then
-                    Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
-                elseif #DropdownSettings.CurrentOption == 0 then
-                    Dropdown.Selected.PlaceholderText = "None"
-                else
-                    Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
-                end
-            else
-                DropdownSettings.CurrentOption = {}
-                Dropdown.Selected.PlaceholderText = "None"
-            end
-        else
-            Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
-        end
-        Dropdown.Selected.Text = ""
-    end
+					if DropdownSettings.MultipleOptions then
+						if DropdownSettings.CurrentOption and type(DropdownSettings.CurrentOption) == "table" then
+							if #DropdownSettings.CurrentOption == 1 then
+								Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1]
+							elseif #DropdownSettings.CurrentOption == 0 then
+								Dropdown.Selected.PlaceholderText = "None"
+							else
+								Dropdown.Selected.PlaceholderText = unpackt(DropdownSettings.CurrentOption)
+							end
+						else
+							DropdownSettings.CurrentOption = {}
+							Dropdown.Selected.PlaceholderText = "None"
+						end
+					else
+						Dropdown.Selected.PlaceholderText = DropdownSettings.CurrentOption[1] or "None"
+					end
+					Dropdown.Selected.Text = ""
+				end
 
-    function DropdownV:Destroy()
-        Dropdown.Visible = false
-        Dropdown:Destroy()
-    end
+				function DropdownV:Destroy()
+					Dropdown.Visible = false
+					Dropdown:Destroy()
+				end
 
-    if Flag then
-        Luna.Options[Flag] = DropdownV
-    end
+				if Flag then
+					Luna.Options[Flag] = DropdownV
+				end
 
-    return DropdownV
-end
+				return DropdownV
+			end
 
 			function Section:CreateColorPicker(ColorPickerSettings, Flag)
 				TabPage.Position = UDim2.new(0,0,0,28)
@@ -5555,21 +5549,6 @@ end
 
 
 		function Tab:CreateDropdown(DropdownSettings, Flag)
-			print("Creating dropdown in context:", debug.info(2, "s"))  -- Shows where called from
-			print("TabPage parent:", TabPage and TabPage.Parent)  -- Shows what TabPage is parented to
-			
-			-- Check if TabPage is in a valid UI hierarchy
-			local function findScreenGui(obj)
-				while obj and obj ~= game do
-					if obj:IsA("ScreenGui") then
-						return obj
-					end
-					obj = obj.Parent
-				end
-			end
-			
-			local screenGui = findScreenGui(TabPage)
-			print("Found ScreenGui:", screenGui and screenGui.Name)
 			local DropdownV = { IgnoreConfig = false, Class = "Dropdown", Settings = DropdownSettings}
 
 			DropdownSettings = Kwargify({
