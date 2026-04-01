@@ -6697,7 +6697,7 @@ function Luna:CreateWindow(WindowSettings)
 					"Candy", "Peach", "Mint", "Sky", "Galaxy", "Void", 
 					"Sand", "Forest", "Bubblegum", "Steel", "Lavender"
 				},
-				CurrentOption = "Obsidian",
+				CurrentOption = "Midnight",
 				Callback = function(presetName)
 					local preset = PresetGradients[presetName]
 					if preset then
